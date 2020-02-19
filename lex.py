@@ -113,15 +113,14 @@ t_NOT = r'!'
 t_TRUE = r'true'
 t_ELSE = r'else'
 
-def contador(t):
-    i , contador = 0
-    while (t[i] == ' '):
-        i+=1
-    lista[] = i
-    return i
+#def contador(t):
+ #   i , contador = 0
+  #  while (t[i] == ' '):
+   #     i+=1
+   # lista[] = i
+   # return i
 
-def t_IDENT(t):
-
+#def t_IDENT(t):
 
 # A regular expression rule with some action code
 def t_NUMBER(t):
@@ -142,11 +141,7 @@ def t_error(t):
 lexer = lex.lex()
 # Test it out
 data = '''
-if 1 > 2 { 
-    return true 
-} else {
-     return false
-}
+if
  '''
 # Give the lexer some input
 lexer.input(data)
