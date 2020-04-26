@@ -1,20 +1,16 @@
 #liveshare
-
-<<<<<<< HEAD
 import ply.lex as lex
 import ply.yacc as yacc
-=======
 from lex import tokens
->>>>>>> 96999c69c90289fcfb497685de45f561ef7d17a8
 
 from lex import tokens
 import AbstrataClass as abstrat
+import os
 
 def kotlinFile():
     '''kotlinFile: functionDeclaration kotlinFile
 					| functionDeclaration'''
 
-<<<<<<< HEAD
 def functionDeclaration():
     '''functionDeclaration: FUN simpleIdentifier functionValueParameters LPAREN DOISP type RPAREN block
 							| FUN simpleIdentifier functionValueParameters LPAREN DOISP type RPAREN 
@@ -94,9 +90,9 @@ def opType(): '''optype: parenthesizedType | functionType | userType '''
 def userType():
   ''' userType : simpleUserType '''
 
-def simpleUserType()
-  ''' simpleUserType: simpleIdentifier typeArguments
-						| simpleIdentifier '''
+def simpleUserType():
+    ''' simpleUserType: simpleIdentifier typeArguments
+					 | simpleIdentifier '''
 
 def typeProjection(): 
   '''typeProjection: typeProjectionModifiers type
@@ -131,7 +127,7 @@ def receiverType():
 def rt():
 	'''rt: parenthesizedType 
 			| nullableType 
-			| typeReference
+			| typeReference'''
 
 def parenthesizedUserType():
   '''parenthesizedUserType: LPAREN userType RPAREN
@@ -211,7 +207,7 @@ def io():
 			| isOperator type
 			| '''
 
-def elvisExpression()
+def elvisExpression():
   ''' elvisExpression : infixFunctionCall
 						| infixFunctionCall elvis elvisExpression 
 						| '''
@@ -281,7 +277,7 @@ def assignableExpression():
    ''' assignableExpression : prefixUnaryExpression
 							 | parenthesizedAssignableExpression '''
 
-def parenthesizedAssignableExpression()
+def parenthesizedAssignableExpression():
    ''' parenthesizedAssignableExpression : LPAREN assignableExpression RPAREN '''
 
 def assignableSuffix():
@@ -395,7 +391,7 @@ def lambdaParameter():
 					| multiVariableDeclaration '''
 
 def anonymousFunction():
-	''' anonymousFunction : FUN af4 parametersWithOptionalType af3 af2 af1 
+	''' anonymousFunction : FUN af4 parametersWithOptionalType af3 af2 af1 '''
 
 def af1(): 
     ''' af1 : functionBody
@@ -438,13 +434,13 @@ def jumpExpression():
 						| CONTINUE
 					    | CONTINUE_AT
 						| BREAK
-						| BREAK_AT
+						| BREAK_AT'''
   
 def callableReference():
    ''' callableReference: receiverType DOISP DOISP simpleIdentifier 
 						| DOISP DOISP simpleIdentifier
 						| receiverType DOISP DOISP CLASS 
-						| DOISP DOISP CLASS
+						| DOISP DOISP CLASS'''
   
 # VERIFICAT TOKENS
 def assignmentAndOperator(): 
@@ -493,8 +489,8 @@ def prefixUnaryOperator():
   | DECREMENTO
   | MINUS
   | PLUS
-  | excl
-  
+  | excl'''
+ #Duvida  
 def postfixUnaryOperator():
    ''' postfixUnaryOperator : INCREMENTO
 							| DECREMENTO
@@ -503,7 +499,7 @@ def postfixUnaryOperator():
 excl (used by prefixUnaryOperator, postfixUnaryOperator)
   : '!'
   | EXCL_WS
-  ;
+  ;'''
 
 def memberAccessOperator():
    ''' memberAccessOperator : PONTO
@@ -568,7 +564,7 @@ def identifier():
    ''' identifier : simpleIdentifier
 					| simpleIdentifier PONTO identifier '''
   
-=======
+
 class AnalisadorSintatico():
     def __init__(self):
 
@@ -725,4 +721,4 @@ class AnalisadorSintatico():
             self.next_token()
         else:
             print("Erro sintatico na linha: " +self.linha_atual+"\n")
->>>>>>> 96999c69c90289fcfb497685de45f561ef7d17a8
+

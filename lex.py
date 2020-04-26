@@ -59,7 +59,9 @@ tokens = (
     'TRUE',
     'ELSE',
     'IDENT',
-    'DEDENT'
+    'DEDENT',
+    'DOISP',
+    'PV'
 )
 # Regular expression rules for simple tokens
 t_PLUS = r'\+'
@@ -112,7 +114,8 @@ t_AND = r'&&'
 t_NOT = r'!'
 t_TRUE = r'true'
 t_ELSE = r'else'
-
+t_DOISP = r':'
+t_PV = r';'
 #def contador(t):
  #   i , contador = 0
   #  while (t[i] == ' '):
