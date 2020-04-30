@@ -42,7 +42,7 @@ tokens = (
     'FOR',
     'FALSE',
     'MOD',
-    'PLUSPLUS',
+    'INCREMENTO',
     'DECREMENTO',
     'ATRIBUICAO',
     'IGUALDADE',
@@ -56,16 +56,81 @@ tokens = (
     'OR',
     'LCHAVE',
     'RCHAVE',
+    'LCCT',
+    'RCCT',
     'TRUE',
     'ELSE',
-    'IDENT',
-    'DEDENT',
+    'PV',
+    'ID',
+    'COMMA',
+    'PONTO',
+    'LITERAL_STRING',
+	'PONTOPONTO',
+    'SETA',
+    'IN',
+    'DO',
+    'EOF',
+    'CONTINUE',
+    'IDENTIDADE',
+    'SEMIDENTIDADE',
+    'MODIGUAL',
+    'MULTIGUAL',
+    'DIVIGUAL',
     'DOISP',
-    'PV'
+    'AS',
+    'NOT_IN',
+    'NOT_IS',
+    'IS',
+    'COLONCOLON',
+    'BREAK_AT',
+    'CONTINUE_AT',
+    'BREAK',
+    'RETURN_AT',
+    'SUSPEND',
+    'OUT',
+    'ELVIS',
+    'WHERE',
+    'INIT',
+    'NOINLINE',
+    'VARARG',
+    'CROSSINLINE',
 )
 # Regular expression rules for simple tokens
+t_INIT = r'init'
+t_NOINLINE = r'noinline'
+t_VARARG = r'vararg'
+t_CROSSINLINE = r'crossinline'
+t_WHERE = r'where'
+t_ELVIS = r'\?:'
+t_OUT = r'out'
+t_SUSPEND = r'suspend'
+t_IS = r'is'
+t_BREAK = r'break'
+t_RETURN_AT = r'return_at'
+t_CONTINUE_AT = r'continue_at'
+t_BREAK_AT = r'break_at'
+t_COLONCOLON = r'::'
+t_NOT_IN = r'not_in'
+t_NOT_IS = r'not_is'
+t_MODIGUAL = r'%='
+t_MULTIGUAL = r'\*='
+t_DIVIGUAL = r'/='
+t_DOISP = r':'
+t_AS = r'as'
+t_IDENTIDADE = r'==='
+t_SEMIDENTIDADE = r'!=='
+t_CONTINUE = r'continue'
+t_EOF = r'eof'
+t_DO = r'do'
+t_IN = r'in'
+t_SETA = r'-\>'
+t_PONTO = r'\.'
+t_PONTOPONTO = r'\.\.'
+t_COMMA = r','
 t_PLUS = r'\+'
-t_PLUSPLUS = r'\++'
+t_LCCT = r'\['
+t_RCCT = r'\]'
+t_INCREMENTO = r'\+\+'
 t_MINUS = r'-'
 t_DECREMENTO = r'--'
 t_MOD = r'%'
@@ -114,7 +179,6 @@ t_AND = r'&&'
 t_NOT = r'!'
 t_TRUE = r'true'
 t_ELSE = r'else'
-t_DOISP = r':'
 t_PV = r';'
 #def contador(t):
  #   i , contador = 0
@@ -129,6 +193,17 @@ t_PV = r';'
 def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)
+    return t
+
+
+def t_LITERAL_STRING(t):
+    r'\"([^\\\n]|(\\.))*?\"'
+    return t
+
+def t_ID(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    if (t.value.upper() in tokens):
+        t.type = t.value.upper()
     return t
 
 # Define a rule so we can track line numbers
@@ -146,15 +221,31 @@ def t_error(t):
 lexer = lex.lex()
 
 # Test it out
-data = '''
-if
+data = r'''
+fun Int main (Int argc, palavra argv[] ){
+    Int i,j,t
+    Char a[n]
+    var palavra
+    palavra= argv[1]
+    for (i=0 in n-1..i++)
+    if ((t = fgetc(stdin)) = java.io.EOFException)
+        a[i] = t
+    a[i] = 0
+    for (i= 0 in a[i]!=0..i++)
+    for (j= 0 in a[j]!=0..j++)
+    if (a[i+j]!=palavra[j])
+        if (palavra[j]==0) print("",i)
+    
+    print("\n")
+    return 0
+}
  '''
 # Give the lexer some input
 lexer.input(data)
 
-# Tokenize
-while True:
-    tok = lexer.token()
-    if not tok:
-        break # No more input
-    print(tok)
+#Tokenize
+# while True:
+#     tok = lexer.token()
+#     if not tok:
+#         break # No more input
+#     print(tok)

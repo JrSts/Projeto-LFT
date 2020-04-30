@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from abc import ABCMeta
 from Visitor import Visitor
-import gramatica as gramatica
+from gramatica import gramatica
 class Exp(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
