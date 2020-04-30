@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from abc import ABCMeta
 from Visitor import Visitor
-import gramatica as gramatica
+from gramatica import*
 class Exp(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
@@ -80,10 +80,15 @@ class parameter(metaclass= ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class type(metaclass=ABCMeta):
+class  Compoundtype(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
+class SingleType(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
+
 class opType(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
@@ -267,7 +272,11 @@ class indexingSuffix(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class isuf(metaclass=ABCMeta):
+class SimpleIsuf(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass 
+class CompoundIsufIsuf(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass 
@@ -312,11 +321,27 @@ class parenthesizedExpression(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class collectionLiteral(metaclass=ABCMeta):
+class CollectionLiteral(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
+class SimpleCollectionLiteral(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
+class CompoundCollectionLiteral(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
 class cl(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
+class SimpleCl(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
+class CompoundCl(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass

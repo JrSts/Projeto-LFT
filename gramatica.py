@@ -6,6 +6,7 @@ from lex import tokens
 from lex import tokens
 import AbstrataClass as abstrat
 import os
+from ConcretaClass import *
 
 def p_kotlinFile(p):
     '''kotlinFile : functionDeclaration kotlinFile
@@ -36,14 +37,14 @@ def p_fd5(p):
             | '''
 def p_typeParameters(p):
     '''typeParameters : MENOR tps MAIOR'''
-    p[0] = TypeParameter(p[1], p[2], p[3])
+    p[0] = TypeParameters(p[1], p[2], p[3])
 
 def p_tps(p):
     '''tps : typeParameter
             | typeParameter COMMA tps
             | '''
     if len(p) == 2:
-        p[0] = SingleTps(p[1])
+        p[0] = SimpleTps(p[1])
     else:
         p[0] = CompoundTps(p[1], p[2], p[3])
 
@@ -63,9 +64,9 @@ def p_functionValueParameters(p):
     '''functionValueParameters : LPAREN fvps RPAREN
                                 | LPAREN RPAREN'''
     if len(p) == 3:
-        p[0] = SimpleFuncitionValueParameters(p[1], p[2])
+        p[0] = SingleFunctionValueParameters(p[1], p[2])
     else:
-        p[0] = CompoundFuncitionValueParameters(p[1], p[2], p[3])
+        p[0] = CompoundFunctionValueParameters(p[1], p[2], p[3])
 
 def p_fvps(p):
     ''' fvps : functionValueParameter
@@ -80,9 +81,9 @@ def p_functionValueParameter(p):
     ''' functionValueParameter : parameter ATRIBUICAO expression
                                   | parameter '''
     if len(p) == 2:
-        p[0] = SingleFunctionValueParameter(p[1])
+        p[0] = SingleFunctionValeuParameter(p[1])
     else:
-        p[0] = CompoundFunctionValueParameter(p[1], p[2], p[3])
+        p[0] = CompoundFunctionValeuParameter(p[1], p[2], p[3])
 
 def p_variableDeclaration(p):
     '''variableDeclaration :  simpleIdentifier DOISP type
@@ -91,7 +92,7 @@ def p_variableDeclaration(p):
     if len(p) == 2:
         p[0] = SimpleVariableDeclaration(p[1])
     else:
-        p[0] = CompoundVariebleDeclaration(p[1], p[2], p[3])
+        p[0] = CompoundVariableDeclaration(p[1], p[2], p[3])
 
 def p_multiVariableDeclaration(p):
     ''' multiVariableDeclaration : LPAREN mvd RPAREN'''
@@ -103,22 +104,22 @@ def p_mvd(p):
             |  variableDeclaration COMMA mvd
             | '''
 
-    if leg(p) == 2:
-        p[0] = SilgleMvd(p[1])
+    if len(p) == 2:
+        p[0] = SingleMvd(p[1])
     else:
         p[0] = CompoundMvd(p[1], p[2], p[3])
 
 def p_parameter(p):
     ''' parameter : simpleIdentifier DOISP type '''
-    p[0] = Parameter(p[1], p[2], p[3])
+    p[0] = parameter(p[1], p[2], p[3])
 
 def p_type(p):
     '''type : typeModifiers optype
               | optype '''
-    if leng(p) == 2:
+    if len(p) == 2:
         p[0] = SingleType(p[1])
     else:
-        p[0] = CompoundType(p[1], p[2])
+        p[0] = Compoundtype(p[1], p[2])
 
 ##############################################Duvida
 def p_opType(p):
@@ -146,7 +147,7 @@ def p_varianceModifier(p):
 
 def p_userType(p):
     ''' userType : simpleUserType '''
-    p[0] = UserType(p[1])
+    p[0] = userType(p[1])
 
 def p_simpleUserType(p):
     ''' simpleUserType : simpleIdentifier typeArguments
@@ -193,11 +194,11 @@ def p_ftp(p) :
 
 def p_parenthesizedType(p):
     '''parenthesizedType : LPAREN type RPAREN '''
-    p[0] = ParenthesizedType(p[1], p[2], p[3])
+    p[0] = parenthesizedType(p[1], p[2], p[3])
 
 def p_receiverType(p):
     '''receiverType : typeModifier rt '''
-    p[0] = ReceiverType(p[1], p[2])
+    p[0] = receiverType(p[1], p[2])
 ##########################################################Duvida
 def p_rt(p):
     '''rt : parenthesizedType'''
@@ -226,7 +227,7 @@ def p_controlStructureBody(p):
 
 def p_block(p):
     '''block : LCHAVE statements RCHAVE '''
-    p[0] = Block(p[1], p[2], p[3])
+    p[0] = block(p[1], p[2], p[3])
 
 ##########################################################Duvida
 
@@ -248,9 +249,9 @@ def p_forStatement_VD(p):
     '''forStatement_VD :  FOR LPAREN variableDeclaration IN expression RPAREN controlStructureBody
                       | FOR LPAREN variableDeclaration IN expression RPAREN '''
     if len(p) == 7:
-        p[0] = SimpleForStatement_MV(p[1], p[2], p[3], p[4], p[5], p[6])
+        p[0] = SimpleForStatement_VD(p[1], p[2], p[3], p[4], p[5], p[6])
     else:
-        p[0] = CompoundForStatement_MV(p[1], p[2], p[3], p[4], p[5], p[6], p[7])
+        p[0] = CompoundForStatement_VD(p[1], p[2], p[3], p[4], p[5], p[6], p[7])
 
 #############################################Duvida
 def p_whileStatement(p):
@@ -281,9 +282,9 @@ def p_disjunction(p):
     ''' disjunction : conjunction
                      | conjunction OR disjunction '''
     if len(p) == 2:
-        p[0] = SimpleDisjuntion(p[1])
+        p[0] = SimpleDisjunction(p[1])
     else:
-        p[0] = CompoundDisjuntion(p[1], p[2], p[3])
+        p[0] = CompoundDisjunction(p[1], p[2], p[3])
 
 def p_conjunction(p):
     '''conjunction : equality
@@ -311,7 +312,7 @@ def p_comparison(p):
 
 def p_infixOperation(p):
     '''infixOperation : elvisExpression io '''
-    p[0] = InfixOperation(p[1], p[2])
+    p[0] = infixOperation(p[1], p[2])
 
 ######################################################Duvida
 def p_io(p):
@@ -404,7 +405,7 @@ def p_posue(p):
     ''' posue : postfixUnarySuffix
                 | postfixUnarySuffix posue '''
     if len(p) == 2:
-        SimplePosue(p[1])
+        SinglePosue(p[1])
     else:
         CompoundPosue(p[1], p[2])
 
@@ -425,7 +426,7 @@ def p_directlyAssignableExpression(p):
 
 def p_parenthesizedDirectlyAssignableExpression(p):
     ''' parenthesizedDirectlyAssignableExpression : LPAREN directlyAssignableExpression RPAREN '''
-    p[0] = ParenthesizedDirectlyAssignableExpression(p[1], p[2], p[3])
+    p[0] = parenthesizedDirectlyAssignableExpression(p[1], p[2], p[3])
 
 ###########################################################duvida
 def p_assignableExpression(p):
@@ -535,9 +536,9 @@ def p_collectionLiteral(p):
     ''' collectionLiteral : LCCT cl RCCT
                              | LCCT RCCT '''
     if len(p) == 3:
-        SimpleColetionLiteral(p[1], p[2])
+       p[0]= SimpleCollectionLiteral(p[1], p[2])
     else:
-        CompoundColetionLiteral(p[1], p[2], p[3])
+       p[0]= CompoundCollectionLiteral(p[1], p[2], p[3])
 
 def p_cl(p):
     ''' cl : expression
@@ -545,7 +546,7 @@ def p_cl(p):
     if len(p) == 2:
         SimpleCl(p[1])
     else:
-        CompoundCol(p[1], p[2])
+        CompoundCl(p[1], p[2])
 
 
 def p_parametersWithOptionalType(p):
@@ -717,9 +718,9 @@ def p_asOperator(p):
     ''' asOperator : AS
                  | AS asOperator '''
     if len(p) == 2:
-        p[0] = SimpleAsOperation(p[1])
+        p[0] = SimpleAsOperator(p[1])
     else:
-        p[0] = CompoundAsOperation(p[1], p[2])
+        p[0] = CompoundAsOperator(p[1], p[2])
         
 # DUVIDA
 def p_prefixUnaryOperator(p):
@@ -745,7 +746,7 @@ def p_memberAccessOperator(p):
 
 def p_safeNav(p):
     ''' safeNav : PONTO  '''
-    p[0] = SafeNav(p[1])
+    p[0] = safeNav(p[1])
 
 # Identifiers
 # olhar tokens
