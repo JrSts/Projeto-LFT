@@ -1447,7 +1447,7 @@ class af4(anonymousFunction):
          visitor.visitaf4(self)
 ########################################################################
 
-class CallLamdaLiteral():
+class CallLambdaLiteral():
     def __init__(self, lambdaLiteral):
         self.lambdaLiteral = lambdaLiteral
     def accept(self, visitor):

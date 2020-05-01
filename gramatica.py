@@ -8,6 +8,7 @@ import AbstrataClass as abstrat
 import os
 import ConcretaClass
 from ConcretaClass import *
+from AbstrataClass import assignmentAndOperator
 
 ###########################################################
 def p_kotlinFile(p):
@@ -245,14 +246,7 @@ def p_statement(p):
                   | assignment
                   | loopStatement
                   | expression '''
-    if isinstance(p[1], CallFunctionDeclaration):
-        p[0] = CallFunctionDeclaration(p[1])
-    elif isinstance(p[1], CallAssignment):
-        p[0] = CallAssignment(p[1])
-    elif isinstance(p[1], CallLoopStatement):
-        p[0] = CallLoopStatement(p[1])
-    elif isinstance(p[1], CallExpression):
-        p[0] = CallExpression(p[1])
+    p[0]=p[1]
 ########################################################################
 
 def p_controlStructureBody(p):
@@ -268,20 +262,13 @@ def p_block(p):
     '''block : LCHAVE statements RCHAVE '''
     p[0] = block(p[1], p[2], p[3])
 ########################################################################
-
+#este tipo de padrao ocorrem quando um variavel vai para outro tipos de variareis 
 def p_loopStatement(p):
     '''loopStatement : forStatement_MD
                     | forStatement_VD
                     | whileStatement
                     | doWhileStatement '''
-    if isinstance(p[1], CallForStatement_MD):
-        p[0] = CallForStatement_MD(p[1])
-    elif isinstance(p[1], CallForStatement_VD):
-        p[0] = CallForStatement_VD(p[1])
-    elif isinstance(p[1], CallWhileStatement):
-        p[0] = CallWhileStatement(p[1])
-    elif isinstance(p[1], CallDoWhileStatement):
-        p[0] = CallDoWhileStatement(p[1])
+    p[0]=p[1]
 ########################################################################
 
 def p_forStatement_MD(p):
@@ -900,9 +887,11 @@ def p_assignmentAndOperator(p):
                                | MULTIGUAL
                                | DIVIGUAL
                                | MODIGUAL	'''
-    if isinstance(p[1], CallMAISIGUAL):
+    p[0]=p[1]
+    p[0]= assignmentAndOperator(p[1])
+    if  p[1]=='+=':
         P[0] = CallMAISIGUAL(p[1])
-    elif isinstance(p[1], CallMENOSIGUAL):
+    elif p[1]=='-=':
         P[0] = CallMENOSIGUAL(p[1])
     elif isinstance(p[1], CallMULTIGUAL):
         P[0] = CallMULTIGUAL(p[1])
@@ -1026,8 +1015,8 @@ def p_memberAccessOperator(p):
         p[0] = CallPonto(p[1])
     elif isinstance(p[1], CallSafenav):
         p[0] = CallSafenav(p[1])
-    elif isinstance(p[1], CallCollonColon):
-        p[0] = CallCollonCollon(p[1])
+    elif isinstance(p[1], CallColonColon):
+        p[0] = CallColonColon(p[1])
 ########################################################################
 
 def p_safeNav(p):
