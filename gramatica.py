@@ -6,8 +6,10 @@ from lex import tokens
 from lex import tokens
 import AbstrataClass as abstrat
 import os
+import ConcretaClass
 from ConcretaClass import *
 
+###########################################################
 def p_kotlinFile(p):
     '''kotlinFile : functionDeclaration kotlinFile
 					| functionDeclaration'''
@@ -16,53 +18,30 @@ def p_kotlinFile(p):
         p[0] = SingleFunctionDeclaration(p[1])
     else:
         p[0] = CompoundFunctionDeclaration(p[1], p[2])
+###########################################################
 
 def p_functionDeclaration(p):
-  ''' functionDeclaration : FUN fd1 fd2 simpleIdentifier functionValueParameters fd3 fd5 '''
+    ''' functionDeclaration : FUN simpleIdentifier functionValueParameters DOISP type block
+                            | FUN simpleIdentifier functionValueParameters block
+                            | FUN simpleIdentifier functionValueParameters DOISP type
+                            | FUN simpleIdentifier functionValueParameters '''
 
-def p_fd1(p):
-    ''' fd1 : typeParameters
-            | '''
 
-def p_fd2(p):
-    ''' fd2 : receiverType PONTO
-            | '''
-
-def p_fd3(p):
-    ''' fd3 : DOISP type
-            | '''
-
-def p_fd5(p):
-    ''' fd5 : functionBody
-            | '''
-def p_typeParameters(p):
-    '''typeParameters : MENOR tps MAIOR'''
-    p[0] = TypeParameters(p[1], p[2], p[3])
-
-def p_tps(p):
-    '''tps : typeParameter
-            | typeParameter COMMA tps
-            | '''
-    if len(p) == 2:
-        p[0] = SimpleTps(p[1])
-    else:
-        p[0] = CompoundTps(p[1], p[2], p[3])
-
-def p_typeParameter(p):
-    '''typeParameter : simpleIdentifier DOISP type
-                      | simpleIdentifier'''
-    if len(p) == 2:
-        p[0] = SingleTypeParameter(p[1])
-    else:
-        p[0] = CompoundTypeParameter(p[1], p[2], p[3])
+###########################################################
 
 def p_functionBody(p):
     ''' functionBody : block
                     | ATRIBUICAO expression '''
+    if len(p) == 2:
+        p[0] = SimpleFunctionBody(p[1])
+    else:
+         p[0] = CompoundFunctionBody(p[1], p[2])
 
-def p_functionValueParameters(p):
+###########################################################
+
+def p_functionValueParameters(p): 
     '''functionValueParameters : LPAREN fvps RPAREN
-                                | LPAREN RPAREN'''
+                                | LPAREN RPAREN '''
     if len(p) == 3:
         p[0] = SingleFunctionValueParameters(p[1], p[2])
     else:
@@ -70,13 +49,16 @@ def p_functionValueParameters(p):
 
 def p_fvps(p):
     ''' fvps : functionValueParameter
-                | functionValueParameter COMMA fvps
-                | '''
+                | functionValueParameter COMMA fvps 
+                | functionValueParameter fvps '''
     if len(p) == 2:
         p[0] = SingleFvps(p[1])
+    elif len(p) == 3:
+        p[0] = CompoundFvps(p[1], p[2])
     else:
-        p[0] = CompoundFvps(p[1], p[2], p[3])
+        p[0] = COMMAFvps(p[1], p[2], p[3])
 
+#########################################################################
 def p_functionValueParameter(p):
     ''' functionValueParameter : parameter ATRIBUICAO expression
                                   | parameter '''
@@ -84,7 +66,7 @@ def p_functionValueParameter(p):
         p[0] = SingleFunctionValeuParameter(p[1])
     else:
         p[0] = CompoundFunctionValeuParameter(p[1], p[2], p[3])
-
+########################################################################
 def p_variableDeclaration(p):
     '''variableDeclaration :  simpleIdentifier DOISP type
                             | simpleIdentifier '''
@@ -93,61 +75,83 @@ def p_variableDeclaration(p):
         p[0] = SimpleVariableDeclaration(p[1])
     else:
         p[0] = CompoundVariableDeclaration(p[1], p[2], p[3])
-
+#####################################################################
 def p_multiVariableDeclaration(p):
-    ''' multiVariableDeclaration : LPAREN mvd RPAREN'''
-    
-    p[0] = MultiVariableDeclaration(p[1], p[2], p[3])
+    ''' multiVariableDeclaration : LPAREN mvd RPAREN
+                                | LPAREN RPAREN'''
+    if len(p) == 3:
+        p[0] = SimpleMultiVariableDeclaration(p[1], p[2])
+    else:
+        p[0] = CompoundMultiVariableDeclaration(p[1], p[2], p[3])
+#####################################################################
 
 def p_mvd(p):
     '''mvd : variableDeclaration
-            |  variableDeclaration COMMA mvd
-            | '''
-
+            |  variableDeclaration COMMA mvd'''
     if len(p) == 2:
-        p[0] = SingleMvd(p[1])
+        p[0] = SimpleMvd(p[1])
     else:
         p[0] = CompoundMvd(p[1], p[2], p[3])
+#######################################################################
 
 def p_parameter(p):
     ''' parameter : simpleIdentifier DOISP type '''
-    p[0] = parameter(p[1], p[2], p[3])
-
+    p[0] = Parameter(p[1], p[2], p[3])
+######################################################################
 def p_type(p):
     '''type : typeModifiers optype
               | optype '''
     if len(p) == 2:
-        p[0] = SingleType(p[1])
+        p[0] = SimpleType(p[1])
     else:
         p[0] = Compoundtype(p[1], p[2])
+#####################################################################
 
-##############################################Duvida
 def p_opType(p):
     '''optype : parenthesizedType
                 | functionType
                 | userType '''
     
+    if isinstance(p[1], CallParenthesizedType):
+        p[0] = CallParenthesizedType(p[1])
+    elif isinstance(p[0], CallFunctionType):
+        p[0] = CallFunctionType(p[1])
+    elif isinstance(p[0], CallUserType):
+        p[0] = CallUserType(p[1])
+######################################################################
 
 def p_typeModifiers(p) : 
-  '''typeModifiers : typeModifier
+    '''typeModifiers : typeModifier
                     | typeModifier typeModifiers '''
-  
+    if len(p) == 2:
+         p[0] = SimpleTypeModifiers(p[1])
+    else:
+        p[0] = CompoundTypeModifiers(p[1], p[2])
+########################################################################
+
 def p_typeModifier(p):
     ''' typeModifier : SUSPEND '''
-
+    p[0] = TypeModifier(p[1])
+########################################################################
  
 def p_typeProjectionModifier(p):
     ''' typeProjectionModifier : varianceModifier '''
-
+    p[0] = TypeProjectionModifier(p[1])
+########################################################################
 
 def p_varianceModifier(p): 
     ''' varianceModifier : IN
                         | OUT '''
-
+    if isinstance(p[1], CallIn):
+        p[0] = CallInp[1]
+    elif isinstance(p[1], CallOut):
+        p[0] = CallOut(p[1])
+########################################################################
 
 def p_userType(p):
     ''' userType : simpleUserType '''
     p[0] = userType(p[1])
+########################################################################
 
 def p_simpleUserType(p):
     ''' simpleUserType : simpleIdentifier typeArguments
@@ -156,6 +160,7 @@ def p_simpleUserType(p):
         p[0] = SimpleSimpleUserType(p[1])
     else:
         p[0] = CompoundSimpleUserType(p[1], p[2])
+########################################################################
 
 def p_typeProjection(p):
     '''typeProjection : typeProjectionModifiers type
@@ -164,6 +169,7 @@ def p_typeProjection(p):
         p[0] = SimpleTypeProjection(p[1])
     else:
         p[0] = CompoundTypeProjection(p[1], p[2])
+########################################################################
 
 def p_typeProjectionModifiers(p):
     '''typeProjectionModifiers : typeProjection
@@ -172,6 +178,7 @@ def p_typeProjectionModifiers(p):
         p[0] = SimpleTypeProjectionModifiers(p[1])
     else:
         p[0] = CompoundTypeProjectionModifiers(p[1], p[2])
+########################################################################
 
 def p_functionType(p):
     '''functionType : receiverType PONTO functionTypeParameters SETA type
@@ -180,62 +187,102 @@ def p_functionType(p):
         p[0] = SimpleFunctionType(p[1], p[2], p[3])
     else:
         p[0] = CompoundFunctionType(p[1], p[2], p[3], p[4], p[5])
+########################################################################
 
-def p_functionTypeParameters(p):
-    ''' functionTypeParameters : LPAREN parameter ftp RPAREN
-                                | LPAREN parameter ftp COMMA RPAREN
-                                | LPAREN type ftp RPAREN
-                                | LPAREN type ftp COMMA RPAREN  '''
+def p_functionTypeParameters_p(p):
+    ''' functionTypeParameters_p : LPAREN parameter ftp RPAREN
+                                 | LPAREN parameter RPAREN '''
+    if len(p) == 4:
+        p[0] = SimpleFunctionTypeParameters_p(p[1], p[2], p[3])
+    else:
+        p[0] = CompoundFunctionTypeParameters_p(p[1], p[2], p[3], p[4])
+########################################################################
+
+def p_functionTypeParameters_t(p):
+    ''' functionTypeParameters_t : LPAREN type RPAREN                                
+                                 | LPAREN type ftp RPAREN '''
+    if len(p) == 4:
+        p[0] = SimpleFunctionTypeParameters_t(p[1], p[2], p[3])
+    else:
+        p[0] = CompoundFunctionTypeParameters_t(p[1], p[2], p[3], p[4])
+########################################################################
 
 def p_ftp(p) :
-	  ''' ftp : COMMA parameter
-		  	  | COMMA type
-			  | '''
+    ''' ftp : COMMA parameter
+		    | COMMA type '''
+    if isinstance(p[2], CallParameter):
+        p[0] = CallParameter(p[1], p[2])
+    elif isinstance(p[2], CallType):
+        p[0] = CallType(p[1], p[2])
+########################################################################
 
 def p_parenthesizedType(p):
     '''parenthesizedType : LPAREN type RPAREN '''
     p[0] = parenthesizedType(p[1], p[2], p[3])
+########################################################################
 
 def p_receiverType(p):
     '''receiverType : typeModifier rt '''
     p[0] = receiverType(p[1], p[2])
-##########################################################Duvida
+########################################################################
+
 def p_rt(p):
     '''rt : parenthesizedType'''
+    p[0] = rt(p[1])
+########################################################################
 
 def p_statements(p):
     '''statements : statement
-                  | statement statements
-                  | '''
+                  | statement statements '''
     if len(p) == 2:
         p[0] = SimpleStatements(p[1])
     else:
         p[0] = CompoundStatements(p[1], p[2])
+########################################################################
 
-##########################################################Duvida
 def p_statement(p):
     '''statement : functionDeclaration
                   | assignment
                   | loopStatement
                   | expression '''
-
+    if isinstance(p[1], CallFunctionDeclaration):
+        p[0] = CallFunctionDeclaration(p[1])
+    elif isinstance(p[1], CallAssignment):
+        p[0] = CallAssignment(p[1])
+    elif isinstance(p[1], CallLoopStatement):
+        p[0] = CallLoopStatement(p[1])
+    elif isinstance(p[1], CallExpression):
+        p[0] = CallExpression(p[1])
+########################################################################
 
 def p_controlStructureBody(p):
     '''controlStructureBody : block
                           | statement'''
-
+    if isinstance(p[1], CallBlock):
+        p[0] = CallBlock(p[1])
+    elif isinstance(p[1], CallStatement):
+        p[0] = CallStatement(p[1])
+########################################################################
 
 def p_block(p):
     '''block : LCHAVE statements RCHAVE '''
     p[0] = block(p[1], p[2], p[3])
-
-##########################################################Duvida
+########################################################################
 
 def p_loopStatement(p):
     '''loopStatement : forStatement_MD
                     | forStatement_VD
                     | whileStatement
                     | doWhileStatement '''
+    if isinstance(p[1], CallForStatement_MD):
+        p[0] = CallForStatement_MD(p[1])
+    elif isinstance(p[1], CallForStatement_VD):
+        p[0] = CallForStatement_VD(p[1])
+    elif isinstance(p[1], CallWhileStatement):
+        p[0] = CallWhileStatement(p[1])
+    elif isinstance(p[1], CallDoWhileStatement):
+        p[0] = CallDoWhileStatement(p[1])
+########################################################################
 
 def p_forStatement_MD(p):
     '''forStatement_MD : FOR LPAREN multiVariableDeclaration IN expression RPAREN controlStructureBody
@@ -244,6 +291,7 @@ def p_forStatement_MD(p):
         p[0] = SimpleForStatement_MD(p[1], p[2], p[3], p[4], p[5], p[6])
     else:
         p[0] = CompoundForStatement_MD(p[1], p[2], p[3], p[4], p[5], p[6], p[7])
+########################################################################
 
 def p_forStatement_VD(p):
     '''forStatement_VD :  FOR LPAREN variableDeclaration IN expression RPAREN controlStructureBody
@@ -253,12 +301,16 @@ def p_forStatement_VD(p):
     else:
         p[0] = CompoundForStatement_VD(p[1], p[2], p[3], p[4], p[5], p[6], p[7])
 
-#############################################Duvida
+########################################################################
 def p_whileStatement(p):
     ''' whileStatement : WHILE LPAREN expression RPAREN controlStructureBody
                       |  WHILE LPAREN expression RPAREN PV '''
 
-
+    if isinstance(p[5], CallPv):
+        p[0] = CallPv(p[1], p[2], p[3], p[4], p[5])
+    elif isinstance(p[5], CallCSB):
+        p[0] = CallCSB(p[1], p[2], p[3], p[4], p[5])
+########################################################################
 def p_doWhileStatement(p):
     ''' doWhileStatement : DO controlStructureBody WHILE LPAREN expression RPAREN
                           | DO WHILE LPAREN expression RPAREN '''
@@ -267,16 +319,21 @@ def p_doWhileStatement(p):
     else:
         p[0] = CompoundDoWhileStatement(p[1], p[2], p[3], p[4], p[5], p[6])
 
-#############################################Duvida
+########################################################################
 
 def p_assignment(p):
     '''assignment : directlyAssignableExpression IGUALDADE expression
                   | assignableExpression assignmentAndOperator expression '''
-
+    if isinstance(p[2], CallIgualdade):
+        p[0] = CallIgualdade(p[1], p[2], p[3])
+    elif isinstance(p[2], CallAssignAndOperator):
+         p[0] = CallAssignAndOperator(p[1], p[2], p[3])
+########################################################################
 
 def p_expression(p):
     ''' expression : disjunction '''
     p[0] = Expression(p[1])
+########################################################################
 
 def p_disjunction(p):
     ''' disjunction : conjunction
@@ -285,6 +342,7 @@ def p_disjunction(p):
         p[0] = SimpleDisjunction(p[1])
     else:
         p[0] = CompoundDisjunction(p[1], p[2], p[3])
+########################################################################
 
 def p_conjunction(p):
     '''conjunction : equality
@@ -293,6 +351,7 @@ def p_conjunction(p):
         p[0] = SimpleConjunction(p[1])
     else:
         p[0] = CompoundConjunction(p[1], p[2], p[3])
+########################################################################
 
 def p_equality(p):
     ''' equality : comparison
@@ -301,6 +360,7 @@ def p_equality(p):
         p[0] = SimpleEquality(p[1])
     else:
         p[0] = CompoundEquality(p[1], p[2], p[3])
+########################################################################
 
 def p_comparison(p):
     ''' comparison : infixOperation
@@ -309,26 +369,40 @@ def p_comparison(p):
         p[0] = SimpleComparison(p[1])
     else:
         p[0] = CompoundComparison(p[1], p[2], p[3])
+########################################################################
 
 def p_infixOperation(p):
-    '''infixOperation : elvisExpression io '''
-    p[0] = infixOperation(p[1], p[2])
+    '''infixOperation : elvisExpression io 
+                        | elvisExpression'''
+    if len(p) == 2:
+        p[0] = SimpleInfixOperation(p[1])
+    else:
+        p[0] = CompoundInfixOperation(p[1], p[2])
+########################################################################
 
-######################################################Duvida
 def p_io(p):
     '''io : inOperator elvisExpression
-            | isOperator type
-            | '''
+            | inOperator elvisExpression io
+            | isOperator type 
+            | isOperator type io '''
+    if len(p) == 3 and isinstance(p[1], CallIsOperator):
+        p[0] = CallIsOperator(p[1],p[2])
+    elif len(p) == 3 and isinstance(p[1], CallInOperator):
+        p[0] = CallInOperator(p[1],p[2])
+    elif len(p) == 4 and isinstance(p[1], CallIsOperator):
+        p[0] = CallIsOperator(p[1],p[2], p[3])
+    elif len(p) == 4 and isinstance(p[1], CallInOperator):
+        p[0] = CallInOperator(p[1],p[2], p[3])
+########################################################################
 
 def p_elvisExpression(p):
     ''' elvisExpression : infixFunctionCall
-                          | infixFunctionCall ELVIS elvisExpression
-                          | '''
+                          | infixFunctionCall ELVIS elvisExpression '''
     if len(p) == 2:
         SimpleElvisExpression(p[1])
     else:
         CompoundElvisExpression(p[1], p[2], p[3])
-
+########################################################################
 
 def p_infixFunctionCall(p):
     '''infixFunctionCall : rangeExpression
@@ -337,9 +411,8 @@ def p_infixFunctionCall(p):
         SimpleInfixFunctionCall(p[1])
     else:
         CompoundInfixFunctionCall(p[1], p[2], p[3])
+########################################################################
 
-
-# MAIS UM OPERADOR '..' PONTOPONTO (PESQUISAR SOBRE)
 def p_rangeExpression(p):
     ''' rangeExpression : additiveExpression
 						| additiveExpression PONTOPONTO rangeExpression '''
@@ -347,6 +420,7 @@ def p_rangeExpression(p):
         SimpleRangeExpression(p[1])
     else:
         CompoundRangeExpression(p[1], p[2], p[3])
+########################################################################
 
 def p_additiveExpression(p):
     ''' additiveExpression : multiplicativeExpression
@@ -355,6 +429,7 @@ def p_additiveExpression(p):
         SimpleAdditiveExpression(p[1])
     else:
         CompoundAdditiveExpression(p[1], p[2], p[3])
+########################################################################
 
 def p_multiplicativeExpression(p):
     ''' multiplicativeExpression : asExpression
@@ -363,6 +438,7 @@ def p_multiplicativeExpression(p):
         SimpleMultiplicativeExpression(p[1])
     else:
         CompoundMultiplicativeExpression(p[1], p[2], p[3])
+########################################################################
 
 def p_asExpression(p):
     ''' asExpression : prefixUnaryExpression
@@ -371,27 +447,40 @@ def p_asExpression(p):
         SimpleAsExpression(p[1])
     else:
         CompoundAsExpression(p[1], p[2], p[3])
+########################################################################
 
 def p_prefixUnaryExpression(p):
-    ''' prefixUnaryExpression : preue postfixUnaryExpression '''
-    p[0] = PrefixUnaryExpression(p[0], p[1])
+    ''' prefixUnaryExpression : preue postfixUnaryExpression 
+                                | postfixUnaryExpression '''
+    if len(p) == 2:
+        p[0] = SimplePrefixUnaryExpression(p[1])
+    else:
+        p[0] = CompoundPrefixUnaryExpression(p[1], p[2])
+########################################################################
 
 def p_preue(p):
     ''' preue : unaryPrefix
-            | unaryPrefix preue
-            | '''
+            | unaryPrefix preue '''
     if len(p) == 2:
         SimplePreue(p[1])
     else:
         CompoundPreue(p[1], p[2])
 
-#############################################################duvida
+####################################################################
+
 def p_unaryPrefix(p):
     ''' unaryPrefix : label
                        | prefixUnaryOperator '''
+    if isinstance(p[1], CallLable):
+        p[0] = CallLabel(p[1])
+    elif isinstance(p[1], CallPrefixUnaryOperator):
+        p[0] = CallPrefixUnaryOperator(p[1])
+########################################################################      
 
 def p_label(p):
     ''' label : simpleIdentifier'''
+    p[0] = Lable(p[1])
+########################################################################
 
 def p_postfixUnaryExpression(p):
     ''' postfixUnaryExpression : primaryExpression
@@ -400,6 +489,7 @@ def p_postfixUnaryExpression(p):
         SimplePostfixUnaryExpression(p[1])
     else:
         CompoundPostfixUnaryExpression(p[1], p[2])
+########################################################################
 
 def p_posue(p):
     ''' posue : postfixUnarySuffix
@@ -408,30 +498,53 @@ def p_posue(p):
         SinglePosue(p[1])
     else:
         CompoundPosue(p[1], p[2])
+########################################################################
 
-#####################################################duvida
 def p_postfixUnarySuffix(p):
     ''' postfixUnarySuffix : postfixUnaryOperator
                                | typeArguments
                                | callSuffix
                                | indexingSuffix
                                | navigationSuffix '''
-
-
+    if isinstance(p[1], CallPostfixUnaryOperator):
+        p[0] = CallPostfixUnaryOperator(p[1])
+    elif isinstance(p[1], CallTypeArguments):
+        p[0] = CallTypeArguments(p[1])
+    elif isinstance(p[1], CallCallSuffix):
+        p[0] = CallCallSuffix(p[1])
+    elif isinstance(p[1], CallNavigationSuffix):
+        p[0] = CallNavigationSuffix(p[1])
+    elif isinstance(p[1], CallIndexingSuffix):
+        p[0] = CallIndexingSuffix(p[1])
+########################################################################
+        
 def p_directlyAssignableExpression(p):
     ''' directlyAssignableExpression : postfixUnaryExpression assignableSuffix
                                        | simpleIdentifier
                                        | parenthesizedDirectlyAssignableExpression '''
+    if len(p) == 3:
+        p[0] = SimpleDirectlyAssignableExpression(p[1], p[2])
+    elif isinstance(p[1], CallSimpleIdentifier):
+        p[0] = CallSimpleIdentifier(p[1])
+    elif isinstance(p[1], CallParenthesizedDirectlyAssignableExpression):
+        p[0] = CallParenthesizedDirectlyAssignableExpression(p[1])
+########################################################################
 
 
 def p_parenthesizedDirectlyAssignableExpression(p):
     ''' parenthesizedDirectlyAssignableExpression : LPAREN directlyAssignableExpression RPAREN '''
-    p[0] = parenthesizedDirectlyAssignableExpression(p[1], p[2], p[3])
+    p[0] = ParenthesizedDirectlyAssignableExpression(p[1], p[2], p[3])
 
-###########################################################duvida
+########################################################################
+
 def p_assignableExpression(p):
     ''' assignableExpression : prefixUnaryExpression
                               | parenthesizedAssignableExpression '''
+    if isinstance(p[1], CallPrefixUnaryExpression):
+        p[0] = CallPrefixUnaryExpression(p[1])
+    elif isinstance(p[1], CallParenthesizedAssignableExpression):
+        p[0] = CallParenthesizedAssignableExpression(p[1])
+########################################################################
 
 def p_parenthesizedAssignableExpression(p):
     ''' parenthesizedAssignableExpression : LPAREN assignableExpression RPAREN '''
@@ -441,17 +554,27 @@ def p_parenthesizedAssignableExpression(p):
 def p_assignableSuffix(p):
     ''' assignableSuffix : typeArguments
                             | indexingSuffix
-                            | navigationSuffix'''
+                            | navigationSuffix '''
+    if isinstance(p[1], CallTypeArguments):
+        p[0] = CallTypeArguments(p[1])
+    elif isinstance(p[1], CallIndexingSuffix):
+        p[0] = CallIndexingSuffix(p[1])
+    if isinstance(p[1], CallNavigationSuffix):
+        p[0] = CallNavigationSuffix(p[1])
+########################################################################
 
-# NOVO TOKEN '[', ']' LCCT E RCCT
 def p_indexingSuffix(p):
-    ''' indexingSuffix : LCCT isuf RCCT '''
-    p[0] = IndexingSuffix(p[1], p[2], p[3])
+    ''' indexingSuffix : LCCT isuf RCCT 
+                        | LCCT RCCT'''
+    if len(p) == 3:
+        p[0] = SimpleIndexingSuffix(p[1], p[2])
+    else:
+        p[0] = CompoundIndexingSuffix(p[1], p[2], p[3])
+########################################################################
 
 def p_isuf(p):
     ''' isuf : expression
-				| expression COMMA isuf
-				| '''
+				| expression COMMA isuf '''
     if len(p) == 2:
         SimpleIsuf(p[1])
     else:
@@ -461,7 +584,11 @@ def p_isuf(p):
 def p_navigationSuffix(p):
     ''' navigationSuffix : memberAccessOperator simpleIdentifier CLASS
                          | memberAccessOperator parenthesizedExpression CLASS '''
-
+    if isinstance(p[2], CallSimpleIdentifier):
+        p[0] = CallSimpleIdentifier(p[1], p[2], p[3])
+    elif isinstance(p[2], CallParenthesizedExpression):
+        p[0] = CallSimpleIdentifier(p[1], p[2], p[3])
+########################################################################
 
 def p_callSuffix(p):
     '''callSuffix : typeArguments valueArguments annotatedLambda
@@ -470,24 +597,42 @@ def p_callSuffix(p):
                      | annotatedLambda
                      | typeArguments valueArguments
                      | valueArguments '''
-
+    if isinstance(p[2], CallValueArguments) and len(p) == 4:
+        p[0] = CallValueArguments(p[1], p[2], p[3])
+    elif isinstance(p[2], CallValueArguments)  and len(p) == 3:
+        p[0] = CallValueArguments(p[1], p[2])
+    elif isinstance(p[1], CallValueArguments)  and len(p) == 3:
+        p[0] = CallValueArguments(p[1], p[2])
+    elif isinstance(p[2], CallValueArguments)  and len(p) == 2:
+        p[0] = CallValueArguments(p[1])
+    elif isinstance(p[1], CallAnnotatedLambda)  and len(p) == 2:
+        p[0] = CallAnnotatedLambda(p[1])
+    elif isinstance(p[2], CallAnnotatedLambda2)  and len(p) == 3:
+        p[0] = CallAnnotatedLambda2(p[1], p[2])
+########################################################################
 
 def p_annotatedLambda(p):
     ''' annotatedLambda : lambdaLiteral '''
     p[0] = AnnotatedLambda(p[1])
+########################################################################
 
 def p_typeArguments(p):
-    ''' typeArguments : MENOR ta MAIOR'''
-    p[0] = TypeArguments(p[1], p[2], p[3])
+    ''' typeArguments : MENOR ta MAIOR
+                        | MENOR MAIOR'''
+    if len(p) == 3:
+        p[0] = SimpleTypeArguments(p[1], p[2])
+    else:
+        p[0] = CompoundTypeArguments(p[1], p[2], p[3])
+########################################################################
 
 def p_ta(p):
     ''' ta : typeProjection
-            | typeProjection COMMA ta
-            | '''
+            | typeProjection COMMA ta '''
     if len(p) == 2:
         SimpleTa(p[1])
     else:
         CompoundTa(p[1], p[2], p[3])
+########################################################################
 
 def p_valueArguments(p):
     '''valueArguments : LPAREN RPAREN
@@ -496,6 +641,7 @@ def p_valueArguments(p):
         SimpleValueArguments(p[1], p[2])
     else:
         CompoundValueArguments(p[1], p[2], p[3])
+########################################################################
 
 def p_vas(p):
     ''' vas : valueArgument
@@ -504,6 +650,7 @@ def p_vas(p):
         SimpleVas(p[1])
     else:
         CompoundVas(p[1], p[2], p[3])
+########################################################################
 
 def p_valueArgument(p):
     ''' valueArgument : simpleIdentifier IGUALDADE MULT expression
@@ -515,8 +662,8 @@ def p_valueArgument(p):
         Compound1ValueArgument(p[1], p[2].p[3])
     else:
         Compound2ValueArgument(p[1], p[2], p[3], p[4])
+########################################################################
 
-###############################################duvida
 def p_primaryExpression(p):
     ''' primaryExpression : parenthesizedExpression
                            | simpleIdentifier
@@ -527,10 +674,35 @@ def p_primaryExpression(p):
                            | ifExpression
                            | jumpExpression '''
 
+    if isinstance(p[1], CallParenthesizedExpression):
+        p[0] = CallParenthesizedExpression(p[1])
+
+    if isinstance(p[1], CallSimpleIdentifier):
+        p[0] = CallSimpleIdentifier(p[1])
+
+    if isinstance(p[1], CallLITERAL_STRING):
+        p[0] = CallLITERAL_STRING(p[1])
+ 
+    if isinstance(p[1], CallFunctionLiteral):
+        p[0] = CallFunctionLiteral(p[1])
+
+    if isinstance(p[1], CallCallableReference):
+        p[0] = CallCallableReference(p[1])
+
+    if isinstance(p[1], CallCollectionLiteral):
+        p[0] = CallCollectionLiteral(p[1])
+
+    if isinstance(p[1], CallIfExpression):
+        p[0] = CallIfExpression(p[1])
+
+    if isinstance(p[1], CallJumpExpression):
+        p[0] = CallJumpExpression(p[1])
+########################################################################
 
 def p_parenthesizedExpression(p):
     ''' parenthesizedExpression : LPAREN expression RPAREN '''
     p[0] = ParenthesizedExpression(p[1], p[2], p[3])
+########################################################################
 
 def p_collectionLiteral(p):
     ''' collectionLiteral : LCCT cl RCCT
@@ -539,6 +711,7 @@ def p_collectionLiteral(p):
        p[0]= SimpleCollectionLiteral(p[1], p[2])
     else:
        p[0]= CompoundCollectionLiteral(p[1], p[2], p[3])
+########################################################################
 
 def p_cl(p):
     ''' cl : expression
@@ -547,22 +720,33 @@ def p_cl(p):
         SimpleCl(p[1])
     else:
         CompoundCl(p[1], p[2])
+########################################################################
 
 
 def p_parametersWithOptionalType(p):
-    ''' parametersWithOptionalType : LPAREN pwot RPAREN'''
+    ''' parametersWithOptionalType : LPAREN pwot RPAREN
+                                    | LPAREN RPAREN '''
+    if len(p) == 3:
+        p[0] = SingleParametersWithOptionalType(p[1], p[2])
+    else:
+         p[0] = CompoundParametersWithOptionalType(p[1], p[2], p[3])
+########################################################################
     
 def p_pwot(p):
     ''' pwot : parameterWithOptionalType 
-            | parameterWithOptionalType COMMA pwot COMMA
-            | '''
+            | parameterWithOptionalType COMMA pwot COMMA '''
+    if len(p) == 2:
+        p[0] = SimplePwot(p[1])
+    else:
+        p[0] = CompoundPwot(p[1], p[2], p[3], p[4])
+########################################################################
 
 def p_parameterWithOptionalType(p):
     ''' parameterWithOptionalType : parameterModifiers simpleIdentifier DOISP type
                                     | simpleIdentifier DOISP type
                                     | parameterModifiers simpleIdentifier
                                     | simpleIdentifier '''
-
+        
 def p_parameterModifiers(p):
     ''' parameterModifiers :  VARARG
                             | NOINLINE

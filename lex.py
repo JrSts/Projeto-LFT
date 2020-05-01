@@ -222,7 +222,7 @@ lexer = lex.lex()
 
 # Test it out
 data = r'''
-fun Int main (Int argc, palavra argv[] ){
+fun main (Int argc, palavra argv[] ){
     Int i,j,t
     Char a[n]
     var palavra
@@ -237,13 +237,13 @@ fun Int main (Int argc, palavra argv[] ){
         if (palavra[j]==0) print("",i)
     
     print("\n")
-    return 0
 }
  '''
 # Give the lexer some input
 lexer.input(data)
 
-#Tokenize
+# Tokenize
+
 # while True:
 #     tok = lexer.token()
 #     if not tok:
