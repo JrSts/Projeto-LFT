@@ -746,17 +746,32 @@ def p_parameterWithOptionalType(p):
                                     | simpleIdentifier DOISP type
                                     | parameterModifiers simpleIdentifier
                                     | simpleIdentifier '''
-        
+    if len(p) == 2:
+        p[0] = Simple1ParameterWithOptionalType(p[1])
+    elif len(p) == 3:
+        p[0] = Simple2ParameterWithOptionalType(p[1], p[2])
+    elif len(p) == 4:
+        p[0] = Compound1ParameterWithOptionalType(p[1], p[2], p[3])
+    elif len(p) == 5:
+        p[0] = Compound2ParameterWithOptionalType(p[1], p[2], p[3], p[4])   
+########################################################################
+
 def p_parameterModifiers(p):
     ''' parameterModifiers :  VARARG
                             | NOINLINE
                             | CROSSINLINE '''
-
-########################################duvida
+    if isinstance(p[1], CallVararg):
+        p[0] = CallVararg(p[1])
+    if isinstance(p[1], CallNoinline):
+        p[0] = CallNoinline(p[1])
+    if isinstance(p[1], CallVararg):
+        p[0] = CallCrossinline(p[1])
+########################################################################
     
 def p_lambdaLiteral(p):
     ''' lambdaLiteral : RCHAVE ll LCHAVE	'''
     p[0] = LambdaLiteral(p[1], p[2], p[3])
+########################################################################
 
 def p_ll(p):
     ''' ll : statements
@@ -768,6 +783,7 @@ def p_ll(p):
         p[0] = Compound1Ll(p[1], p[2])
     else :
         p[0] = Compound2Ll(p[1], p[2], p[3])
+########################################################################
         
 def p_lambdaParameters(p):
     ''' lambdaParameters : lambdaParameter
@@ -776,43 +792,51 @@ def p_lambdaParameters(p):
         p[0] = SimpleLambdaParameters(p[1])
     else :
         p[0] = CompoundLambdaParameters(p[1], p[2], p[3])
+########################################################################
         
 def p_lambdaParameter(p):
     ''' lambdaParameter : variableDeclaration
                      | multiVariableDeclaration DOISP type
                      | multiVariableDeclaration '''
+    if len(p) == 2 and isinstance(p[1], CallVariableDeclaration):
+        p[0] = CallVariableDeclaration(p[1])
+    elif len(p) == 2 and isinstance(p[1], CallMultiVariableDeclaration):
+        p[0] = CallMultiVariableDeclaration(p[1])
+    elif len(p) == 4:
+        p[0] = CompoundLambdaParameter(p[1])
+########################################################################
 
-################################################duvida
 def p_anonymousFunction(p):
-    ''' anonymousFunction : FUN af4 parametersWithOptionalType af3 af1 '''
-
-def p_af1(p):
-    ''' af1 : functionBody
-				| '''
-
-def p_p_anonymousFunction(p):
-    ''' anonymousFunction : WHERE af'''
-
-def p_af(p):
-    ''' af : typeConstraint
-            | typeConstraint COMMA af '''
-
-def p_typeConstraint(p):
-    ''' typeConstraint : simpleIdentifier DOISP type '''
-
-def p_af3(p):
-    ''' af3 : DOISP type
-            | '''
-
-
-def p_af4(p):
-    ''' af4 : type PONTO
-            | '''
-
+    ''' anonymousFunction : FUN type PONTO parametersWithOptionalType DOISP type typeConstraint functionBody
+                          | FUN parametersWithOptionalType DOISP type typeConstraint functionBody
+                          | FUN type PONTO parametersWithOptionalType typeConstraint functionBody
+                          | FUN type PONTO parametersWithOptionalType DOISP type functionBody                     
+                          | FUN type PONTO parametersWithOptionalType DOISP type typeConstraint
+                          | FUN parametersWithOptionalType typeConstraint functionBody
+                          | FUN parametersWithOptionalType DOISP type functionBody
+                          | FUN parametersWithOptionalType DOISP type typeConstraint
+                          | FUN type PONTO parametersWithOptionalType functionBody
+                          | FUN type PONTO parametersWithOptionalType typeConstraint 
+                          | FUN type PONTO parametersWithOptionalType DOISP type
+                          | FUN parametersWithOptionalType functionBody
+                          | FUN parametersWithOptionalType typeConstraint
+                          | FUN type PONTO parametersWithOptionalType 
+                          | FUN parametersWithOptionalType '''
+########################################################################
 
 def p_functionLiteral(p):
     ''' functionLiteral : lambdaLiteral
                          | anonymousFunction '''
+    if isinstance(p[1], CallLambdaLiteral):
+        p[0] = CallLambdaLiteral(p[1])
+    elif isinstance(p[1], CallAnonymousFunction):
+        p[0] = CallAnonymousFunction(p[1])
+########################################################################
+
+def p_typeConstraint(p):
+    ''' typeConstraint : simpleIdentifier DOISP type '''
+    p[0] = TypeConstraint(p[1], p[2], p[3])
+########################################################################
 
 def p_ifExpression(p):
     ''' ifExpression : IF LPAREN expression RPAREN controlStructureBody PV
@@ -825,6 +849,7 @@ def p_ifExpression(p):
                          | IF LPAREN expression RPAREN PV ELSE controlStructureBody
                          | IF LPAREN expression RPAREN ELSE controlStructureBody PV
                          | IF LPAREN expression RPAREN ELSE controlStructureBody '''
+########################################################################
 
 # VERIFICAR TOKENS
 def p_jumpExpression(p):
@@ -835,15 +860,30 @@ def p_jumpExpression(p):
                          | CONTINUE_AT
                          | BREAK
                          | BREAK_AT'''
-
+    if isinstance(p[1], CallReturn):
+        p[0] = CallReturn(p[1], p[2])
+    elif isinstance(p[1], CallReturnAt):
+        p[0] = CallReturnAt(p[1], p[2])
+    elif isinstance(p[1], CallExpression):
+        p[0] = CallExpression(p[1])  
+    elif isinstance(p[1], CallContinue):
+        p[0] = CallContinue(p[1])    
+    elif isinstance(p[1], CallContinueAt):
+        p[0] = CallContinueAt(p[1])  
+    elif isinstance(p[1], CallBreak):
+        p[0] = CallBreak(p[1])
+    elif isinstance(p[1], CallBreakAt):
+        p[0] = CallBreakAt(p[1])
+########################################################################        
 
 def p_callableReference_SI(p):
-    ''' callableReference : receiverType DOISP DOISP simpleIdentifier
-                         | DOISP DOISP simpleIdentifier '''
+    ''' callableReference : receiverType COLONCOLON simpleIdentifier
+                         | COLONCOLON simpleIdentifier '''
     if len(p) == 4:
         p[0] = SimpleCallableReference_SI(p[1], p[2], p[3])
     else:
         p[0] = CompoundCallableReference_SI(p[1], p[2], p[3], p[4])
+########################################################################        
         
 def p_callableReference_Class(p):
     ''' callableReference : receiverType DOISP DOISP CLASS
@@ -852,22 +892,40 @@ def p_callableReference_Class(p):
         p[0] = SimpleCallableReference_Class(p[1], p[2], p[3])
     else:
         p[0] = CompoundCallableReference_Class(p[1], p[2], p[3], p[4])
-        
-# VERIFICAT TOKENS
+########################################################################
+
 def p_assignmentAndOperator(p):
-    ''' assignmentAndOperator : MAIORIGUAL
-                               | MENORIGUAL
+    ''' assignmentAndOperator : MAISIGUAL
+                               | MENOSIGUAL
                                | MULTIGUAL
                                | DIVIGUAL
                                | MODIGUAL	'''
-
+    if isinstance(p[1], CallMAISIGUAL):
+        P[0] = CallMAISIGUAL(p[1])
+    elif isinstance(p[1], CallMENOSIGUAL):
+        P[0] = CallMENOSIGUAL(p[1])
+    elif isinstance(p[1], CallMULTIGUAL):
+        P[0] = CallMULTIGUAL(p[1])
+    elif isinstance(p[1], CallDIVIGUAL):
+        P[0] = CallDIVIGUAL(p[1])
+    elif isinstance(p[1], CallMODIGUAL):
+        P[0] = CallMODIGUAL(p[1])
+########################################################################
 
 def p_equalityOperator(p):
     ''' equalityOperator : DIFERENTE
                          | IDENTIDADE
                          | IGUALDADE
                          | SEMIDENTIDADE	'''
-
+    if isinstance(p[1], CallIgualdade):
+        p[0] = CallIgualdade(p[1])
+    elif isinstance(p[1], CallDiferente):
+        p[0] = CallDiferente(p[1])
+    elif isinstance(p[1], CallIdentidade):
+        p[0] = CallIdentidade(p[1])
+    elif isinstance(p[1], CallSemIdentidade):
+        p[0] = CallSemIdentidade(p[1])
+########################################################################
 
 def p_comparisonOperator(p):
     ''' comparisonOperator : MENOR
@@ -875,29 +933,55 @@ def p_comparisonOperator(p):
                            | MENORIGUAL
                            | MAIORIGUAL '''
 
+    if isinstance(p[1], CallMaior):
+        p[0] = CallMaior(p[1])
+    elif isinstance(p[1], CallMenor):
+        p[0] = CallMenor(p[1])
+    elif isinstance(p[1], CallMaiorIgual):
+        p[0] = CallMaiorIgual(p[1])
+    elif isinstance(p[1], CallMenorIgual):
+        p[0] = CallMenorIgual(p[1])
+########################################################################
 
 def p_inOperator(p):
     ''' inOperator : IN
                  | NOT_IN '''
-
+    if isinstance(p[1], CallIn):
+        p[0] = CallIn(p[1])
+    elif isinstance(p[1], CallNotIn):
+        p[0] = CallNotIn(p[1])
+########################################################################
 
 def p_isOperator(p):
     '''isOperator : IS
 				| NOT_IS '''
-
+    if isinstance(p[1], CallIs):
+        p[0] = CallIs(p[1])
+    elif isinstance(p[1], CallNotIs):
+        p[0] = CallNotIs(p[1])
+########################################################################
 
 def p_additiveOperator(p):
     ''' additiveOperator : PLUS
                          | MINUS	'''
-
+    if isinstance(p[1], CallMinus):
+        p[0] = CallMinus(p[1])
+    elif isinstance(p[1], CallPlus):
+        p[0] = CallPlus(p[1])
+########################################################################
 
 def p_multiplicativeOperator(p):
     ''' multiplicativeOperator : MULT
                                 | DIVIDE
                                 | MOD '''
+    if isinstance(p[1], CallMult):
+        p[0] = CallMult(p[1])
+    elif isinstance(p[1], CallMod):
+        p[0] = CallMod(p[1])
+    elif isinstance(p[1], CallDivide):
+        p[0] = CallDivide(p[1])
+########################################################################
 
-
-# duvida
 def p_asOperator(p):
     ''' asOperator : AS
                  | AS asOperator '''
@@ -905,32 +989,51 @@ def p_asOperator(p):
         p[0] = SimpleAsOperator(p[1])
     else:
         p[0] = CompoundAsOperator(p[1], p[2])
-        
-# DUVIDA
+########################################################################
+
 def p_prefixUnaryOperator(p):
     ''' prefixUnaryOperator : INCREMENTO
-   | DECREMENTO
-   | MINUS
-   | PLUS
-   | NOT'''
+                            | DECREMENTO
+                            | MINUS
+                            | PLUS
+                            | NOT'''
+    if isinstance(p[1], CallIncremento):
+        p[0] = CallIncremento(p[1])
+    if isinstance(p[1], CallDecremento):
+        p[0] = CallDecremento(p[1])
+    if isinstance(p[1], CallMinus):
+        p[0] = CallMinus(p[1])
+    if isinstance(p[1], CallPlus):
+        p[0] = CallPlus(p[1])
+    if isinstance(p[1], CallNot):
+        p[0] = CallNot(p[1])
+########################################################################
 
-
-
-# Duvida
 def p_postfixUnaryOperator(p):
     ''' postfixUnaryOperator : INCREMENTO
                              | DECREMENTO'''
-
+    if isinstance(p[1], CallIncremento):
+        p[0] = CallIncremento(p[1])
+    if isinstance(p[1], CallDecremento):
+        p[0] = CallDecremento(p[1])
+########################################################################
 
 def p_memberAccessOperator(p):
     ''' memberAccessOperator : PONTO
                              | safeNav
                              | COLONCOLON     '''
-
+    if isinstance(p[1], CallPonto):
+        p[0] = CallPonto(p[1])
+    elif isinstance(p[1], CallSafenav):
+        p[0] = CallSafenav(p[1])
+    elif isinstance(p[1], CallCollonColon):
+        p[0] = CallCollonCollon(p[1])
+########################################################################
 
 def p_safeNav(p):
     ''' safeNav : PONTO  '''
     p[0] = safeNav(p[1])
+########################################################################
 
 # Identifiers
 # olhar tokens
