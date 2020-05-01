@@ -844,7 +844,7 @@ class SimplePrefixUnaryExpression(SimpleAsExpression,CompoundAsExpression):
     def accept(self,visitor):
         visitor.visitSimplePrefixUnaryExpression(self)
 
-class SimplePrefixUnaryExpression(SimpleAsExpression,CompoundAsExpression):
+class CompoundPrefixUnaryExpression(SimpleAsExpression,CompoundAsExpression):
     def __init__(self,preue, postfixUnaryExpression):
         self.preue=preue
         self.postfixUnaryExpression=postfixUnaryExpression

@@ -15,7 +15,7 @@ def p_kotlinFile(p):
 					| functionDeclaration'''
 
     if len(p) == 2:
-        p[0] = SingleFunctionDeclaration(p[1])
+        p[0] = SimpleFunctionDeclaration(p[1])
     else:
         p[0] = CompoundFunctionDeclaration(p[1], p[2])
 ###########################################################
@@ -43,7 +43,7 @@ def p_functionValueParameters(p):
     '''functionValueParameters : LPAREN fvps RPAREN
                                 | LPAREN RPAREN '''
     if len(p) == 3:
-        p[0] = SingleFunctionValueParameters(p[1], p[2])
+        p[0] = SimpleFunctionValueParameters(p[1], p[2])
     else:
         p[0] = CompoundFunctionValueParameters(p[1], p[2], p[3])
 
@@ -52,7 +52,7 @@ def p_fvps(p):
                 | functionValueParameter COMMA fvps 
                 | functionValueParameter fvps '''
     if len(p) == 2:
-        p[0] = SingleFvps(p[1])
+        p[0] = SimpleFvps(p[1])
     elif len(p) == 3:
         p[0] = CompoundFvps(p[1], p[2])
     else:
@@ -63,7 +63,7 @@ def p_functionValueParameter(p):
     ''' functionValueParameter : parameter ATRIBUICAO expression
                                   | parameter '''
     if len(p) == 2:
-        p[0] = SingleFunctionValeuParameter(p[1])
+        p[0] = SimpleFunctionValeuParameter(p[1])
     else:
         p[0] = CompoundFunctionValeuParameter(p[1], p[2], p[3])
 ########################################################################
@@ -104,7 +104,7 @@ def p_type(p):
     if len(p) == 2:
         p[0] = SimpleType(p[1])
     else:
-        p[0] = Compoundtype(p[1], p[2])
+        p[0] = CompoundType(p[1], p[2])
 #####################################################################
 
 def p_opType(p):
@@ -126,12 +126,12 @@ def p_typeModifiers(p) :
     if len(p) == 2:
          p[0] = SimpleTypeModifiers(p[1])
     else:
-        p[0] = CompoundTypeModifiers(p[1], p[2])
+        p[0] = CompondTypeModifiers(p[1], p[2])
 ########################################################################
 
 def p_typeModifier(p):
     ''' typeModifier : SUSPEND '''
-    p[0] = TypeModifier(p[1])
+    p[0] = TypeModifiers(p[1])
 ########################################################################
  
 def p_typeProjectionModifier(p):
@@ -143,7 +143,7 @@ def p_varianceModifier(p):
     ''' varianceModifier : IN
                         | OUT '''
     if isinstance(p[1], CallIn):
-        p[0] = CallInp[1]
+        p[0] = CallIn[1]
     elif isinstance(p[1], CallOut):
         p[0] = CallOut(p[1])
 ########################################################################
@@ -326,8 +326,8 @@ def p_assignment(p):
                   | assignableExpression assignmentAndOperator expression '''
     if isinstance(p[2], CallIgualdade):
         p[0] = CallIgualdade(p[1], p[2], p[3])
-    elif isinstance(p[2], CallAssignAndOperator):
-         p[0] = CallAssignAndOperator(p[1], p[2], p[3])
+    elif isinstance(p[2], CallAssignmentAndOperator):
+         p[0] = CallAssignmentAndOperator(p[1], p[2], p[3])
 ########################################################################
 
 def p_expression(p):
@@ -471,7 +471,7 @@ def p_preue(p):
 def p_unaryPrefix(p):
     ''' unaryPrefix : label
                        | prefixUnaryOperator '''
-    if isinstance(p[1], CallLable):
+    if isinstance(p[1], CallLabel):
         p[0] = CallLabel(p[1])
     elif isinstance(p[1], CallPrefixUnaryOperator):
         p[0] = CallPrefixUnaryOperator(p[1])
@@ -597,14 +597,14 @@ def p_callSuffix(p):
                      | annotatedLambda
                      | typeArguments valueArguments
                      | valueArguments '''
-    if isinstance(p[2], CallValueArguments) and len(p) == 4:
-        p[0] = CallValueArguments(p[1], p[2], p[3])
-    elif isinstance(p[2], CallValueArguments)  and len(p) == 3:
-        p[0] = CallValueArguments(p[1], p[2])
-    elif isinstance(p[1], CallValueArguments)  and len(p) == 3:
-        p[0] = CallValueArguments(p[1], p[2])
-    elif isinstance(p[2], CallValueArguments)  and len(p) == 2:
-        p[0] = CallValueArguments(p[1])
+    if isinstance(p[2], CallValueArguments3) and len(p) == 4:
+        p[0] = CallValueArguments3(p[1], p[2], p[3])
+    elif isinstance(p[2], CallValueArguments2)  and len(p) == 3:
+        p[0] = CallValueArguments2(p[1], p[2])
+    elif isinstance(p[1], CallValueArguments2)  and len(p) == 3:
+        p[0] = CallValueArguments2(p[1], p[2])
+    elif isinstance(p[2], CallValueArguments1)  and len(p) == 2:
+        p[0] = CallValueArguments1(p[1])
     elif isinstance(p[1], CallAnnotatedLambda)  and len(p) == 2:
         p[0] = CallAnnotatedLambda(p[1])
     elif isinstance(p[2], CallAnnotatedLambda2)  and len(p) == 3:
@@ -727,7 +727,7 @@ def p_parametersWithOptionalType(p):
     ''' parametersWithOptionalType : LPAREN pwot RPAREN
                                     | LPAREN RPAREN '''
     if len(p) == 3:
-        p[0] = SingleParametersWithOptionalType(p[1], p[2])
+        p[0] = SimpleParametersWithOptionalType(p[1], p[2])
     else:
          p[0] = CompoundParametersWithOptionalType(p[1], p[2], p[3])
 ########################################################################
