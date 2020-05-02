@@ -30,7 +30,7 @@ class CallExp():
 class AssignExp():
     def __init__(self,assign):
         self.assign = assign
-    def accept(self,Visitor):
+    def accept(self, Visitor):
         Visitor.visitAssignExp(self)
 
 class NumExp():
@@ -96,11 +96,10 @@ class SimpleFunctionDeclaration(kotlinFile):
         visitor.visitSimpleFunctionDeclaration(self)
 
 class FunctionDeclaration(kotlinFile):
-    def __init__(self, fun, SI, FVL, doisptype, block):
-        self.fun=fun
+    def __init__(self, SI, FVL, type, block):
         self.SI=SI
         self.FVL=FVL
-        self.doisptype=doisptype
+        self.type=ptype
         self.block=block
     def accept(self,visitor):
         Visitor.visitFunctionDeclaration(self)
@@ -346,19 +345,16 @@ class CompoundTypeProjectionModifiers(CompoundTypeProjection):
 ########################################################################
 
 class SimpleFunctionType(kotlinFile):
-    def __init__(self, functionTypeParameters, SETA, type):
+    def __init__(self, functionTypeParameters, type):
         self.functionTypeParameters=functionTypeParameters
-        self.SETA=SETA
         self.type=type
     def accept(self, visitor):
         visitor.visitSimpleFunctionType(self)
 
 class CompoundFunctionType(kotlinFile):
-    def __init__(self, receiverType, PONTO, functionTypeParameters, SETA, type):
+    def __init__(self, receiverType, functionTypeParameters, type):
         self.receiverType= receiverType
-        self.PONTO=PONTO
         self.functionTypeParameters=functionTypeParameters
-        self.SETA=SETA
         self.type=type
     def accept(self, visitor):
         visitor.visitCompoundFunctionType(self)
@@ -837,7 +833,7 @@ class SimplePrefixUnaryExpression(SimpleAsExpression,CompoundAsExpression):
     def accept(self,visitor):
         visitor.visitSimplePrefixUnaryExpression(self)
 
-class SimplePrefixUnaryExpression(SimpleAsExpression,CompoundAsExpression):
+class CompoundPrefixUnaryExpression(SimpleAsExpression,CompoundAsExpression):
     def __init__(self,preue, postfixUnaryExpression):
         self.preue=preue
         self.postfixUnaryExpression=postfixUnaryExpression
@@ -1386,16 +1382,14 @@ class CallVariableDeclaration():
         Visitor.visitCallVariableDeclaration(self)
     
 class CallMultiVariableDeclaration():
-    def __init__(self, variableDeclaration):
-        self.variableDeclaration = variableDeclaration
+    def __init__(self, multiVariableDeclaration):
+        self.multiVariableDeclaration = multiVariableDeclaration
     def accept(self, visitor):
         Visitor.visitCallMultiVariableDeclaration(self)
 
 class CompoundLambdaParameter(SimpleLambdaParameters,CompoundLambdaParameters):
     def __init__(self,variableDeclaration,multiVariableDeclaration, DOISP ,type):
-        self.variableDeclaration=variableDeclaration
         self.multiVariableDeclaration=multiVariableDeclaration
-        self.DOISP= DOISP
         self.type=type
     def accept(self,visitor):
         visitor.visitCompoundLambdaParameter(self)
@@ -1442,7 +1436,7 @@ class af4(anonymousFunction):
          visitor.visitaf4(self)
 ########################################################################
 
-class CallLamdaLiteral():
+class CallLambdaLiteral():
     def __init__(self, lambdaLiteral):
         self.lambdaLiteral = lambdaLiteral
     def accept(self, visitor):
