@@ -39,7 +39,7 @@ class NumExp():
     def accept(self,Visitor):
         Visitor.visitorNumExp(self)
         
-class IDExp ():
+class IDExp():
     def __init__(self,id):
         self.id = id
     def accept(self, Visitor):
@@ -69,7 +69,7 @@ class SingleParam():
         Visitor.visitSingleParam(self)
 
 class AssignExp():
-    def __init__(self, ID,Exp):
+    def __init__(self, ID, Exp):
         self.ID = ID
         self.Exp = Exp
     def accept(self , Visitor):
@@ -112,8 +112,7 @@ class SimpleFunctionBody(kotlinFile):
         Visitor.visitSimpleFunctionBody(self)
 
 class CompoundFunctionBody(kotlinFile):
-    def __init__(self, atribuicao, expression):
-        self.atribuicao = atribuicao
+    def __init__(self, expression):
         self.expression = expression
     def accept(self, visitor):
         Visitor.visitCompoundFunctionBody(self)
@@ -174,25 +173,21 @@ class SimpleVariableDeclaration(kotlinFile):
         visitor.visitSimpleVariableDeclaration(self)
 
 class CompoundVariableDeclaration(kotlinFile):
-    def __init__(self, simpleIdentifier, DOISP, type):
+    def __init__(self, simpleIdentifier, type):
         self.simpleIdentifier = simpleIdentifier
-        self.DOISP=DOISP
         self.type=type
     def accept(self, visitor):
         visitor.visitvariableDeclaration(self)
 #################################################################
 
 class SimpleMultiVariableDeclaration(kotlinFile):
-    def __init__(self, LP, RP):
-        self.LP=LP
-        self.RP=RP
+    def __init__(self):
+        self
     def accept(self, visitor):
         visitor.visitSimpleMultiVariableDeclaration(self)
 
 class CompoundMultiVariableDeclaration(kotlinFile):
-    def __init__(self, LP, mvd, RP):
-        self.LP=LP
-        self.RP=RP
+    def __init__(self, mvd):
         self.mvd=mvd
     def accept(self, visitor):
         visitor.visitCompoundMultiVariableDeclaration(self)
@@ -205,18 +200,16 @@ class SimpleMvd(SimpleMultiVariableDeclaration):
         visitor.visitSimpleMvd(self)
 
 class CompoundMvd(CompoundMultiVariableDeclaration):
-    def __init__(self, variableDeclaration, COMMA, mvd ):
+    def __init__(self, variableDeclaration, mvd ):
         self.mvd=mvd
-        self.COMMA=COMMA
         self.variableDeclaration=variableDeclaration
     def accept(self, visitor):
         visitor.visitCompoundMvd(self)
 ####################################################################
 
 class Parameter(kotlinFile):
-    def __init__(self,simpleIdentifier, DOISP, type ):
+    def __init__(self,simpleIdentifier, type ):
         self.simpleIdentifier= simpleIdentifier
-        self.doisp= DOISP
         self.type=type
     def accept(self, visitor):
         visitor.visitParameter(self)
@@ -309,7 +302,7 @@ class SimpleSimpleUserType(userType):
         visitor.visitSimpleSimpleUserType(self)
 
 class CompoundSimpleUserType(userType):
-    def __init__(self, simpleUserType,typeArguments):
+    def __init__(self, simpleUserType, typeArguments):
         self.simpleUserType=simpleUserType
         self.typeArguments=typeArguments
     def accept(self, visitor):
@@ -361,37 +354,29 @@ class CompoundFunctionType(kotlinFile):
 ########################################################################
 
 class SimpleFunctionTypeParameters_p(kotlinFile):
-    def __init__(self, lp, parameter, rp):
-        self.lp = lp
+    def __init__(self, parameter):
         self.parameter = parameter
-        self.rp = rp
     def accept(self, visitor):
         Visitor.visitSimpleFunctionTypeParameters_p()
 
 class CompoundFunctionTypeParameters_p(kotlinFile):
-    def __init__(self, lp, parameter, ftp, rp):
-        self.lp = lp
+    def __init__(self, parameter, ftp):
         self.parameter = parameter
         self.ftp = ftp
-        self.rp = rp
     def accept(self, visitor):
         Visitor.visitCompoundFunctionTypeParameters_p()
 ########################################################################
 
 class SimpleFunctionTypeParameters_t(kotlinFile):
-    def __init__(self, lp, type, rp):
-        self.lp = lp
+    def __init__(self, type):
         self.type = type
-        self.rp = rp
     def accept(self, visitor):
         Visitor.visitSimpleFunctionTypeParameters_t()
 
 class CompoundFunctionTypeParameters_t(kotlinFile):
-    def __init__(self, lp, type, ftp, rp):
-        self.lp = lp
+    def __init__(self, type, ftp):
         self.type = type
         self.ftp = ftp
-        self.rp = rp
     def accept(self, visitor):
         Visitor.visitCompoundFunctionTypeParameters_t()
 ########################################################################
@@ -410,10 +395,8 @@ class CallType():
 ########################################################################
 
 class ParenthesizedType(kotlinFile):
-    def __init__(self, LPAREN, type,RPAREN ):
-        self.LPAREN=LPAREN
+    def __init__(self, type):
         self.type=type
-        self.RPAREN=RPAREN
     def accept(self, visitor):
         visitor.visitparenthesizedType(self)
 ########################################################################
@@ -486,10 +469,8 @@ class CallStatement():
 ########################################################################
 
 class block(CallBlock, CallStatement):
-    def __init__(self,LCHAVE, statements, RCHAVE):
-        self.LCHAVE=LCHAVE
+    def __init__(self, statements):
         self.statements=statements
-        self.RCHAVE=RCHAVE
     def accept(self, visitor):
         visitor.visitblock(self)
 ########################################################################
@@ -520,100 +501,68 @@ class CallDoWhileStatement():
 ########################################################################
 
 class SimpleForStatement_MD(CallForStatement_MD, CallForStatement_VD, CallWhileStatement, CallDoWhileStatement):
-    def __init__(self, FOR, LPAREN, multiVariableDeclaration, IN, expression, RPAREN):
-        self.FOR=FOR
-        self.LPAREN=LPAREN
+    def __init__(self, multiVariableDeclaration, expression):
         self.multiVariableDeclaration=multiVariableDeclaration
-        self.IN=IN
         self.expression=expression
-        self.RPAREN=RPAREN
     def accept(self, visitor):
         visitor.visitSimpleForStatement_MD(self)
 
 class CompoundForStatement_MD(CallForStatement_MD, CallForStatement_VD, CallWhileStatement, CallDoWhileStatement):
-    def __init__(self, FOR, LPAREN, multiVariableDeclaration, IN, expression, RPAREN, controlStructureBody):
-        self.FOR=FOR
-        self.LPAREN=LPAREN
+    def __init__(self, multiVariableDeclaration, expression, controlStructureBody):
         self.multiVariableDeclaration=multiVariableDeclaration
-        self.IN=IN
         self.expression=expression
-        self.RPAREN=RPAREN
         self.controlStructureBody=controlStructureBody
     def accept(self, visitor):
         visitor.visitCompoundForStatement_MD(self)
 
 class SimpleForStatement_VD(CallForStatement_MD, CallForStatement_VD, CallWhileStatement, CallDoWhileStatement):
-    def __init__(self, FOR, LPAREN, variableDeclaration, IN, expression, RPAREN):
-        self.FOR=FOR
-        self.LPAREN=LPAREN
+    def __init__(self, variableDeclaration, expression):
         self.variableDeclaration=variableDeclaration
-        self.IN=IN
         self.expression=expression
-        self.RPAREN=RPAREN
     def accept(self, visitor):
         visitor.visitSimpleForStatement_MD(self)
 
 class CompoundForStatement_VD(CallForStatement_MD, CallForStatement_VD, CallWhileStatement, CallDoWhileStatement):
-    def __init__(self, FOR, LPAREN, multiVariableDeclaration, IN, expression, RPAREN, controlStructureBody):
-        self.FOR=FOR
-        self.LPAREN=LPAREN
+    def __init__(self, multiVariableDeclaration, expression, controlStructureBody):
         self.variableDeclaration=variableDeclaration
-        self.IN=IN
         self.expression=expression
-        self.RPAREN=RPAREN
         self.controlStructureBody=controlStructureBody
     def accept(self, visitor):
         visitor.visitCompoundForStatement_MD(self)
 ########################################################################
 
 class CallPv():
-    def __init__(self, WHILE, LPAREN, expression, RPAREN, pv):
-        self.WHILE=WHILE
-        self.LPAREN=LPAREN
+    def __init__(self, expression):
         self.expression=expression
-        self.RPAREN=RPAREN
-        self.pv = pv
     def accept(self, visitor):
         Visitor.visitCallPv(self)
 
 class CallCSB():
-    def __init__(self, WHILE, LPAREN, expression, RPAREN, csb):
-        self.WHILE=WHILE
-        self.LPAREN=LPAREN
+    def __init__(self, expression, csb):
         self.expression=expression
-        self.RPAREN=RPAREN
         self.csb = csb
     def accept(self, visitor):
         Visitor.visitCallCSB(self)
 ########################################################################
         
 class SimpleDoWhileStatement(CallForStatement_MD, CallForStatement_VD, CallWhileStatement, CallDoWhileStatement):
-    def __init__(self,DO, WHILE ,LPAREN, expression, RPAREN): 
-        self.do=DO
-        self.WHILE=WHILE 
-        self.LPAREN=LPAREN
+    def __init__(self, expression):
         self.expression=expression
-        self. RPAREN= RPAREN
     def accept(self, visitor):
         visitor.visitSimpleDoWhileStatement(self)
 
 class CompoundDoWhileStatement(CallForStatement_MD, CallForStatement_VD, CallWhileStatement, CallDoWhileStatement):
-    def __init__(self,DO, controlStructureBody, WHILE ,LPAREN, expression, RPAREN): 
-        self.do=DO
+    def __init__(self, controlStructureBody, expression):
         self.controlStructureBody=controlStructureBody
-        self.WHILE=WHILE 
-        self.LPAREN=LPAREN
         self.expression=expression
-        self. RPAREN= RPAREN
     def accept(self, visitor):
         visitor.visitCompoundDoWhileStatement(self)
 ########################################################################
         
 class CallAtribuicao():
-    def __init__(self,directlyAssignableExpression, atribuicao, expression):
+    def __init__(self,directlyAssignableExpression, expression):
         self.directlyAssignableExpression=directlyAssignableExpression
         self.expression=expression
-        self.atribuicao = atribuicao
     def accept(self, visitor):
         Visitor.visitCallAtribuicao(self)
 
@@ -627,22 +576,21 @@ class CallAssignmentAndOperator():
 ########################################################################
         
 class Expression(kotlinFile):
-    def __init__(self,disjunction ):
-        self.disjunction =disjunction 
+    def __init__(self, disjunction):
+        self.disjunction = disjunction
     def accept (self,visitor):
         visitor.visitExpression(self)
 ########################################################################
         
 class SimpleDisjunction(Expression):
-    def __init__(self,conjunction):
-        self.conjunction=conjunction
+    def __init__(self, conjunction):
+        self.conjunction = conjunction
     def accept (self,visitor):
         visitor.visitSimpleDisjunction(self)
        
 class CompoundDisjunction(Expression):
-    def __init__(self,conjunction ,OR, disjunction):
+    def __init__(self, conjunction, disjunction):
         self.conjunction=conjunction
-        self.OR=OR
         self.disjunction=disjunction
     def accept (self,visitor):
         visitor.visitCompoundDisjunction(self)
@@ -655,10 +603,9 @@ class SimpleConjunction(SimpleDisjunction):
         visitor.vistSimpleConjunction(self)
 
 class CompoundConjunction(CompoundDisjunction):
-    def __init__(self, equality, conjunction, AND):
+    def __init__(self, equality, conjunction):
         self.equality = equality
         self.conjunction = conjunction
-        self.AND = AND
     def accept(self, visitor):
         visitor.vistCompoundConjunction(self)
 ########################################################################
@@ -744,9 +691,8 @@ class SimpleElvisExpression(io):
         visitor.visitSimpleElvisExpression(self)
 
 class CompoundElvisExpression(io):
-    def __init__(self,infixFunctionCall, elvis, elvisExpression ):
+    def __init__(self,infixFunctionCall, elvisExpression ):
         self.infixFunctionCall=infixFunctionCall
-        self.elvis=elvis
         self.elvisExpression=elvisExpression
     def accept(self,visitor):
         visitor.visitCompoundElvisExpression(self)
@@ -774,9 +720,8 @@ class SimpleRangeExpression(SimpleInfixFunctionCall):
         visitor.visitSimpleRangeExpression(self)
     
 class CompoundRangeExpression(CompoundInfixFunctionCall):
-    def __init__(self,additiveExpression, PONTOPONTO, rangeExpression):
+    def __init__(self,additiveExpression, rangeExpression):
         self.additiveExpression=additiveExpression
-        self.PONTOPONTO=PONTOPONTO
         self.rangeExpression=rangeExpression
     def accept(self, visitor):
         visitor.visitCompoundRangeExpression(self)
@@ -954,10 +899,8 @@ class SimpleDirectlyAssignableExpression(SimplePostfixUnaryExpression,CompoundPo
 ########################################################################
         
 class ParenthesizedDirectlyAssignableExpression(directlyAssignableExpression):
-    def __init__(self,LPAREN, directlyAssignableExpression, RPAREN):
-        self.LPAREN=LPAREN
+    def __init__(self, directlyAssignableExpression):
         self.directlyAssignableExpression=directlyAssignableExpression
-        self.RPAREN=RPAREN
     def accept(self,visitor):
         visitor.visitParenthesizedDirectlyAssignableExpression(self)
 ########################################################################
@@ -976,10 +919,8 @@ class CallPrefixUnaryExpression():
 ########################################################################
         
 class ParenthesizedAssignableExpression(assignableExpression):
-    def __init__(self, LPAREN, assignableExpression, RPAREN):
-        self.LPAREN=LPAREN
+    def __init__(self, assignableExpression):
         self.assignableExpression=assignableExpression
-        self.RPAREN= RPAREN
     def accept(self, visitor):
         visitor.visitparenthesizedAssignableExpression(self)
 ########################################################################
@@ -1004,17 +945,14 @@ class CallIndexingSuffix():
 ###########################################################duvida
  
 class SimpleIndexingSuffix(kotlinFile):
-    def __init__(self,LCCT, RCCT):
-        self.LCCT=LCCT
-        self.RCCT=RCCT
+    def __init__(self):
+        self
     def accept(self,visitor):
         visitor.visitSimpleIndexingSuffix(self)       
 
 class CompoundIndexingSuffix(kotlinFile):
     def __init__(self,LCCT, isuf, RCCT):
-        self.LCCT=LCCT
         self.isuf=isuf
-        self.RCCT=RCCT
     def accept(self,visitor):
         visitor.visitCompoundIndexingSuffix(self)
 ########################################################################
@@ -1026,9 +964,8 @@ class SimpleIsuf(IndexingSuffix):
         visitor.visitSimpleIsuf(self)
         
 class CompoundIsuf(IndexingSuffix):
-    def __init__(self,expression, COMMA, isuf ):
+    def __init__(self,expression, isuf ):
         self.expression=expression
-        self.COMMA=COMMA
         self.isuf=isuf
     def accept(self,visitor):
         visitor.visitCompoundIsuf(self)
@@ -1038,7 +975,6 @@ class CallParenthesizedExpression():
     def __init__(self, memberAccessOperator, parenthesizedExpression, CLASS):
         self.memberAccessOperator=memberAccessOperator
         self.parenthesizedExpression = parenthesizedExpression
-        self.CLASS=CLASS
     def accept(self, visitor):
         Visitor.visitCallParenthesizedExpression(self)
 ########################################################################
@@ -1086,17 +1022,14 @@ class AnnotatedLambda(kotlinFile):
 ########################################################################
         
 class SimpleTypeArguments(kotlinFile):
-    def __init__(self,MENOR, MAIOR):
-        self.MENOR=MENOR
-        self.MAIOR=MAIOR
+    def __init__(self):
+        self
     def accept(self,visitor):
         visitor.visitSimpleTypeArguments(self)
 
 class CompoundTypeArguments(kotlinFile):
-    def __init__(self,MENOR ,ta, MAIOR):
-        self.MENOR=MENOR
+    def __init__(self, ta):
         self.ta=ta
-        self.MAIOR=MAIOR
     def accept(self,visitor):
         visitor.visitCompoundTypeArguments(self)
 ########################################################################
@@ -1104,31 +1037,26 @@ class CompoundTypeArguments(kotlinFile):
 class SimpleTa(TypeArguments):
     def __init_(self,typeProjection):
         self.typeProjection=typeProjection
-        self.COMMA=COMMA
     def accept (self, visitor):
         visitor.visitSimpleTa(self)
         
 class CompoundTa(TypeArguments):
-    def __init_(self,typeProjection, COMMA, ta):
+    def __init_(self,typeProjection, ta):
         self.typeProjection=typeProjection
-        self.COMMA=COMMA
         self.ta=ta
     def accept (self, visitor):
         visitor.visitCompoundTa(self)
 ########################################################################
         
 class SimpleValueArguments(kotlinFile):
-    def __init__(self,LPAREN, RPAREN):
-        self.LPAREN=LPAREN
-        self.RPAREN=RPAREN
+    def __init__(self):
+        self
     def accept(self, visitor):
         visitor.visitSimpleValueArguments(self)
         
 class CompoundValueArguments(kotlinFile):
     def __init__(self,LPAREN, vas, RPAREN):
-        self.LPAREN=LPAREN
         self.vas=vas
-        self.RPAREN=RPAREN
     def accept(self, visitor):
         visitor.visitCompoundValueArguments(self)
 ########################################################################
@@ -1142,7 +1070,6 @@ class SimpleVas(SimpleValueArguments):
 class CompoundVas(CompoundValueArguments):
     def __init__(self,valueArgument ,COMMA, vas):
         self.valueArgument=valueArgument
-        self.COMMA=COMMA
         self.vas=vas
     def accept(self,visitor):
         visitor.visitCompoundVas(self)
@@ -1155,18 +1082,15 @@ class SimpleValueArgument(SimpleVas):
         visitor.visitSimpleValueArgument(self)
         
 class Compound1ValueArgument(CompoundVas):
-    def __init__(self, simpleIdentifier, IGUALDADE, expression):
+    def __init__(self, simpleIdentifier, expression):
         self.simpleIdentifier=simpleIdentifier
-        self.IGUALDADE=IGUALDADE
         self.expression=expression
     def accept(self,visitor):
         visitor.visitCompound1ValueArgument(self)
         
 class Compound2ValueArgument(CompoundVas):
-    def __init__(self, simpleIdentifier, IGUALDADE, MULT, expression):
+    def __init__(self, simpleIdentifier, expression):
         self.simpleIdentifier=simpleIdentifier
-        self.IGUALDADE=IGUALDADE
-        self.MULT=MULT
         self.expression=expression
     def accept(self,visitor):
         visitor.visitCompound2ValueArgument(self)
@@ -1210,26 +1134,21 @@ class CallJumpExpression():
 ########################################################################
         
 class ParenthesizedExpression(kotlinFile):
-    def __init__(self,LPAREN ,expression, RPAREN):
-        self.LPAREN=LPAREN
+    def __init__(self, expression):
         self.expression=expression
-        self.RPAREN=RPAREN
     def accept(self,visitor):
         visitor.visitparenthesizedExpression(self)
 ########################################################################
 
 class SimpleCollectionLiteral(kotlinFile):
-    def __init__(self,LCCT, RCCT):
-        self.LCCT=LCCT
-        self.RCCT=RCCT
+    def __init__(self):
+        self
     def accept (self, visitor):
         visitor.visitSimpleCollectionLiteral(self)
 
 class CompoundCollectionLiteral(kotlinFile):
-    def __init__(self,LCCT, cl, RCCT):
-        self.LCCT=LCCT
+    def __init__(self, cl):
         self.cl=cl
-        self.RCCT=RCCT
     def accept (self, visitor):
         visitor.visitCompoundCollectionLiteral(self)
 ########################################################################
@@ -1241,26 +1160,22 @@ class SimpleCl(SimpleCollectionLiteral):
         visitor.visitSimpleCl(self)
 
 class CompoundCl(CompoundCollectionLiteral):
-    def __init__(self,expression, COMMA, cl):
+    def __init__(self,expression, cl):
         self.expression=expression
-        self.COMMA=COMMA
         self.cl=cl
     def accept(self,visitor):
         visitor.visitCompoundCl(self)
 ########################################################################
 
 class SimpleParametersWithOptionalType(kotlinFile):
-    def __init__(self, LPAREN, RPAREN):
-        self.LPAREN = LPAREN
-        self.RPAREN = RPAREN
+    def __init__(self):
+        self
     def accept(self, visitor):
         Visitor.visitSimpleParametersWithOptionalType(self)
 
 class CompoundParametersWithOptionalType(kotlinFile):
-    def __init__(self, LPAREN, pwot, RPAREN):
-        self.LPAREN = LPAREN
+    def __init__(self,pwot):
         self.pwot = pwot
-        self.RPAREN = RPAREN
     def accept(self, visitor):
         Visitor.visitCompoundParametersWithOptionalType(self)
 ########################################################################
@@ -1274,25 +1189,22 @@ class SimplePwot(CompoundParametersWithOptionalType):
 class CompoundPwot(CompoundParametersWithOptionalType):
     def __init__(self, parameterWithOptionalType, COMMA, pwot):
         self.parameterWithOptionalType = parameterWithOptionalType
-        self.COMMA = COMMA
         self.pwot = pwot
     def accept(self, visitor):
         Visitor.visitCompoundPwot(self)
 ########################################################################
 
 class Compound1ParameterWithOptionalType():
-    def __init__(self, simpleIdentifier, DOISP, type):
+    def __init__(self, simpleIdentifier, type):
         self.simpleIdentifier = CallSimpleIdentifier
-        self.DOISP = DOISP
         self.type = type
     def accept(self, visitor):
         Visitor.visitCompound1ParameterWithOptionalType(self)
 
 class Compound2ParameterWithOptionalType():
-    def __init__(self, parameterModifiers, simpleIdentifier, DOISP, type):
+    def __init__(self, parameterModifiers, simpleIdentifier, type):
         self.parameterModifiers = parameterModifiers
         self.simpleIdentifier = CallSimpleIdentifier
-        self.DOISP = DOISP
         self.type = type
     def accept(self, visitor):
         Visitor.visitCompound2ParameterWithOptionalType(self)
@@ -1330,10 +1242,8 @@ class CallCrossinline():
 ########################################################################
 
 class LambdaLiteral(kotlinFile):
-    def _init__(self,RCHAVE, ll ,LCHAVE):
-        self.RCHAVE=RCHAVE
+    def _init__(self, ll):
         self.ll=ll
-        self.LCHAVE=LCHAVE
     def accept (self,visitor):
         visitor.visitlambdaLiteral(self)
 ########################################################################
@@ -1345,16 +1255,14 @@ class SimpleLl(LambdaLiteral):
         visitor.visitSimpleLl(self)
 
 class Compound1Ll(LambdaLiteral):
-    def __init__(self, SETA, statements):
-        self.SETA=SETA
+    def __init__(self, statements):
         self.statements=statements
     def accept(self,visitor):
         visitor.visitCompound1Ll(self)
 
 class Compound2Ll(LambdaLiteral):
-    def __init__(self,lambdaParameters, SETA, statements):
+    def __init__(self,lambdaParameters, statements):
         self.lambdaParameters=lambdaParameters
-        self.SETA=SETA
         self.statements=statements
     def accept(self,visitor):
         visitor.visitCompound2Ll(self)
@@ -1367,9 +1275,8 @@ class SimpleLambdaParameters(kotlinFile):
         visitor.visitSimpleLambdaParameters(self)
 
 class CompoundLambdaParameters(kotlinFile):
-    def __init__(self,lambdaParameter, COMMA, lambdaParameters):
+    def __init__(self,lambdaParameter, lambdaParameters):
         self.lambdaParameter=lambdaParameter
-        self.COMMA=COMMA
         self.lambdaParameters=lambdaParameters
     def accept(self,  visitor):
         visitor.visitCompoundLambdaParameters(self)
@@ -1388,7 +1295,7 @@ class CallMultiVariableDeclaration():
         Visitor.visitCallMultiVariableDeclaration(self)
 
 class CompoundLambdaParameter(SimpleLambdaParameters,CompoundLambdaParameters):
-    def __init__(self,variableDeclaration,multiVariableDeclaration, DOISP ,type):
+    def __init__(self,variableDeclaration,multiVariableDeclaration, type):
         self.multiVariableDeclaration=multiVariableDeclaration
         self.type=type
     def accept(self,visitor):
@@ -1407,30 +1314,25 @@ class anonymousFunction(kotlinFile):
         visitor.visitanonymousFunction(self)
 
 class af1(anonymousFunction):
-     def __init__(self,functionBody,null):
+     def __init__(self,functionBody):
          self.functionBody=functionBody
-         self.null=null
      def accept(self, visitor):
          visitor.visitaf1(self)
 
 class af2(anonymousFunction):
-     def __init__(self,typeConstraints,null):
+     def __init__(self,typeConstraints):
          self.typeConstraints=typeConstraints
-         self.null=null
      def accept(self, visitor):
          visitor.visitaf2(self)
 
 class af3(anonymousFunction):
-     def __init__(self,DOISP, type,null):
-         self.DOISP=DOISP
-         self.null=null
+     def __init__(self,type):
          self.type=type
      def accept(self, visitor):
          visitor.visitaf3(self)
 
 class af4(anonymousFunction):
-     def __init__(self,type, PONTO):
-         self.PONTO=PONTO
+     def __init__(self,type):
          self.type=type
      def accept(self, visitor):
          visitor.visitaf4(self)
@@ -1450,9 +1352,8 @@ class CallAnonymousFunction():
 ########################################################################
 
 class TypeConstraint(LambdaLiteral,anonymousFunction):
-    def __init__(self,simpleIdentifier, DOISP, type):
+    def __init__(self,simpleIdentifier, type):
         self.simpleIdentifier = simpleIdentifier
-        self.DOISP = DOISP
         self.type = type
     def accept(self,visitor):
         visitor.visitTypeConstraint(self)
@@ -1513,33 +1414,28 @@ class CallBreakAt():
 ########################################################################
 
 class SimpleCallableReference_SI(kotlinFile):
-    def __init__(self, COLONCOLON, simpleIdentifier ):
-        self.COLONCOLON=COLONCOLON
+    def __init__(self, simpleIdentifier):
         self.simpleIdentifier=simpleIdentifier
     def accept (self,visitor):
         visitor.visitSimpleCallableReference_SI(self)
 
 class CompoundCallableReference_SI(kotlinFile):
-    def __init__(self,receiverType, COLONCOLON, simpleIdentifier ):
-        self.COLONCOLON=COLONCOLON
+    def __init__(self,receiverType, simpleIdentifier):
+        self.receiverType = receiverType
         self.simpleIdentifier=simpleIdentifier
     def accept (self,visitor):
         visitor.visitCompoundCallableReference_SI(self)
 ########################################################################
 
 class SimpleCallableReference_Class(kotlinFile):
-    def __init__(self, COLONCOLON, CLASS ):
-        self.COLONCOLON=COLONCOLON
-        self.CLASS = CLASS
+    def __init__(self.simpleIdentifier):
         self.simpleIdentifier=simpleIdentifier
     def accept (self,visitor):
         visitor.visitSimpleCallableReference_Class(self)
 
 class CompoundCallableReference_Class(kotlinFile):
-    def __init__(self,receiverType, COLONCOLON, CLASS):
+    def __init__(self,receiverType):
         self.receiverType=receiverType
-        self.COLONCOLON=COLONCOLON
-        self.CLASS=CLASS
     def accept (self,visitor):
         visitor.visitCompoundCallableReference_Class(self)
 ########################################################################
