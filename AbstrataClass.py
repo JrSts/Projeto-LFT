@@ -880,7 +880,7 @@ class memberAccessOperator(metaclass=ABCMeta):
         pass
 class safeNav(metaclass=ABCMeta):
     @abstractmethod
-    def accept(self):
+    def accept(sel):
         pass
 
 
