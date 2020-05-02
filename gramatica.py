@@ -891,7 +891,7 @@ def p_assignmentAndOperator(p):
     p[0]= assignmentAndOperator(p[1])
     if  p[1]=='+=':
         P[0] = CallMAISIGUAL(p[1])
-    elif p[1]=='-=':
+    elif p[1]=='-=': 
         P[0] = CallMENOSIGUAL(p[1])
     elif isinstance(p[1], CallMULTIGUAL):
         P[0] = CallMULTIGUAL(p[1])
