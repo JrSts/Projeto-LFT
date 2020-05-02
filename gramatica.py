@@ -21,7 +21,11 @@ def p_kotlinFile(p):
 ###########################################################
 
 def p_functionDeclaration(p):
-    ''' functionDeclaration : FUN simpleIdentifier functionValueParameters DOISP type block
+    ''' functionDeclaration : FUN simpleIdentifier simpleIdentifier functionValueParameters DOISP type block
+                            | FUN simpleIdentifier simpleIdentifier functionValueParameters block
+                            | FUN simpleIdentifier simpleIdentifier functionValueParameters DOISP type
+                            | FUN simpleIdentifier simpleIdentifier functionValueParameters
+							| FUN simpleIdentifier functionValueParameters DOISP type block
                             | FUN simpleIdentifier functionValueParameters block
                             | FUN simpleIdentifier functionValueParameters DOISP type
                             | FUN simpleIdentifier functionValueParameters '''
@@ -43,9 +47,9 @@ def p_functionValueParameters(p):
     '''functionValueParameters : LPAREN fvps RPAREN
                                 | LPAREN RPAREN '''
     if len(p) == 3:
-        p[0] = SingleFunctionValueParameters(p[1], p[2])
+        p[0] = SingleFunctionValueParameters()
     else:
-        p[0] = CompoundFunctionValueParameters(p[1], p[2], p[3])
+        p[0] = CompoundFunctionValueParameters(p[2])
 
 def p_fvps(p):
     ''' fvps : functionValueParameter
@@ -56,7 +60,7 @@ def p_fvps(p):
     elif len(p) == 3:
         p[0] = CompoundFvps(p[1], p[2])
     else:
-        p[0] = COMMAFvps(p[1], p[2], p[3])
+        p[0] = COMMAFvps(p[1], p[3])
 
 #########################################################################
 def p_functionValueParameter(p):
@@ -65,7 +69,7 @@ def p_functionValueParameter(p):
     if len(p) == 2:
         p[0] = SingleFunctionValeuParameter(p[1])
     else:
-        p[0] = CompoundFunctionValeuParameter(p[1], p[2], p[3])
+        p[0] = CompoundFunctionValeuParameter(p[1], p[3])
 ########################################################################
 def p_variableDeclaration(p):
     '''variableDeclaration :  simpleIdentifier DOISP type
@@ -111,13 +115,7 @@ def p_opType(p):
     '''optype : parenthesizedType
                 | functionType
                 | userType '''
-    
-    if isinstance(p[1], CallParenthesizedType):
-        p[0] = CallParenthesizedType(p[1])
-    elif isinstance(p[0], CallFunctionType):
-        p[0] = CallFunctionType(p[1])
-    elif isinstance(p[0], CallUserType):
-        p[0] = CallUserType(p[1])
+        p[0] = p[1]
 ######################################################################
 
 def p_typeModifiers(p) : 
@@ -131,21 +129,19 @@ def p_typeModifiers(p) :
 
 def p_typeModifier(p):
     ''' typeModifier : SUSPEND '''
-    p[0] = TypeModifier(p[1])
+    p[0] = p[1]
 ########################################################################
  
 def p_typeProjectionModifier(p):
     ''' typeProjectionModifier : varianceModifier '''
-    p[0] = TypeProjectionModifier(p[1])
+    p[0] = p[1]
 ########################################################################
 
 def p_varianceModifier(p): 
     ''' varianceModifier : IN
                         | OUT '''
-    if isinstance(p[1], CallIn):
-        p[0] = CallInp[1]
-    elif isinstance(p[1], CallOut):
-        p[0] = CallOut(p[1])
+    p[0] = p[1]
+
 ########################################################################
 
 def p_userType(p):
@@ -218,7 +214,7 @@ def p_ftp(p) :
 
 def p_parenthesizedType(p):
     '''parenthesizedType : LPAREN type RPAREN '''
-    p[0] = parenthesizedType(p[1], p[2], p[3])
+    p[0] = ParenthesizedType(p[1], p[2], p[3])
 ########################################################################
 
 def p_receiverType(p):
@@ -798,9 +794,9 @@ def p_lambdaParameter(p):
     ''' lambdaParameter : variableDeclaration
                      | multiVariableDeclaration DOISP type
                      | multiVariableDeclaration '''
-    if len(p) == 2 and isinstance(p[1], CallVariableDeclaration):
+    if isinstance(p[1], CallVariableDeclaration):
         p[0] = CallVariableDeclaration(p[1])
-    elif len(p) == 2 and isinstance(p[1], CallMultiVariableDeclaration):
+    elif len(p) == 2:
         p[0] = CallMultiVariableDeclaration(p[1])
     elif len(p) == 4:
         p[0] = CompoundLambdaParameter(p[1])
@@ -851,7 +847,7 @@ def p_ifExpression(p):
                          | IF LPAREN expression RPAREN ELSE controlStructureBody '''
 ########################################################################
 
-# VERIFICAR TOKENS
+# VERIFICAR Expression 
 def p_jumpExpression(p):
     ''' jumpExpression :  RETURN expression
                          | RETURN_AT expression
@@ -1032,7 +1028,7 @@ def p_memberAccessOperator(p):
 
 def p_safeNav(p):
     ''' safeNav : PONTO  '''
-    p[0] = safeNav(p[1])
+    p[0] = p[1]
 ########################################################################
 
 # Identifiers

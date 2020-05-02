@@ -121,16 +121,13 @@ class CompoundFunctionBody(kotlinFile):
 ###########################################################
 
 class SimpleFunctionValueParameters(kotlinFile):
-    def __init__(self, lp, rp):
-       self.rp = rp
-       self.lp = lp
+    def __init__(self):
+       self
     def accept(self, visitor):
         visitor.visitSimpleFunctionValueParameters(self)
 
 class CompoundFunctionValueParameters(kotlinFile):
-    def __init__(self, lp, fvps, rp):
-       self.rp = rp
-       self.lp = lp
+    def __init__(self, fvps):
        self.fvps=fvps
     def accept(self, visitor):
         visitor.visitCompoundFunctionValueParameters(self)
@@ -143,9 +140,8 @@ class SimpleFvps(SimpleFunctionValueParameters):
         visitor.visitSimpleFvps(self)
 
 class COMMAFvps(CompoundFunctionValueParameters):
-    def __init__(self, fvp,COMMA, fvps):
+    def __init__(self, fvp, fvps):
         self.fvp=fvp
-        self.COMMA=COMMA
         self.fvps=fvps
     def accept(self, visitor):
         visitor.visitCompoundFvps(self)
@@ -165,9 +161,8 @@ class SimpleFunctionValeuParameter(kotlinFile):
         visitor.visitSimpleFunctionValueParameter(self)
         
 class CompoundFunctionValeuParameter(kotlinFile):
-    def __init__(self, parameter, atribuicao, exp):
+    def __init__(self, parameter, exp):
         self.Parameter=parameter
-        self.atribuicao=atribuicao
         self.exp=exp
     def accept(self,visitor):
         visitor.visitCompoundFunctionValueParameter(self)
@@ -418,7 +413,7 @@ class CallType():
         Visitor.visitCallType(self)
 ########################################################################
 
-class parenthesizedType(kotlinFile):
+class ParenthesizedType(kotlinFile):
     def __init__(self, LPAREN, type,RPAREN ):
         self.LPAREN=LPAREN
         self.type=type

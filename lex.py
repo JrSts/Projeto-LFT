@@ -222,7 +222,7 @@ lexer = lex.lex()
 
 # Test it out
 data = r'''
-fun main (Int argc, palavra argv[] ){
+fun Int main (Int argc, palavra argv[] ){
     Int i,j,t
     Char a[n]
     var palavra
