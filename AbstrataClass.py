@@ -30,12 +30,12 @@ class kotlinFile(metaclass=ABCMeta):
 class CompoundFunctionDeclaration(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
-        pass
+        pass  
 class SimpleFunctionDeclaration(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
-class FunctionDeclaration(metaclass=ABCMeta):
+class functionDeclaration(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
@@ -46,7 +46,123 @@ class SimpleFunctionBody(metaclass=ABCMeta):
 class CompoundFunctionBody(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
+        pass 
+class functionBody(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class functionValueParameters(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class fvps(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class functionValueParameter(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class variableDeclaration(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class multiVariableDeclaration(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class mvd(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class parameter(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
         pass  
+class type(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass 
+class typeModifiers(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class typeModifier(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class typeProjectionModifier(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class varianceModifier(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass 
+class userType(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass 
+class simpleUserType(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass 
+class typeProjection(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class typeProjectionModifiers(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class functionType(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class functionTypeParameters_p(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class functionTypeParameters_t(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class ftp(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class parenthesizedType(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class receiverType(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class rt(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class statements(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class statement(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class controlStructureBody(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class block(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+class loopStatement(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
 class SimpleFunctionValueParameters(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
