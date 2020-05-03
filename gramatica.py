@@ -8,7 +8,7 @@ import AbstrataClass as abstrat
 import os
 import ConcretaClass
 from ConcretaClass import *
-from AbstrataClass import assignmentAndOperator
+from AbstrataClass import *
 
 ###########################################################
 def p_kotlinFile(p):
@@ -513,8 +513,8 @@ def p_directlyAssignableExpression(p):
                                        | parenthesizedDirectlyAssignableExpression '''
     if len(p) == 3:
         p[0] = SimpleDirectlyAssignableExpression(p[1], p[2])
-    elif isinstance(p[1], simpleIdentifier):
-        p[0] = simpleIdentifier(p[1])
+    elif isinstance(p[1], CallSimpleIdentifier):
+        p[0] = CallSimpleIdentifier(p[1])
     else:
         p[0] = parenthesizedDirectlyAssignableExpression(p[1])
 ########################################################################
@@ -1005,9 +1005,9 @@ def p_postfixUnaryOperator(p):
     ''' postfixUnaryOperator : INCREMENTO
                              | DECREMENTO '''
     if p[1] == '++':
-        P[0] = postfixUnaryOperator(p[1])
+        P[0] = CallPostfixUnaryOperator(p[1])
     elif p[1] == '--':
-        P[0] = postfixUnaryOperator(p[1])
+        P[0] = CallPostfixUnaryOperator(p[1])
 ########################################################################
 
 def p_memberAccessOperator(p):

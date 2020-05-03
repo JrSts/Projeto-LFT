@@ -342,14 +342,6 @@ class parenthesizedType(metaclass= ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class receiverType(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self):
-        pass
-class rt(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self):
-        pass
 class SimpleStatements (metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
@@ -880,9 +872,12 @@ class memberAccessOperator(metaclass=ABCMeta):
         pass
 class safeNav(metaclass=ABCMeta):
     @abstractmethod
-    def accept(sel):
+    def accept(self):
         pass
-
+class SimpleIdentifier(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
 
 
 
