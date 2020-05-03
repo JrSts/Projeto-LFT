@@ -16,29 +16,29 @@ def p_kotlinFile(p):
 					| functionDeclaration'''
 
     if len(p) == 2:
-        p[0] = SimpleFunctionDeclaration(p[1])
+        p[0] = SimpleKotlinFile(p[1])
     else:
-        p[0] = CompoundFunctionDeclaration(p[1], p[2])
+        p[0] = CompoundKotlinFile(p[1], p[2])
 ###########################################################
 
 def p_functionDeclaration(p):
-    ''' functionDeclaration : FUN af1 simpleIdentifier functionValueParameters af2 af3 '''
-    p[0] = FunctionDeclatarion(p[2], p[3], p[4], p[5])
+    ''' functionDeclaration : FUN fd1 simpleIdentifier functionValueParameters fd2 fd3 '''
+    p[0] = FunctionDeclaration(p[2], p[3], p[4], p[5], p[6])
     
-def p_af1(p):
-    '''af1 : simpleIdentifier
+def p_fd1(p):
+    '''fd1 : simpleIdentifier
            | '''
-    p[0] = p[1]
+    p[0] = Fd1(p[1])
     
-def p_af2(p):
-    '''af2 : DOISP type
+def p_fd2(p):
+    '''fd2 : DOISP type
            | '''
-    p[0] = p[1]
+    p[0] = Fd2(p[2])
     
-def p_af3(p):
-    '''af3 : block
+def p_fd3(p):
+    '''fd3 : block
            | '''
-    p[0] = p[1]
+    p[0] = Fd3(p[1])
 
 ###########################################################
 
@@ -48,7 +48,7 @@ def p_functionBody(p):
     if len(p) == 2:
         p[0] = SimpleFunctionBody(p[1])
     else:
-         p[0] = CompoundFunctionBody(p[1], p[2])
+         p[0] = CompoundFunctionBody(p[2])
 
 ###########################################################
 
@@ -56,7 +56,7 @@ def p_functionValueParameters(p):
     '''functionValueParameters : LPAREN fvps RPAREN
                                 | LPAREN RPAREN '''
     if len(p) == 3:
-        p[0] = SingleFunctionValueParameters()
+        p[0] = SimpleFunctionValueParameters()
     else:
         p[0] = CompoundFunctionValueParameters(p[2])
 
@@ -124,7 +124,7 @@ def p_opType(p):
     '''optype : parenthesizedType
                 | functionType
                 | userType '''
-        p[0] = p[1]
+    p[0] = p[1]
 ######################################################################
 
 def p_typeModifiers(p) : 
@@ -218,8 +218,8 @@ def p_functionTypeParameters_t(p):
 def p_ftp(p) :
     ''' ftp : COMMA parameter
 		    | COMMA type '''
-    if isinstance(p[2], parameter):
-        p[0] = parameter(p[2])
+    if isinstance(p[2], Parameter):
+        p[0] = Parameter(p[2])
     elif isinstance(p[2], type):
         p[0] = type(p[2])
 ########################################################################
@@ -376,14 +376,14 @@ def p_io(p):
             | inOperator elvisExpression io
             | isOperator type 
             | isOperator type io '''
-    if len(p) == 3 and isinstance(p[1], isOperator):
-        p[0] = CallIsOperator(p[1],p[2])
-    elif len(p) == 3 and isinstance(p[1], inOperator):
-        p[0] = CallInOperator(p[1],p[2])
-    elif len(p) == 4 and isinstance(p[1], isOperator):
-        p[0] = CallIsOperator(p[1],p[2], p[3])
-    elif len(p) == 4 and isinstance(p[1], inOperator):i
-        p[0] = CallInOperator(p[1],p[2], p[3])
+    if len(p) == 3 and isinstance(p[1], IsOperator):
+        p[0] = IsOperator(p[1],p[2])
+    elif len(p) == 3 and isinstance(p[1], InOperator):
+        p[0] = InOperator(p[1],p[2])
+    elif len(p) == 4 and isinstance(p[1], IsOperator):
+        p[0] = IsOperator(p[1],p[2], p[3])
+    elif len(p) == 4 and isinstance(p[1], InOperator):
+        p[0] = InOperator(p[1],p[2], p[3])
 ########################################################################
 
 def p_elvisExpression(p):
@@ -894,9 +894,9 @@ def p_assignmentAndOperator(p):
         P[0] = assignmentAndOperator(p[1])
     elif p[1] =='-=':
         P[0] = assignmentAndOperator(p[1])
-    elif p[1] == '*=''
+    elif p[1] == '*=':
         P[0] = assignmentAndOperator(p[1])
-    elif p[1] == '/=''
+    elif p[1] == '/=':
         P[0] = assignmentAndOperator(p[1])
     elif p[1] == '%=':
         P[0] = assignmentAndOperator(p[1])
@@ -912,9 +912,9 @@ def p_equalityOperator(p):
         P[0] = equalityOperator(p[1])
     elif p[1] == '===':
         P[0] = equalityOperator(p[1])
-    elif p[1] == '!=''
+    elif p[1] == '!=':
         P[0] = equalityOperator(p[1])
-    elif p[1] == '!==''
+    elif p[1] == '!==':
         P[0] = equalityOperator(p[1])
 ########################################################################
 
@@ -928,9 +928,9 @@ def p_comparisonOperator(p):
         P[0] = comparisonOperator(p[1])
     elif p[1] == '>':
         P[0] = comparisonOperator(p[1])
-    elif p[1] == '<=''
+    elif p[1] == '<=':
         P[0] = comparisonOperator(p[1])
-    elif p[1] == '>=''
+    elif p[1] == '>=':
         P[0] = comparisonOperator(p[1])
 ########################################################################
 
@@ -992,19 +992,18 @@ def p_prefixUnaryOperator(p):
         P[0] = prefixUnaryOperator(p[1])
     elif p[1] == '--':
         P[0] = prefixUnaryOperator(p[1])
-    elif p[1] == '-''
+    elif p[1] == '-':
         P[0] = prefixUnaryOperator(p[1])
-    elif p[1] == '/+'
+    elif p[1] == '/+':
         P[0] = prefixUnaryOperator(p[1])
     elif p[1] == '!':
         P[0] = prefixUnaryOperator(p[1])
-
 
 ########################################################################
 
 def p_postfixUnaryOperator(p):
     ''' postfixUnaryOperator : INCREMENTO
-                             | DECREMENTO'''
+                             | DECREMENTO '''
     if p[1] == '++':
         P[0] = postfixUnaryOperator(p[1])
     elif p[1] == '--':
