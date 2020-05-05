@@ -22,19 +22,27 @@ def p_kotlinFile(p):
 ###########################################################
 
 def p_functionDeclaration(p):
-    ''' functionDeclaration : FUN fd1 simpleIdentifier functionValueParameters fd2 fd3 '''
+    ''' functionDeclaration : FUN simpleIdentifier functionValueParameters fd2 fd3 '''
     p[0] = FunctionDeclaration(p[2], p[3], p[4], p[5], p[6])
-    
 def p_fd1(p):
     '''fd1 : simpleIdentifier
            | '''
     p[0] = Fd1(p[1])
-    
-def p_fd2(p):
-    '''fd2 : DOISP type
-           | '''
-    p[0] = Fd2(p[2])
-    
+
+def p_fd2(p):     
+    '''fd2 : DOISP type   
+            | '''    
+    if len(p) == 3:        
+        p[0]=Fd2(p[2])    
+    else:         
+        p[0]: Fd2(None)      
+def p_fd3(p):     
+    '''fd3 : block   
+            | '''    
+    if len(p) == 2:        
+        p[0] = Fd3(p[1])     
+    else:         
+        p[0]: Fd3(None)
 def p_fd3(p):
     '''fd3 : block
            | '''
@@ -76,7 +84,7 @@ def p_functionValueParameter(p):
     ''' functionValueParameter : parameter ATRIBUICAO expression
                                   | parameter '''
     if len(p) == 2:
-        p[0] = SimpleFunctionValeuParameter(p[1])
+        p[0] = SimpleFunctionValueParameter(p[1])
     else:
         p[0] = CompoundFunctionValeuParameter(p[1], p[3])
 ########################################################################
@@ -108,6 +116,7 @@ def p_mvd(p):
 #######################################################################
 
 def p_parameter(p):
+
     ''' parameter : simpleIdentifier DOISP type '''
     p[0] = Parameter(p[1], p[3])
 ######################################################################
@@ -190,15 +199,20 @@ def p_typeProjectionModifiers(p):
 
 def p_functionType(p):
     '''functionType : receiverType PONTO functionTypeParameters SETA type
-                      | functionTypeParameters SETA type '''
+                    | functionTypeParameters SETA type
+    '''
     if len(p) == 4:
         p[0] = SimpleFunctionType(p[1], p[3])
     else:
         p[0] = CompoundFunctionType(p[1], p[3], p[5])
 ########################################################################
 
+def p_functionTypeParameters(p):
+    '''functionTypeParameters : functionTypeParameters_p
+                            | functionTypeParameters_t'''
+
 def p_functionTypeParameters_p(p):
-    ''' functionTypeParameters_p : LPAREN parameter ftp RPAREN
+    '''functionTypeParameters_p : LPAREN parameter ftp RPAREN
                                  | LPAREN parameter RPAREN '''
     if len(p) == 4:
         p[0] = SimpleFunctionTypeParameters_p(p[2])
@@ -207,7 +221,7 @@ def p_functionTypeParameters_p(p):
 ########################################################################
 
 def p_functionTypeParameters_t(p):
-    ''' functionTypeParameters_t : LPAREN type RPAREN                                
+    '''functionTypeParameters_t : LPAREN type RPAREN
                                  | LPAREN type ftp RPAREN '''
     if len(p) == 4:
         p[0] = SimpleFunctionTypeParameters_t(p[2])
@@ -217,7 +231,10 @@ def p_functionTypeParameters_t(p):
 
 def p_ftp(p) :
     ''' ftp : COMMA parameter
-		    | COMMA type '''
+		    | COMMA type
+		    | COMMA parameter ftp
+		    | COMMA type ftp'''
+
     if isinstance(p[2], Parameter):
         p[0] = Parameter(p[2])
     elif isinstance(p[2], type):
@@ -885,7 +902,7 @@ def p_callableReference_Class(p):
 ########################################################################
 
 def p_assignmentAndOperator(p):
-    ''' assignmentAndOperator : MAISIGUAL
+    ''' assignmentAndOperator :  MAISIGUAL
                                | MENOSIGUAL
                                | MULTIGUAL
                                | DIVIGUAL
@@ -1034,11 +1051,35 @@ def p_simpleIdentifier(p):
                         | NOINLINE
                         | OUT
                         | VARARG
-                        | WHERE  '''
+                        | WHERE
+                        | INT
+                        | FLOAT
+                        | BOOLEAN
+                        | STRING
+                        | ARRAY
+                        | CHAR
+                        | OBJECT
+                        | CONST
+                        | CONSTRUCTOR
+                        | EOF
+                        | FALSE
+                        | FUNCTION
+                        | NULL
+                        | NULLABLE
+                        | NUMBER
+                        | OPERATOR
+                        | SMARTCAST
+                        | THIS
+                        | TRUE
+                        | VAL
+                        | VAR
+                        | DOUBLE
+                        | WHEN
+                        | LONG'''
     p[0] = p[1]
 
 def p_error(p):
-    print ("Erro Sintático")
+    print ("Erro Sintático: ", p)
 
 class AnalisadorSintatico():
     def __init__(self):

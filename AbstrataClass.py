@@ -306,11 +306,11 @@ class CompoundTypeProjectionModifiers(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class SimpleFunctionType(metaclass=ABCMeta):
+class simpleFunctionType(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CompoundFunctionType(metaclass=ABCMeta):
+class compoundFunctionType(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass

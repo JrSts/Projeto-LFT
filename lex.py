@@ -94,8 +94,12 @@ tokens = (
     'NOINLINE',
     'VARARG',
     'CROSSINLINE',
+    'MAISIGUAL',
+    'MENOSIGUAL',
+    'LONG'
 )
 # Regular expression rules for simple tokens
+t_LONG=r'Long'
 t_INIT = r'init'
 t_NOINLINE = r'noinline'
 t_VARARG = r'vararg'
@@ -180,6 +184,8 @@ t_NOT = r'!'
 t_TRUE = r'true'
 t_ELSE = r'else'
 t_PV = r';'
+t_MAISIGUAL=r'\+='
+t_MENOSIGUAL=r'-='
 #def contador(t):
  #   i , contador = 0
   #  while (t[i] == ' '):
@@ -222,21 +228,15 @@ lexer = lex.lex()
 
 # Test it out
 data = r'''
-fun Int main (Int argc, palavra argv[] ){
-    Int i,j,t
-    Char a[n]
-    var palavra
-    palavra= argv[1]
-    for (i=0 in n-1..i++)
-    if ((t = fgetc(stdin)) = java.io.EOFException)
-        a[i] = t
-    a[i] = 0
-    for (i= 0 in a[i]!=0..i++)
-    for (j= 0 in a[j]!=0..j++)
-    if (a[i+j]!=palavra[j])
-        if (palavra[j]==0) print("",i)
-    
-    print("\n")
+fun main(args: Array<String>) {
+
+    val num = 10
+    var factorial: Long = 1
+    // factorial = factorial * i;
+    for (i in 1..num) {
+        factorial *= i.toLong()
+    }
+    println("Factorial of $num = $factorial")
 }
  '''
 # Give the lexer some input
