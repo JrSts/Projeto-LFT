@@ -14,7 +14,6 @@ from AbstrataClass import *
 def p_kotlinFile(p):
     '''kotlinFile : functionDeclaration kotlinFile
 					| functionDeclaration'''
-
     if len(p) == 2:
         p[0] = SimpleKotlinFile(p[1])
     else:
