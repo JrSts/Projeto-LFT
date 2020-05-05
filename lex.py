@@ -232,7 +232,6 @@ fun main(args: Array<String>) {
 
     val num = 10
     var factorial: Long = 1
-    // factorial = factorial * i;
     for (i in 1..num) {
         factorial *= i.toLong()
     }

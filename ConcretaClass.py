@@ -1,5 +1,4 @@
-from Visitor import Visitor
-from AbstrataClass import *
+from AbstrataClass import abstractmethod
 class SomaExp():
     def __init__(self, exp1, exp2):
         self.exp1 = exp1
@@ -74,7 +73,9 @@ class AssignExp():
         self.Exp = Exp
     def accept(self , Visitor):
         Visitor.visitAssighExp(self)
+
 ###########################################################
+
 class KotlinFile():
     def __init__(self):
         self
@@ -96,8 +97,7 @@ class CompoundKotlinFile():
 ###########################################################
 
 class FunctionDeclaration(KotlinFile):
-    def __init__(self, fd1, simpleIdentifier, functionValueParameters, fd2, fd3):
-        self.fd1 = fd1
+    def __init__(self, simpleIdentifier, functionValueParameters, fd2, fd3):
         self.simpleIdentifier
         self.functionValueParameters
         self.fd2 = fd2
@@ -105,11 +105,11 @@ class FunctionDeclaration(KotlinFile):
     def accept(self, Visitor):
         Visitor.visitFuncrionDeclaration(self)
 
-class Fd1(FunctionDeclaration):
-    def __init__(self, simpleIdentifier):
-        self.simpleIdentifier = simpleIdentifier
-    def accept(self, Visitor):
-        Visitor.visitFd1(self)
+# class Fd1(FunctionDeclaration):
+#     def __init__(self, simpleIdentifier):
+#         self.simpleIdentifier = simpleIdentifier
+#     def accept(self, Visitor):
+#         Visitor.visitFd1(self)
 
 class Fd2(FunctionDeclaration):
     def __init__(self, type):
@@ -122,6 +122,54 @@ class Fd3(FunctionDeclaration):
         self.block = block
     def accept(self, Visitor):
         Visitor.visitFd3(self)
+###########################################################
+
+class PropertyDeclaration_mv(Statement):
+    def __init__(self, typeParameters, multiVariableDeclaration, type):
+        self.typeParameters = typeParameters
+        self.multiVariableDeclaration = multiVariableDeclaration
+        self.type = type
+    def accept(self, visitor):
+        Visitor.visitPropertyDeclaration_mv(self)
+
+class PropertyDeclaration_v(Statement):
+    def __init__(self, typeParameters, variableDeclaration, type, pv):
+        self.typeParameters = typeParameters
+        self.variableDeclaration = variableDeclaration
+        self.type = type
+        self.pv = pv
+    def accept(self, visitor):
+        Visitor.visitPropertyDeclaration_v(self)
+
+class Pd1_var(PropertyDeclaration_v):
+    def __init__(self, var):
+        self.var = var
+    def accept(self, Visitor):
+        Visitor.visitPd1_var(self)
+
+class Pd1_val(PropertyDeclaration_v):
+    def __init__(self, val):
+        self.val = val
+    def accept(self, Visitor):
+        Visitor.visitPd1_val(self)
+
+class Pd2(PropertyDeclaration_v):
+    def __init__(self, typeParameters):
+        self.typeParameters = typeParameters
+    def accept(self, Visitor):
+        Visitor.visitPd2(self)
+
+###########################################################
+
+class Statement(Statements):
+    def __init__(self, functionDeclaration, loopStatment, expression, propertyDeclaration):
+        self.functionDeclaration = functionDeclaration
+        self.loopStatement = loopStatement
+        self.expression = expression
+        self.propertyDeclaration = propertyDeclaration
+    def accept(self, Visitor):
+        Visitor.visitStatement(self)
+
 ###########################################################
 
 class SimpleFunctionBody(FunctionDeclaration):
@@ -297,6 +345,47 @@ class TypeModifier(Type):
     def accept(self, Visitor):
         Visitor.visitTypeModifier(self)
 #########################################################################
+class SimpleTypeParameters():
+    def __init__(self, typeParameter, tps2):
+        self.typeParameter = typeParameter
+        self.tps2 = tps2
+    def accept(self, Visitor):
+        Visitor.visitSimpleTypeParameters(self)
+
+class CompoundTypeParameters():
+    def __init__(self, typeParameter, tps1, tps2):
+        self.typeParameter = typeParameter
+        self.tps1 = tps1
+        self.tps2 = tps2
+    def accept(self, Visitor):
+        Visitor.visitTypeProjectionModifier(self)
+
+class SimpleTps1():
+    def __init__(self, parameter):
+        self.parameter = parameter
+    def accept(self, Visitor):
+        Visitor.visitSimpleTps1(self)
+
+class SimpleTps1():
+    def __init__(self, parameter, tps1):
+        self.parameter = parameter
+        self.tps1 = tps1
+    def accept(self, Visitor):
+        Visitor.visitSimpleTps1(self)
+
+
+class CompoundTps1():
+    def __init__(self, parameter):
+        self.parameter = parameter
+    def accept(self, Visitor):
+        Visitor.visitCompoundTps1(self)
+
+
+class Tps2():
+    def __init__(self, COMMA):
+        self.COMMA = COMMA
+    def accept(self, Visitor):
+        Visitor.visitTps2(self)
 
 class TypeProjectionModifier(SimpleTypeModifiers,CompondTypeModifiers):
     def __init__(self, varianceModifier):
@@ -324,25 +413,19 @@ class CallOut():
         Visitor.visitCallOut(self)
 ########################################################################
 
-class userType(KotlinFile):
+class UserType(KotlinFile):
     def __init__(self,simpleUserType):
-        self.simpleUserType=simpleUserType
-    def accept(self, Visitor):
+        self.simpleUserType = simpleUserType
+    def accept(self, visitor):
         Visitor.visituserType(self)
 ##########################################################################
 
-class SimpleSimpleUserType(userType):
-    def __init__(self, simpleUserType):
-        self.simpleUserType=simpleUserType
-    def accept(self, Visitor):
-        Visitor.visitSimpleSimpleUserType(self)
-
-class CompoundSimpleUserType(userType):
+class SimpleUserType(UserType):
     def __init__(self, simpleUserType, typeArguments):
-        self.simpleUserType=simpleUserType
-        self.typeArguments=typeArguments
+        self.simpleUserType = simpleUserType
+        self.typeArguments = typeArguments
     def accept(self, Visitor):
-        Visitor.visitCompoundSimpleUserType(self)
+        Visitor.visitSimpleUserType(self)
 ##########################################################################
 
 class SimpleTypeProjection(KotlinFile):
@@ -892,11 +975,24 @@ class CallPostfixUnaryOperator():
     def accept(self, Visitor):
         Visitor.visitCallPostfixUnaryOperator(self)
 
-class CallTypeArguments():
-    def __init__(self, typeArguments):
-        self.typeArguments =typeArguments
+class SimpleTypeArguments():
+    def __init__(self):
+        self
     def accept(self, Visitor):
-        Visitor.visitCallTypeArguments(self)
+        Visitor.visitSimpleTypeArguments(self)
+
+class TypeArguments(Type):
+    def __init__(self, ta):
+        self.ta = ta
+    def accept(self, Visitor):
+        Visitor.visitTypeArguments(self)
+
+class Ta(TypeArguments):
+    def __init__(self, typePtojection, ta):
+        self.ta = ta
+        self.typePtojection = typePtojection
+    def accept(self, Visitor):
+        Visitor.visitTa(self)
 
 class CallIndexingSuffix():
     def __init__(self, indexingSuffix):
@@ -1064,7 +1160,8 @@ class AnnotatedLambda(KotlinFile):
     def accept(self,Visitor):
         Visitor.visitannotatedLambda(self)
 ########################################################################
-        
+
+
 class SimpleTypeArguments(KotlinFile):
     def __init__(self):
         self
@@ -1079,13 +1176,13 @@ class CompoundTypeArguments(KotlinFile):
 ########################################################################
         
 class SimpleTa(SimpleTypeArguments):
-    def __init__(self,typeProjection):
-        self.typeProjection=typeProjection
+    def __init__(self, typeProjection):
+        self.typeProjection = typeProjection
     def accept (self, Visitor):
         Visitor.visitSimpleTa(self)
         
 class CompoundTa(CompoundTypeArguments):
-    def __init__(self,typeProjection, ta):
+    def __init__(self, typeProjection, ta):
         self.typeProjection=typeProjection
         self.ta=ta
     def accept (self, Visitor):

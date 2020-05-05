@@ -1,14 +1,9 @@
-# liveshare
 import ply.lex as lex
 import ply.yacc as yacc
 from lex import tokens
-
-from lex import tokens
-import AbstrataClass as abstrat
-import os
 import ConcretaClass
-from ConcretaClass import *
-from AbstrataClass import *
+import AbstrataClass
+import os
 
 ###########################################################
 def p_kotlinFile(p):
@@ -23,31 +18,92 @@ def p_kotlinFile(p):
 def p_functionDeclaration(p):
     ''' functionDeclaration : FUN simpleIdentifier functionValueParameters fd2 fd3 '''
     p[0] = FunctionDeclaration(p[2], p[3], p[4], p[5], p[6])
-def p_fd1(p):
-    '''fd1 : simpleIdentifier
-           | '''
-    p[0] = Fd1(p[1])
+
+# def p_fd1(p):
+#     '''fd1 : simpleIdentifier
+#            | '''
+#     p[0] = Fd1(p[1])
 
 def p_fd2(p):     
     '''fd2 : DOISP type   
             | '''    
     if len(p) == 3:        
-        p[0]=Fd2(p[2])    
+        p[0] = Fd2(p[2])
     else:         
-        p[0]: Fd2(None)      
+        p[0]: Fd2(None)
+
 def p_fd3(p):     
     '''fd3 : block   
             | '''    
     if len(p) == 2:        
         p[0] = Fd3(p[1])     
     else:         
-        p[0]: Fd3(None)
-def p_fd3(p):
-    '''fd3 : block
-           | '''
-    p[0] = Fd3(p[1])
+        p[0] = Fd3(None)
 
 ###########################################################
+
+def p_propertyDeclaration(p):
+    ''' propertyDeclaration : pd1 pd2 pd3 ATRIBUICAO expression pd4'''
+    p[0] = PropertyDeclaration(p[2], p[3], p[5], p[6])
+
+def p_pd1(p):
+    ''' pd1 : VAR
+           | VAL '''
+    p[0] = p[1]
+
+def p_pd2(p):
+    ''' pd2 : typeParameters
+            | '''
+    if len(p) == 2:
+        p[0] = Pd2(p[1])
+    else:
+        p[0]: Pd2(None)
+
+def p_pd3(p):
+    ''' pd3 : multiVariableDeclaration
+            | variableDeclaration '''
+    p[0] = p[1]
+
+def p_pd4(p):
+    ''' pd4 : PV
+            | '''
+    if len(p) == 2:
+        p[0] = Pd4(p[1])
+    else:
+        p[0]: Pd4(None)
+
+def p_typeParameters(p):
+    ''' typeParameters : MENOR typeParameter tps2 MAIOR
+                        | MENOR typeParameter tps1 tps2 MAIOR '''
+
+    if len(p) == 5:
+        p[0] = SimpleTypeParameters(p[2], p[3])
+    else:
+        p[0] = CmpoundTypeParameters(p[2], p[3], p[4])
+
+def p_tps1(p):
+        ''' tps1 : COMMA typeParameter
+                | COMMA typeParameter tps1'''
+        if len(p) == 3:
+            p[0] = TypeParameters(p[2])
+        else:
+            p[0] = TypeParameters(p[2], p[3])
+
+def p_tps2(p):
+    ''' tps2 : COMMA
+            | '''
+    if len(p) == 3:
+        p[0] = Tps2(p[2])
+    else:
+        p[0] = Tps2(None)
+
+def p_typeParameter(p):
+    ''' typeParameter : simpleIdentifier
+                    | simpleIdentifier DOISP type'''
+    if len(p) == 2:
+        p[0] = TypeParameter(p[1], p[3])
+    else:
+        p[0] = p[1]
 
 def p_functionBody(p):
     ''' functionBody : block
@@ -123,7 +179,7 @@ def p_type(p):
     '''type : typeModifiers optype
               | optype '''
     if len(p) == 2:
-        p[0] = SimpleType(p[1])
+        p[0] = p[1]
     else:
         p[0] = CompoundType(p[1], p[2])
 #####################################################################
@@ -139,7 +195,7 @@ def p_typeModifiers(p) :
     '''typeModifiers : typeModifier
                     | typeModifier typeModifiers '''
     if len(p) == 2:
-         p[0] = SimpleTypeModifiers(p[1])
+        p[0] = SimpleTypeModifiers(p[1])
     else:
         p[0] = CompondTypeModifiers(p[1], p[2])
 ########################################################################
@@ -173,16 +229,16 @@ def p_simpleUserType(p):
     ''' simpleUserType : simpleIdentifier typeArguments
 					 | simpleIdentifier '''
     if len(p) == 2:
-        p[0] = SimpleSimpleUserType(p[1])
+        p[0] = p[1]
     else:
-        p[0] = CompoundSimpleUserType(p[1], p[2])
+        p[0] = SimpleUserType(p[1], p[2])
 ########################################################################
 
 def p_typeProjection(p):
     '''typeProjection : typeProjectionModifiers type
                       | type '''
     if len(p) == 2:
-        p[0] = SimpleTypeProjection(p[1])
+        p[0] = p[1]
     else:
         p[0] = CompoundTypeProjection(p[1], p[2])
 ########################################################################
@@ -268,7 +324,8 @@ def p_statement(p):
     '''statement : functionDeclaration
                   | assignment
                   | loopStatement
-                  | expression '''
+                  | expression
+                  | propertyDeclaration '''
     p[0] = p[1]
 ########################################################################
 
@@ -635,27 +692,27 @@ def p_ta(p):
     ''' ta : typeProjection
             | typeProjection COMMA ta '''
     if len(p) == 2:
-        SimpleTa(p[1])
+        p[0] = p[1]
     else:
-        CompoundTa(p[1], p[3])
+        p[0] = CompoundTa(p[1], p[3])
 ########################################################################
 
 def p_valueArguments(p):
     '''valueArguments : LPAREN RPAREN
                      | LPAREN vas RPAREN '''
     if len(p) == 3:
-        SimpleValueArguments()
+        p[0] = SimpleValueArguments()
     else:
-        CompoundValueArguments(p[2])
+        p[0] = CompoundValueArguments(p[2])
 ########################################################################
 
 def p_vas(p):
     ''' vas : valueArgument
              | valueArgument COMMA vas '''
     if len(p) == 2:
-        SimpleVas(p[1])
+        p[0] = SimpleVas(p[1])
     else:
-        CompoundVas(p[1], p[3])
+        p[0] = CompoundVas(p[1], p[3])
 ########################################################################
 
 def p_valueArgument(p):
@@ -663,11 +720,11 @@ def p_valueArgument(p):
                       | simpleIdentifier IGUALDADE expression
                       | expression  '''
     if len(p) == 2:
-        SimpleValueArgument(p[1])
+        p[0] = SimpleValueArgument(p[1])
     elif len(p) == 4:
-        Compound1ValueArgument(p[1], p[3])
+        p[0] = Compound1ValueArgument(p[1], p[3])
     else:
-        Compound2ValueArgument(p[1], p[4])
+        p[0] = Compound2ValueArgument(p[1], p[4])
 ########################################################################
 
 def p_primaryExpression(p):
@@ -679,7 +736,7 @@ def p_primaryExpression(p):
                            | collectionLiteral
                            | ifExpression
                            | jumpExpression '''
-    p[0]= p[1]
+    p[0] = p[1]
     
     # if isinstance(p[1], CallParenthesizedExpression):
     #     p[0] = CallParenthesizedExpression(p[1])
@@ -724,9 +781,9 @@ def p_cl(p):
     ''' cl : expression
             | expression COMMA cl '''
     if len(p) == 2:
-        SimpleCl(p[1])
+        p[0] = SimpleCl(p[1])
     else:
-        CompoundCl(p[1], p[2])
+        p[0] = CompoundCl(p[1], p[2])
 ########################################################################
 
 

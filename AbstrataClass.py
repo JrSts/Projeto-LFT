@@ -1,7 +1,8 @@
 from abc import abstractmethod
 from abc import ABCMeta
-from Visitor import Visitor
-from gramatica import *
+import Visitor
+import gramatica
+
 class Exp(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
@@ -27,6 +28,22 @@ class kotlinFile(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
+
+class SimpleKotlinFile(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+
+class CompoundKotlinFile(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+
+class FunctionDeclaration(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+
 class CompoundFunctionDeclaration(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
@@ -35,10 +52,7 @@ class SimpleFunctionDeclaration(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
-class functionDeclaration(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self, Visitor):
-        pass
+
 class SimpleFunctionBody(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
@@ -143,11 +157,11 @@ class rt(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
-class statements(metaclass=ABCMeta):
+class Statements(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
-class statement(metaclass=ABCMeta):
+class Statement(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
@@ -534,10 +548,21 @@ class CallNavigationSuffix(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallTypeArguments(metaclass=ABCMeta):
+class TypeArguments(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
+
+class SimpleTypeArguments(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
+
+class CompoundTypeArguments(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
+
 class CallIndexingSuffix(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
