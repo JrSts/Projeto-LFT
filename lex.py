@@ -4,6 +4,7 @@
 # 
 # ------------------------------------------------------------
 import ply.lex as lex
+import ply.yacc as yacc
 from builtins import int, print
 # List of token names. This is always required
 tokens = (
@@ -65,7 +66,7 @@ tokens = (
     'COMMA',
     'PONTO',
     'LITERAL_STRING',
-	'PONTOPONTO',
+    'PONTOPONTO',
     'SETA',
     'IN',
     'DO',
@@ -96,14 +97,17 @@ tokens = (
     'CROSSINLINE',
     'MAISIGUAL',
     'MENOSIGUAL',
-    'LONG'
+    'LONG',
+    'TYPE'
 )
 # Regular expression rules for simple tokens
-t_LONG=r'Long'
+t_TYPE = r'type'
+t_LONG = r'Long'
 t_INIT = r'init'
 t_NOINLINE = r'noinline'
 t_VARARG = r'vararg'
 t_CROSSINLINE = r'crossinline'
+t_ARRAY = r'Array'
 t_WHERE = r'where'
 t_ELVIS = r'\?:'
 t_OUT = r'out'
@@ -154,7 +158,6 @@ t_VAR = r'var'
 t_VAL = r'val'
 t_FUN = r'fun'
 t_STRING = r'String'
-t_ARRAY = r'array'
 t_OBJECT = r'object'
 t_THIS = r'this'
 t_CHAR = r'char'
@@ -214,7 +217,7 @@ def t_ID(t):
 
 # Define a rule so we can track line numbers
 def t_newline(t):
-    r'\n+'
+    r'\n'
     t.lexer.lineno += len(t.value)  # A string containing ignored characters (spaces and tabs)
 t_ignore = ' \t'
 

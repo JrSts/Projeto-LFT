@@ -1,8 +1,7 @@
 from abc import abstractmethod
 from abc import ABCMeta
 import Visitor
-import gramatica
-
+from lex import tokens
 class Exp(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
@@ -10,47 +9,47 @@ class Exp(metaclass=ABCMeta):
 
 class Call(metaclass=ABCMeta):
     @abstractmethod
-    def accept(self,Visitor):
+    def accept(self, visitor):
         pass
 
 class Params(metaclass=ABCMeta):
     @abstractmethod
-    def accept(self,Visitor):
+    def accept(self, visitor):
         pass
 
 class Assign(metaclass=ABCMeta):
      @abstractmethod
-     def accept(self,Visitor):
+     def accept(self, visitor):
         pass
 ################################
 
 class kotlinFile(metaclass=ABCMeta):
     @abstractmethod
-    def accept(self, Visitor):
+    def accept(self, visitor):
         pass
 
 class SimpleKotlinFile(metaclass=ABCMeta):
     @abstractmethod
-    def accept(self, Visitor):
+    def accept(self, visitor):
         pass
 
 class CompoundKotlinFile(metaclass=ABCMeta):
     @abstractmethod
-    def accept(self, Visitor):
+    def accept(self, visitor):
         pass
 
 class FunctionDeclaration(metaclass=ABCMeta):
     @abstractmethod
-    def accept(self, Visitor):
+    def accept(self, visitor):
         pass
 
 class CompoundFunctionDeclaration(metaclass=ABCMeta):
     @abstractmethod
-    def accept(self, Visitor):
+    def accept(self, visitor):
         pass  
 class SimpleFunctionDeclaration(metaclass=ABCMeta):
     @abstractmethod
-    def accept(self, Visitor):
+    def accept(self, visitor):
         pass
 
 class SimpleFunctionBody(metaclass=ABCMeta):
@@ -165,15 +164,17 @@ class Statement(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
+
+class LoopStatement(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+    
 class controlStructureBody(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
 class block(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self, Visitor):
-        pass
-class loopStatement(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
@@ -254,15 +255,15 @@ class SingleType(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallParenthesizedType(metaclass=ABCMeta):
+class ParenthesizedType(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallFunctionType(metaclass=ABCMeta):
+class FunctionType(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass 
-class CallUserType(metaclass=ABCMeta):
+class UserType(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
@@ -283,11 +284,11 @@ class typeProjectionModifiers(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallIn(metaclass=ABCMeta):
+class In(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallOut(metaclass=ABCMeta):
+class Out(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
@@ -344,13 +345,13 @@ class CompoundFunctionTypeParameters_t(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallParameter(metaclass=ABCMeta):
+class Parameter(metaclass=ABCMeta):
     @abstractmethod
-    def accept(self, Visitor):
+    def accept(self, visitor):
         pass
-class CallType(metaclass=ABCMeta):
+class Type(metaclass=ABCMeta):
     @abstractmethod
-    def accept(self, Visitor):
+    def accept(self, visitor):
         pass
 class parenthesizedType(metaclass= ABCMeta):
     @abstractmethod
@@ -364,59 +365,64 @@ class CompoundStatements (metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallFunctionDeclaration (metaclass=ABCMeta):
+class FunctionDeclaration (metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallAssignment (metaclass=ABCMeta):
+class Assignment (metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class  CallLoopStatement(metaclass=ABCMeta):
+
+class Expression(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class  CallExpression(metaclass=ABCMeta):
+class Statement (metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class Callblock(metaclass=ABCMeta):
+class Block(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallStatement (metaclass=ABCMeta):
+class ForStatement_MD(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class block(metaclass=ABCMeta):
+class ForStatement_VD(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallForStatement_MD(metaclass=ABCMeta):
+class WhileStatement(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallForStatement_VD(metaclass=ABCMeta):
+
+class DoWhileStatement(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallWhileStatement(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self):
-        pass
-class CallDoWhileStatement(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self):
-        pass
-class annot(metaclass=ABCMeta):
+class Annot(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
-class propertyDeclaration(metaclass=ABCMeta):
+class PropertyDeclaration(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class opType(metaclass=ABCMeta):
+
+class MultiVariableDeclaration(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
+
+class VariableDeclaration(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
+
+class OpType(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
@@ -532,11 +538,11 @@ class parenthesizedDirectlyAssignableExpression(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallparenthesizedAssignableExpression(metaclass=ABCMeta):
+class parenthesizedAssignableExpression(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallPrefixUnaryExpression(metaclass=ABCMeta):
+class PrefixUnaryExpression(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
@@ -544,7 +550,7 @@ class parenthesizedAssignableExpression(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallNavigationSuffix(metaclass=ABCMeta):
+class NavigationSuffix(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
@@ -563,7 +569,12 @@ class CompoundTypeArguments(metaclass=ABCMeta):
     def accept(self):
         pass
 
-class CallIndexingSuffix(metaclass=ABCMeta):
+class LoopStatement(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
+
+class IndexingSuffix(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
@@ -592,27 +603,27 @@ class callSuffix(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass 
-class CallParenthesizedExpression(metaclass=ABCMeta):
+class ParenthesizedExpression(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallValueArguments1(metaclass=ABCMeta):
+class ValueArguments1(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallValueArguments2(metaclass=ABCMeta):
+class ValueArguments2(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallValueArguments3(metaclass=ABCMeta):
+class ValueArguments3(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallAnnotatedLambda(metaclass=ABCMeta):
+class AnnotatedLambda(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallAnnotatedLambda2(metaclass=ABCMeta):
+class AnnotatedLambda2(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
@@ -673,28 +684,28 @@ class Compound2ValueArgument(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallLITERAL_STRING(metaclass=ABCMeta):
+class LITERAL_STRING(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallCallableReference(metaclass=ABCMeta):
+class CallableReference(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
 
-class CallFunctionLiteral(metaclass=ABCMeta):
+class FunctionLiteral(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallCollectionLiteral(metaclass=ABCMeta):
+class CollectionLiteral(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallIfExpression(metaclass=ABCMeta):
+class IfExpression(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class CallJumpExpression(metaclass=ABCMeta):
+class JumpExpression(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
@@ -839,35 +850,35 @@ class CompoundCallableReference_Class(metaclass=ABCMeta):
     def accept(self):
         pass
     
-class callableReference(metaclass=ABCMeta):
+class CallableReference(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class assignmentAndOperator(metaclass=ABCMeta):
+class AssignmentAndOperator(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class equalityOperator(metaclass=ABCMeta):
+class EqualityOperator(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class comparisonOperator(metaclass=ABCMeta):
+class ComparisonOperator(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class inOperator(metaclass=ABCMeta):
+class InOperator(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class isOperator(metaclass=ABCMeta):
+class IsOperator(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class additiveOperator(metaclass=ABCMeta):
+class AdditiveOperator(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class multiplicativeOperator(metaclass=ABCMeta):
+class MultiplicativeOperator(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
@@ -879,11 +890,11 @@ class CompoundAsOperator(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class asOperator(metaclass=ABCMeta):
+class AsOperator(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class prefixUnaryOperator(metaclass=ABCMeta):
+class PrefixUnaryOperator(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
@@ -891,11 +902,11 @@ class PostfixUnaryOperator(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class memberAccessOperator(metaclass=ABCMeta):
+class MemberAccessOperator(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class safeNav(metaclass=ABCMeta):
+class SafeNav(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
