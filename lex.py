@@ -98,10 +98,8 @@ tokens = (
     'MAISIGUAL',
     'MENOSIGUAL',
     'LONG',
-    'TYPE'
 )
 # Regular expression rules for simple tokens
-t_TYPE = r'type'
 t_LONG = r'Long'
 t_INIT = r'init'
 t_NOINLINE = r'noinline'
@@ -231,7 +229,7 @@ lexer = lex.lex()
 
 # Test it out
 data = r'''
-fun main(args: Array<String>) {
+fun main(args: Array) {
 
     val num = 10
     var factorial: Long = 1
