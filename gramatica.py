@@ -5,6 +5,7 @@ from AbstrataClass import abstractmethod
 import AbstrataClass as ac
 import ConcretaClass as cc
 import os
+from ConcretaClass import Compound2ValueArgument, CompoundCallSuffixConcrete, SimpleCallSuffixConcrete
 
 ###########################################################
 def p_kotlinFile(p):

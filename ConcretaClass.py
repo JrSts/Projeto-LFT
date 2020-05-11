@@ -593,7 +593,7 @@ class AssignmentConcrete(ac.Assignment):
         self.directlyAssignableExpression=directlyAssignableExpression
         self.expression=expression
     def accept(self, Visitor):
-        Visitor.visitAtribuicao(self)
+        Visitor.visitAssignmentConcrete(self)
 
 class AssignmentAndOperatorConcrete(ac.AssignmentAndOperator):
     def __init__(self,assignmentAndOperator, assignableExpression ,expression): 
@@ -601,7 +601,7 @@ class AssignmentAndOperatorConcrete(ac.AssignmentAndOperator):
         self.expression=expression
         self.assignableExpression = assignableExpression
     def accept(self, Visitor):
-        Visitor.visitAssignableExpression(self)
+        Visitor.visitAssignmentAndOperatorConcrete(self)
 ########################################################################
 class DisjunctionConcrete(ac.Disjunction):
     def __init__(self):
@@ -810,14 +810,14 @@ class SimplePrefixUnaryExpressionRecursive(ac.PrefixUnaryExpressionRecursive):
     def __init__(self, unaryPrefix):
         self.unaryPrefix = unaryPrefix
     def accept(self, Visitor):
-        Visitor.visitSimplePreue(self)
+        Visitor.visitSimplePrefixUnaryExpressionRecursive(self)
 
 class CompoundPrefixUnaryExpressionRecursive(ac.PrefixUnaryExpressionRecursive):
     def __init__(self, unaryPrefix, prefixUnaryExpressionRecursive):
         self.unaryPrefix = unaryPrefix
         self.prefixUnaryExpressionRecursive = prefixUnaryExpressionRecursive
     def accept(self, Visitor):
-        Visitor.visitCompoundPreue(self)
+        Visitor.visitCompoundPrefixUnaryExpressionRecursive(self)
 ########################################################################
 class PrefixUnaryOperatorConcrete(ac.UnaryPrefix):
     def __init__(self, prefixUnaryOperator):
