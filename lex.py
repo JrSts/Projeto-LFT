@@ -232,7 +232,7 @@ data = r'''
 fun main(args: Array) {
 
     val num = 10
-    var factorial: Long = 1
+    var factorial = 1
     for (i in 1..num) {
         factorial *= i.toLong()
     }

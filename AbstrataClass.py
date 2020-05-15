@@ -156,6 +156,11 @@ class PrefixUnaryExpressionRecursive(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
+
+class Lable(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
 class OptionsLambdaLiteral(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
@@ -308,15 +313,20 @@ class UnaryPrefix(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
-class Label(metaclass=ABCMeta):
-    @abstractmethod
-    def accept(self):
-        pass
 class postfixUnaryExpression(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass
+
+class optionalTypePonto(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
 class Posue(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self):
+        pass
+class VarOrVal(metaclass=ABCMeta):
     @abstractmethod
     def accept(self):
         pass

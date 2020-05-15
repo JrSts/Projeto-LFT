@@ -89,29 +89,29 @@ class CompoundKotlinFile(ac.KotlinFile):
     def accept(self, Visitor):
         Visitor.visitCompoundKotlinFile(self)
 ###########################################################
-class FunctionDeclaration(ac.FunctionDeclaration, ac.Statement):
-    def __init__(self, simpleIdentifier, functionValueParameters, optinalType, optionalBlock):
+class FunctionDeclaration(ac.FunctionDeclaration):
+    def __init__(self, simpleIdentifier, functionValueParameters, optionalType, optionalBlock):
         self.simpleIdentifier = simpleIdentifier
         self.functionValueParameters = functionValueParameters
-        self.optinalType = optinalType
+        self.optionalType = optionalType
         self.optionalBlock = optionalBlock
     def accept(self, Visitor):
         Visitor.visitFuncrionDeclaration(self)
 
-class OptinalType(FunctionDeclaration):
+class OptionalType(ac.FunctionDeclaration, ac.ParameterWithOptionalType, ac.LambdaParameter, ac.AnonymousFunction):
     def __init__(self, type):
         self.type = type
     def accept(self, Visitor):
-        Visitor.visitOptinalType(self)
+        Visitor.visitOptionalType(self)
 
-class OptionalBlock(FunctionDeclaration):
+class OptionalBlock(ac.FunctionDeclaration):
     def __init__(self, block):
         self.block = block
     def accept(self, Visitor):
         Visitor.visitOptionalBlock(self)
 ###########################################################
 
-class PropertyDeclarationConcrete(ac.KotlinFile, ac.Statement):
+class PropertyDeclarationConcrete(ac.PropertyDeclaration, ac.Statement):
     def __init__(self, varOrVal, optionalTypeParameters, MvOrV, expression, optionalPv):
         self.varOrVal = varOrVal
         self.MvOrV = MvOrV
@@ -121,29 +121,29 @@ class PropertyDeclarationConcrete(ac.KotlinFile, ac.Statement):
     def accept(self, Visitor):
         Visitor.visitPropertyDeclaration(self)
 
-class MultiVariableDeclaration(ac.KotlinFile):
+class MultiVariableDeclaration(ac.GenericVariableDeclaration):
     def __init__(self, multiVariableDeclaration):
         self.multiVariableDeclaration = multiVariableDeclaration
     def accept(self, Visitor):
         Visitor.visitMultiVariableDeclaration(self)
 
-class VariableDeclaration(ac.KotlinFile):
+class VariableDeclaration(ac.GenericVariableDeclaration):
     def __init__(self, variableDeclaration):
         self.variableDeclaration = variableDeclaration
     def accept(self, Visitor):
         Visitor.visitVariableDeclaration(self)
 
-class Var(ac.PropertyDeclaration):
+class Var(ac.VarOrVal):
     def __init__(self, var):
         self.var = var
     def accept(self, Visitor):
-        Visitor.visitPd1_var(self)
+        Visitor.visitVar(self)
 
-class Val(ac.PropertyDeclaration):
+class Val(ac.VarOrVal):
     def __init__(self, val):
         self.val = val
     def accept(self, Visitor):
-        Visitor.visitPd1_val(self)
+        Visitor.visitVal(self)
 
 class OptionalTypeParameters(ac.PropertyDeclaration):
     def __init__(self, typeParameters):
@@ -368,20 +368,20 @@ class Out(ac.VarianceModifier):
     def accept(self, Visitor):
         Visitor.visitVariaceModifierOut(self)
 ########################################################################
-class SimpleUserTypeConcrete(ac.UserType):
-    def __init__(self):
-        self
-    def accept(self, Visitor):
-        Visitor.visitSimpleSimpleUserType(self)
+# class SimpleUserTypeConcrete(ac.UserType):
+#     def __init__(self):
+#         self
+#     def accept(self, Visitor):
+#         Visitor.visitSimpleSimpleUserType(self)
 
-class SimpleSimpleUserType(UserType):
+class SimpleSimpleUserType(ac.UserType):
     def __init__(self, simpleIdentifier):
         self.simpleIdentifier = simpleIdentifier
     def accept(self, Visitor):
         Visitor.visitSimpleSimpleUserType(self)
 
-class CompoundSimpleUserType(UserType):
-    def __init__(self, simpleUserType, typeArguments):
+class CompoundSimpleUserType(ac.UserType):
+    def __init__(self, simpleIdentifier, typeArguments):
         self.simpleIdentifier = simpleIdentifier
         self.typeArguments = typeArguments
     def accept(self, Visitor):
@@ -507,17 +507,13 @@ class StatementConcrete(ac.ControlStructureBody):
         Visitor.visitBlock(self)
 ########################################################################
 
-class ForStatement_MD(ac.LoopStatement):
-    def __init__(self, forStatement):
-        self.forStatement = forStatement
+class ForStatementConcrete(ac.LoopStatement):
+    def __init__(self, genericVariableDeclaration, expression, optionalControlStructureBody):
+        self.genericVariableDeclaration = genericVariableDeclaration
+        self.expression = expression
+        self.optionalControlStructureBody = optionalControlStructureBody
     def accept(self, Visitor):
-        Visitor.visitForStatement_MD(self)
-       
-class ForStatement_VD(ac.LoopStatement):
-    def __init__(self, forStatement):
-        self.forStatement = forStatement
-    def accept(self, Visitor):
-        Visitor.visitForStatement_VD(self)
+        Visitor.visitForStatementConcrete(self)
 
 class WhileStatement_PV(ac.LoopStatement):
     def __init__(self, expression):
@@ -544,36 +540,6 @@ class DoWhileStatement(ac.LoopStatement):
         self.doWhileStatement = doWhileStatement
     def accept(self, Visitor):
         Visitor.visitDoWhileStatement(self)
-########################################################################
-class SimpleForStatement_MD(LoopStatement):
-    def __init__(self, multiVariableDeclaration, expression):
-        self.multiVariableDeclaration=multiVariableDeclaration
-        self.expression=expression
-    def accept(self, Visitor):
-        Visitor.visitSimpleForStatement_MD(self)
-
-class CompoundForStatement_MD(LoopStatement):
-    def __init__(self, multiVariableDeclaration, expression, controlStructureBody):
-        self.multiVariableDeclaration=multiVariableDeclaration
-        self.expression=expression
-        self.controlStructureBody=controlStructureBody
-    def accept(self, Visitor):
-        Visitor.visitCompoundForStatement_MD(self)
-
-class SimpleForStatement_VD(LoopStatement):
-    def __init__(self, variableDeclaration, expression):
-        self.variableDeclaration=variableDeclaration
-        self.expression=expression
-    def accept(self, Visitor):
-        Visitor.visitSimpleForStatement_VD(self)
-
-class CompoundForStatement_VD(LoopStatement):
-    def __init__(self, variableDeclaration, expression, controlStructureBody):
-        self.variableDeclaration=variableDeclaration
-        self.expression=expression
-        self.controlStructureBody=controlStructureBody
-    def accept(self, Visitor):
-        Visitor.visitCompoundForStatement_MD(self)
 ########################################################################
 class SimpleDoWhileStatement(ac.LoopStatement):
     def __init__(self, expression):
@@ -609,13 +575,13 @@ class DisjunctionConcrete(ac.Disjunction):
     def accept (self,Visitor):
         Visitor.visitDisjunctionConcrete(self)
 ########################################################################
-class SimpleDisjunction(ac.Expression):
+class SimpleDisjunction(ac.Disjunction):
     def __init__(self, conjunction):
         self.conjunction = conjunction
     def accept (self,Visitor):
         Visitor.visitSimpleDisjunction(self)
        
-class CompoundDisjunction(ac.Expression):
+class CompoundDisjunction(ac.Disjunction):
     def __init__(self, conjunction, disjunction):
         self.conjunction=conjunction
         self.disjunction=disjunction
@@ -1300,8 +1266,8 @@ class MultiVariableDeclarationConcrete(ac.LambdaParameter):
         Visitor.visitCompoundLambdaParameter(self)
 ########################################################################
 class AnonymousFunctionConcrete(ac.AnonymousFunction):
-    def __init__(self ,optinalTypePonto ,parametersWithOptionalType, optionalType ,optionalTypeConstraints, optionalFunctionBody):
-        self.optinalTypePonto=optinalTypePonto
+    def __init__(self ,optionalTypePonto ,parametersWithOptionalType, optionalType ,optionalTypeConstraints, optionalFunctionBody):
+        self.optionalTypePonto=optionalTypePonto
         self.parametersWithOptionalType=parametersWithOptionalType
         self.optionalType=optionalType
         self.optionalTypeConstraints=optionalTypeConstraints
@@ -1309,11 +1275,11 @@ class AnonymousFunctionConcrete(ac.AnonymousFunction):
     def accept(self, Visitor):
         Visitor.visitAnonymousFunctionConcrete(self)
 
-class OptinalTypePontoConcrete(ac.AnonymousFunction):
+class OptionalTypePontoConcrete(ac.AnonymousFunction):
     def __init__(self, type):
          self.type = type
     def accept(self, Visitor):
-        Visitor.visitOptinalTypePontoConcrete(self)
+        Visitor.visitOptionalTypePontoConcrete(self)
 
 class OptionalTypeConstraintsConcrete(ac.AnonymousFunction):
     def __init__(self, typeConstraints):

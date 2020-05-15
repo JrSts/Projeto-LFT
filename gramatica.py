@@ -17,27 +17,25 @@ def p_kotlinFile(p):
         p[0] = cc.CompoundKotlinFile(p[1], p[2])
 ###########################################################
 
-def p_functionDeclaration(p):
-    ''' functionDeclaration : FUN simpleIdentifier functionValueParameters optionalType optionalBlock '''
-    p[0] = cc.FunctionDeclaration(p[2], p[3], p[4], p[5])
-
 def p_optionalType(p):
     ''' optionalType : DOISP type
                      | '''
-    if len(p) == 3:        
-        p[0] = cc.OptinalType(p[2])
-    else:         
-        p[0] = cc.OptinalType(None)
+    if len(p) == 3:
+        p[0] = cc.OptionalType(p[2])
+    else:
+        p[0] = cc.OptionalType(None)
 
 def p_optionalBlock(p):
     ''' optionalBlock : block
                       | '''
-    if len(p) == 2:        
+    if len(p) == 2:
         p[0] = cc.OptionalBlock(p[1])
-    else:         
+    else:
         p[0] = cc.OptionalBlock(None)
 
-
+def p_functionDeclaration(p):
+    ''' functionDeclaration : FUN simpleIdentifier functionValueParameters optionalType optionalBlock '''
+    p[0] = cc.FunctionDeclaration(p[2], p[3], p[4], p[5])
 ###########################################################
 def p_optionalPv(p):
     ''' optionalPv : PV
@@ -47,12 +45,19 @@ def p_optionalPv(p):
     else:
         p[0]: cc.OptionalPv(None)
 ###########################################################
+def p_genericVariableDeclaration(p):
+    ''' genericVariableDeclaration : multiVariableDeclaration
+                                   | variableDeclaration '''
+    if isinstance(p[1], ac.MultiVariableDeclaration):
+        p[0] = cc.MultiVariableDeclaration(p[1])
+    else:
+        p[0] = cc.VariableDeclaration(p[1])
+########################################################################
 
-def p_propertyDeclaration(p):
-    ''' propertyDeclaration : varOrVal optionalTypeParameters genericVariableDeclaration ATRIBUICAO expression optionalPv'''
-    p[0] = cc.PropertyDeclarationConcrete(p[1], p[2], p[3], p[5], p[6])
+def p_expression(p):
+    ''' expression : disjunction '''
+    p[0] = p[1]
 ###########################################################
-
 def p_varOrVal(p):
     ''' varOrVal : VAR
                  | VAL '''
@@ -60,7 +65,6 @@ def p_varOrVal(p):
         p[0] = cc.Var(p[1])
     else:
         p[0] = cc.Val(p[1])
-###########################################################
 
 def p_optionalTypeParameters(p):
     ''' optionalTypeParameters : typeParameters
@@ -70,15 +74,9 @@ def p_optionalTypeParameters(p):
     else:
         p[0]: cc.OptionalTypeParameters(None)
 ###########################################################
-
-def p_genericVariableDeclaration(p):
-    ''' genericVariableDeclaration : multiVariableDeclaration
-                                   | variableDeclaration '''
-    if isinstance(p[1], ac.MultiVariableDeclaration):
-        p[0] = cc.MultiVariableDeclaration(p[1])
-    else:
-        p[0] = cc.VariableDeclarationar(p[1])
-
+def p_propertyDeclaration(p):
+    ''' propertyDeclaration : varOrVal optionalTypeParameters genericVariableDeclaration ATRIBUICAO expression optionalPv'''
+    p[0] = cc.PropertyDeclarationConcrete(p[1], p[2], p[3], p[5], p[6])
 ###########################################################
 
 def p_typeParameters(p):
@@ -221,7 +219,7 @@ def p_simpleUserType(p):
     ''' simpleUserType : simpleIdentifier typeArguments
 					   | simpleIdentifier '''
     if len(p) == 2:
-        p[0] = cc.SimpleUserType(p[1])
+        p[0] = cc.SimpleSimpleUserType(p[1])
     else:
         p[0] = cc.CompoundSimpleUserType(p[1], p[2])
 ########################################################################
@@ -250,11 +248,7 @@ def p_functionType(p):
     else:
         p[0] = cc.CompoundFunctionType(p[1], p[3], p[5])
 ########################################################################
-def p_functionTypeParameters(p):
-    '''functionTypeParameters : LPAREN optionalParameterOrType parameterOrTypeRecursive optionalCOMMA RPAREN '''
-    p[0] = cc.FunctionTypeParametersConcrete(p[2], p[3], p[4])
-
-def p_optinalParameterOrType(p):
+def p_optionalParameterOrType(p):
     ''' optionalParameterOrType : parameter
                                | type
                                | '''
@@ -269,11 +263,14 @@ def p_parameterOrTypeRecursive(p):
     ''' parameterOrTypeRecursive : COMMA optionalParameterOrType
                                  | COMMA optionalParameterOrType parameterOrTypeRecursive
                                  | '''
-
     if len(p) == 3:
         p[0] = cc.SimpleParameterOrTypeRecursive(p[2])
     else:
         p[0] = cc.CompoundParameterOrTypeRecursive(p[2], p[3])
+
+def p_functionTypeParameters(p):
+    '''functionTypeParameters : LPAREN optionalParameterOrType parameterOrTypeRecursive optionalCOMMA RPAREN '''
+    p[0] = cc.FunctionTypeParametersConcrete(p[2], p[3], p[4])
 ########################################################################
 def p_parenthesizedType(p):
     '''parenthesizedType : LPAREN type RPAREN '''
@@ -305,7 +302,7 @@ def p_statement(p):
 
 def p_controlStructureBody(p):
     '''controlStructureBody : block
-                          | statement'''
+                            | statement '''
     p[0] = p[1]
 ########################################################################
 
@@ -315,30 +312,24 @@ def p_block(p):
 ########################################################################
 #este tipo de padrao ocorrem quando um variavel vai para outro tipos de variareis 
 def p_loopStatement(p):
-    '''loopStatement : forStatement_MD
-                    | forStatement_VD
-                    | whileStatement
-                    | doWhileStatement '''
+    '''loopStatement : forStatement
+                     | whileStatement
+                     | doWhileStatement '''
     p[0] = p[1]
+
+########################################################################
+def p_optionalControlStructureBody(p):
+    ''' optionalControlStructureBody : controlStructureBody
+                                     | '''
+    if len(p) == 2:
+        p[0] = cc.ControlStructureBody(p[1])
+    else:
+        p[0] = cc.ControlStructureBody(None)
 ########################################################################
 
-def p_forStatement_MD(p):
-    '''forStatement_MD : FOR LPAREN multiVariableDeclaration IN expression RPAREN controlStructureBody
-                      | FOR LPAREN multiVariableDeclaration IN expression RPAREN '''
-    if len(p) == 7:
-        p[0] = cc.SimpleForStatement_MD(p[3], p[5])
-    else:
-        p[0] = cc.CompoundForStatement_MD(p[3], p[5], p[7])
-########################################################################
-
-def p_forStatement_VD(p):
-    '''forStatement_VD :  FOR LPAREN variableDeclaration IN expression RPAREN controlStructureBody
-                      | FOR LPAREN variableDeclaration IN expression RPAREN '''
-    if len(p) == 8:
-        p[0] = cc.SimpleForStatement_VD(p[3], p[5])
-    else:
-        p[0] = cc.CompoundForStatement_VD(p[3], p[5], p[7])
-
+def p_forStatement(p):
+    ''' forStatement : FOR LPAREN genericVariableDeclaration IN expression RPAREN optionalControlStructureBody '''
+    p[0] = cc.ForStatementConcrete(p[3], p[5], p[7])
 ########################################################################
 def p_whileStatement(p):
     ''' whileStatement : WHILE LPAREN expression RPAREN controlStructureBody
@@ -351,7 +342,7 @@ def p_whileStatement(p):
 ########################################################################
 def p_doWhileStatement(p):
     ''' doWhileStatement : DO controlStructureBody WHILE LPAREN expression RPAREN
-                          | DO WHILE LPAREN expression RPAREN '''
+                         | DO WHILE LPAREN expression RPAREN '''
     if len(p) == 6:
         p[0] = cc.SimpleDoWhileStatement(p[4])
     else:
@@ -366,11 +357,7 @@ def p_assignment(p):
         p[0] = cc.AssignmentConcrete(p[1], p[3])
     else:
         p[0] = cc.AssignmentAndOperator(p[1], p[2], p[3])
-########################################################################
 
-def p_expression(p):
-    ''' expression : disjunction '''
-    p[0] = p[1]
 ########################################################################
 
 def p_disjunction(p):
@@ -496,6 +483,14 @@ def p_prefixUnaryExpression(p):
     else:
         p[0] = cc.CompoundPrefixUnaryExpression(p[1], p[2])
 ########################################################################
+def p_unaryPrefix(p):
+    ''' unaryPrefix : label
+                    | prefixUnaryOperator '''
+    if isinstance(p[1], ac.Lable):
+        p[0] = cc.LabelConcrete(p[1])
+    else:
+        p[0] = cc.PrefixUnaryOperatorConcrete(p[1])
+########################################################################
 def p_prefixUnaryExpressionRecursive(p):
     ''' prefixUnaryExpressionRecursive : unaryPrefix
                                        | unaryPrefix prefixUnaryExpressionRecursive '''
@@ -504,14 +499,6 @@ def p_prefixUnaryExpressionRecursive(p):
     else:
         p[0] = cc.CompoundPrefixUnaryExpressionRecursive(p[1], p[2])
 ####################################################################
-def p_unaryPrefix(p):
-    ''' unaryPrefix : label
-                    | prefixUnaryOperator '''
-    if isinstance(p[1], ac.Lable):
-        p[0] = cc.LableConcrete(p[1])
-    else:
-        p[0] = cc.PrefixUnaryOperatorConcrete(p[1])
-########################################################################      
 
 def p_label(p):
     ''' label : simpleIdentifier'''
@@ -687,8 +674,8 @@ def p_valueArguments(p):
 ########################################################################
 
 def p_valueArgument(p):
-    ''' valueArgument : simpleIdentifier IGUALDADE MULT expression
-                      | simpleIdentifier IGUALDADE expression
+    ''' valueArgument : simpleIdentifier ATRIBUICAO MULT expression
+                      | simpleIdentifier ATRIBUICAO expression
                       | expression  '''
     if len(p) == 2:
         p[0] = cc.SimpleValueArgument(p[1])
@@ -812,7 +799,7 @@ def p_lambdaParameters(p):
                          | lambdaParameter COMMA lambdaParameters '''
     if len(p) == 2:
         p[0] = cc.SimpleLambdaParameters(p[1])
-    else :
+    else:
         p[0] = cc.CompoundLambdaParameters(p[1], p[3])
 ########################################################################
 def p_lambdaParameter(p):
@@ -880,13 +867,7 @@ def p_controlStructureBodyOrPV(p):
     else:
         p[0] = cc.ControlStructureBody(p[1])
 
-def p_optionalControlStructureBody(p):
-    ''' optionalControlStructureBody : controlStructureBody
-                                     | '''
-    if len(p) == 2:
-        p[0] = cc.ControlStructureBody(p[1])
-    else:
-        p[0] = cc.ControlStructureBody(None)
+
 
 def p_optionalPV(p):
     ''' optionalPV : PV
@@ -1100,7 +1081,7 @@ def p_simpleIdentifier(p):
                         | VAR
                         | WHEN
                         | LONG
-                        | ARRAY  '''
+                        | ARRAY '''
     p[0] = p[1]
 
 def p_error(p):
