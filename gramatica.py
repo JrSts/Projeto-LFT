@@ -360,8 +360,8 @@ def p_parametersFunction(p):
                            | primaryExpression COMMA parametersFunction '''
 
 def p_chamadaDeFuncao(p):
-    ''' chamadaDeFuncao : simpleIdentifier LPAREN RPAREN
-                        | simpleIdentifier LPAREN parametersFunction RPAREN'''
+    ''' chamadaDeFuncao : statement LPAREN RPAREN
+                        | statement LPAREN parametersFunction RPAREN '''
     # if len(p) == 2:
     #     p[0] = cc.SimpleChamadaDeFuncao(p[1])
     # else:
