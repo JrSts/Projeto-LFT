@@ -124,11 +124,11 @@ def p_functionValueParameters(p):
         p[0] = cc.CompoundFunctionValueParameters(p[2])
 
 def p_functionValueParametersRecursive(p):
-    ''' functionValueParametersRecursive : functionValueParameter optionalCOMMA
+    ''' functionValueParametersRecursive : functionValueParameter
                                         | functionValueParameter COMMA functionValueParametersRecursive  '''
 
-    if len(p) == 3:
-        p[0] = cc.SimpleFunctionValueParametersRecursive(p[1], p[2])
+    if len(p) == 2:
+        p[0] = cc.SimpleFunctionValueParametersRecursive(p[1], None)
     else:
         p[0] = cc.CompoundFunctionValueParametersRecursive(p[1], p[3])
 
@@ -170,12 +170,15 @@ def p_parameter(p):
     p[0] = cc.ParameterConcrete(p[1], p[3])
 ######################################################################
 def p_type(p):
-    ''' type : optionalTypeModifiers optype'''
-    p[0] = cc.TypeConcrete(p[1], p[2])
+    ''' type :  typeModifiers optype
+              | optype '''
+    if (len(p) == 3):
+        p[0] = cc.TypeConcrete(p[1], p[2])
+    else:
+        p[0] = cc.TypeConcrete(None, p[1])
 
 def p_optionalTypeModifiers(p):
-    '''optionalTypeModifiers : typeModifiers
-                             | '''
+    '''optionalTypeModifiers : typeModifiers '''
     if len(p) == 2:
         p[0] = cc.OptionalTypeModifiersConcrete(p[1])
     else:
@@ -352,7 +355,7 @@ def p_doWhileStatement(p):
 
 def p_assignment(p):
     '''assignment : directlyAssignableExpression ATRIBUICAO expression
-                  | assignableExpression assignmentAndOperator expression '''
+                  | asExpression assignmentAndOperator expression '''
     if p[2] == '=':
         p[0] = cc.AssignmentConcrete(p[1], p[3])
     else:
@@ -688,6 +691,7 @@ def p_primaryExpression(p):
     ''' primaryExpression : parenthesizedExpression
                            | simpleIdentifier
                            | LITERAL_STRING
+                           | NUMBER
                            | callableReference
                            | functionLiteral
                            | collectionLiteral
@@ -883,7 +887,6 @@ def p_optionalPV(p):
 def p_jumpExpression(p):
     ''' jumpExpression :  RETURN expression
                          | RETURN_AT expression
-                         | expression
                          | CONTINUE
                          | CONTINUE_AT
                          | BREAK
@@ -1064,24 +1067,7 @@ def p_simpleIdentifier(p):
                         | OUT
                         | VARARG
                         | WHERE
-                        | OBJECT
-                        | CONST
-                        | CONSTRUCTOR
-                        | EOF
-                        | FALSE
-                        | FUNCTION
-                        | NULL
-                        | NULLABLE
-                        | NUMBER
-                        | OPERATOR
-                        | SMARTCAST
-                        | THIS
-                        | TRUE
-                        | VAL
-                        | VAR
-                        | WHEN
-                        | LONG
-                        | ARRAY '''
+                        | OPERATOR '''
     p[0] = p[1]
 
 def p_error(p):

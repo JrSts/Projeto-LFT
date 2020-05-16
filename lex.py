@@ -22,7 +22,6 @@ tokens = (
     'VAL',
     'FUN',
     'STRING',
-    'ARRAY',
     'OBJECT',
     'THIS',
     'CHAR',
@@ -105,7 +104,7 @@ t_INIT = r'init'
 t_NOINLINE = r'noinline'
 t_VARARG = r'vararg'
 t_CROSSINLINE = r'crossinline'
-t_ARRAY = r'Array'
+#t_ARRAY = r'Array'
 t_WHERE = r'where'
 t_ELVIS = r'\?:'
 t_OUT = r'out'
@@ -172,7 +171,6 @@ t_CONSTRUCTOR = r'constructor'
 t_DOUBLE = r'Double'
 t_SMARTCAST = r'Smartcast'
 t_BOOLEAN = r'Boolean'
-t_FUNCTION = r'function'
 t_FOR = r'for'
 t_FALSE = r'false'
 t_MAIOR = r'>'
@@ -232,9 +230,9 @@ data = r'''
 fun main(args: Array) {
 
     val num = 10
-    var factorial = 1
+    val factorial = 1
     for (i in 1..num) {
-        factorial *= i.toLong()
+        factorial *= 13
     }
     println("Factorial of $num = $factorial")
 }

@@ -134,7 +134,9 @@ class Visitor:
         CompoundTypeParameter.simpleIdentifier.accept(self)
         print('simpleIdentifier')
     def visitSimpleFunctionBody(self, SimpleFunctionBody):
+        print ('{')
         SimpleFunctionBody.block.accept(self)
+        print ('}')
         print('block')
     def visitCompoundFunctionBody(self, CompoundFunctionBody):
         CompoundFunctionBody.expression.accept(self)
@@ -311,10 +313,11 @@ class Visitor:
         WhileStatement_PV.expression.accept(self)
         print('expression')
     def visitWhileStatement_CBS(self,WhileStatement_CBS):
+        print ('while (', end='')
         WhileStatement_CBS.expression.accept(self)
-        print('expression')
+        print (')', end='')
         WhileStatement_CBS.controlStructureBody.accept(self)
-        print('controlStructureBody')
+
     def visitWhileStatementD(self,WhileStatement):
         WhileStatement.whileStatement.acccept(self)
         print('whileStatement')
