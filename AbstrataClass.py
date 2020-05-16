@@ -229,6 +229,11 @@ class LoopStatement(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass
+class ChamadaDeFuncao(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, Visitor):
+        pass
+
 class ForStatement_MD(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):

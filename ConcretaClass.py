@@ -90,7 +90,8 @@ class CompoundKotlinFile(ac.KotlinFile):
         Visitor.visitCompoundKotlinFile(self)
 ###########################################################
 class FunctionDeclaration(ac.FunctionDeclaration):
-    def __init__(self, simpleIdentifier, functionValueParameters, optionalType, optionalBlock):
+    def __init__(self, FUN, simpleIdentifier, functionValueParameters, optionalType, optionalBlock):
+        self.FUN = FUN
         self.simpleIdentifier = simpleIdentifier
         self.functionValueParameters = functionValueParameters
         self.optionalType = optionalType
@@ -469,12 +470,7 @@ class CompoundStatements(ac.Statements):
         self.statments=statments
     def accept(self, Visitor):
         Visitor.visitCompoundStatemnts(self)
-########################################################################
-class FunctionDeclaration(ac.Statement):
-    def __init__(self):
-        self
-    def accept(self, Visitor):
-        Visitor.visitFunctionDeclaration(self)
+##########################################################################
 
 class Assignment(ac.Statement):
     def __init__(self):
@@ -495,8 +491,8 @@ class Expression(ac.Statement):
         Visitor.visitExpression(self)
 ########################################################################
 class Block(ac.ControlStructureBody):
-    def __init__(self):
-        self
+    def __init__(self, statements):
+        self.statements = statements
     def accept(self, Visitor):
         Visitor.visitBlock(self)
 
@@ -553,6 +549,19 @@ class CompoundDoWhileStatement(ac.LoopStatement):
         self.expression=expression
     def accept(self, Visitor):
         Visitor.visitCompoundDoWhileStatement(self)
+########################################################################
+class SimpleChamadaDeFuncao(ac.ChamadaDeFuncao):
+    def __init__(self, simpleIdentifier):
+        self.simpleIdentifier = simpleIdentifier
+    def accept(self, Visitor):
+        Visitor.visitSimpleChamadaDeFuncao(self)
+
+class SimpleChamadaDeFuncao(ac.ChamadaDeFuncao):
+    def __init__(self, simpleIdentifier, expression):
+        self.simpleIdentifier = simpleIdentifier
+        self.expression = expression
+    def accept(self, Visitor):
+        Visitor.visitSimpleChamadaDeFuncao(self)
 ########################################################################
 class AssignmentConcrete(ac.Assignment):
     def __init__(self,directlyAssignableExpression, expression):

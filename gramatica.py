@@ -35,7 +35,7 @@ def p_optionalBlock(p):
 
 def p_functionDeclaration(p):
     ''' functionDeclaration : FUN simpleIdentifier functionValueParameters optionalType optionalBlock '''
-    p[0] = cc.FunctionDeclaration(p[2], p[3], p[4], p[5])
+    p[0] = cc.FunctionDeclaration(p[1], p[2], p[3], p[4], p[5])
 ###########################################################
 def p_optionalPv(p):
     ''' optionalPv : PV
@@ -299,7 +299,8 @@ def p_statement(p):
                   | assignment
                   | loopStatement
                   | expression
-                  | propertyDeclaration '''
+                  | propertyDeclaration
+                  | chamadaDeFuncao '''
     p[0] = p[1]
 ########################################################################
 
@@ -311,7 +312,7 @@ def p_controlStructureBody(p):
 
 def p_block(p):
     '''block : LCHAVE statements RCHAVE '''
-    p[0] = cc.block(p[2])
+    p[0] = cc.Block(p[2])
 ########################################################################
 #este tipo de padrao ocorrem quando um variavel vai para outro tipos de variareis 
 def p_loopStatement(p):
@@ -331,8 +332,9 @@ def p_optionalControlStructureBody(p):
 ########################################################################
 
 def p_forStatement(p):
-    ''' forStatement : FOR LPAREN genericVariableDeclaration IN expression RPAREN optionalControlStructureBody '''
-    p[0] = cc.ForStatementConcrete(p[3], p[5], p[7])
+    ''' forStatement : FOR LPAREN genericVariableDeclaration IN expression RPAREN controlStructureBody
+                     | FOR LPAREN genericVariableDeclaration IN expression RPAREN '''
+  #  p[0] = cc.ForStatementConcrete(p[3], p[5], p[7])
 ########################################################################
 def p_whileStatement(p):
     ''' whileStatement : WHILE LPAREN expression RPAREN controlStructureBody
@@ -353,13 +355,26 @@ def p_doWhileStatement(p):
 
 ########################################################################
 
+def p_parametersFunction(p):
+    ''' parametersFunction : primaryExpression
+                           | primaryExpression COMMA parametersFunction '''
+
+def p_chamadaDeFuncao(p):
+    ''' chamadaDeFuncao : simpleIdentifier LPAREN RPAREN
+                        | simpleIdentifier LPAREN parametersFunction RPAREN'''
+    # if len(p) == 2:
+    #     p[0] = cc.SimpleChamadaDeFuncao(p[1])
+    # else:
+    #     p[0] = cc.CompoundChamadaDeFuncao(p[1], p[3])
+
+########################################################################
 def p_assignment(p):
     '''assignment : directlyAssignableExpression ATRIBUICAO expression
                   | asExpression assignmentAndOperator expression '''
     if p[2] == '=':
         p[0] = cc.AssignmentConcrete(p[1], p[3])
     else:
-        p[0] = cc.AssignmentAndOperator(p[1], p[2], p[3])
+        p[0] = cc.AssignmentAndOperatorConcrete(p[1], p[2], p[3])
 
 ########################################################################
 
@@ -489,7 +504,7 @@ def p_prefixUnaryExpression(p):
 def p_unaryPrefix(p):
     ''' unaryPrefix : label
                     | prefixUnaryOperator '''
-    if isinstance(p[1], ac.Lable):
+    if isinstance(p[1], ac.Label):
         p[0] = cc.LabelConcrete(p[1])
     else:
         p[0] = cc.PrefixUnaryOperatorConcrete(p[1])
@@ -501,11 +516,7 @@ def p_prefixUnaryExpressionRecursive(p):
         p[0] = cc.SimplePrefixUnaryExpressionRecursive(p[1])
     else:
         p[0] = cc.CompoundPrefixUnaryExpressionRecursive(p[1], p[2])
-####################################################################
 
-def p_label(p):
-    ''' label : simpleIdentifier'''
-    p[0] = p[1]
 ########################################################################
 def p_postfixUnaryExpressionRecursive(p):
     ''' postfixUnaryExpressionRecursive : postfixUnarySuffix
@@ -784,7 +795,7 @@ def p_parameterModifiers(p):
     #     p[0] = Crossinline(p[1])
 ########################################################################
 def p_lambdaLiteral(p):
-    ''' lambdaLiteral : RCHAVE optionsLambdaLiteral LCHAVE	'''
+    ''' lambdaLiteral : LCHAVE optionsLambdaLiteral RCHAVE	'''
     p[0] = cc.LambdaLiteral(p[2])
 ########################################################################
 def p_optionsLambdaLiteral(p):
@@ -1058,6 +1069,12 @@ def p_safeNav(p):
 
 # Identifiers
 # olhar tokens
+####################################################################
+
+def p_label(p):
+    ''' label : simpleIdentifier '''
+    p[0] = p[1]
+
 def p_simpleIdentifier(p):
     ''' simpleIdentifier : ID 
                         | CROSSINLINE
