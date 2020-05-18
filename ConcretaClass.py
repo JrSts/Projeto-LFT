@@ -503,20 +503,26 @@ class StatementConcrete(ac.ControlStructureBody):
         Visitor.visitBlock(self)
 ########################################################################
 
-class ForStatementConcrete(ac.LoopStatement):
+class SimpleForStatementConcrete(ac.LoopStatement):
+    def __init__(self, genericVariableDeclaration, expression):
+        self.genericVariableDeclaration = genericVariableDeclaration
+        self.expression = expression
+    def accept(self, Visitor):
+        Visitor.visitSimpleForStatementConcrete(self)
+
+class CompoundForStatementConcrete(ac.LoopStatement):
     def __init__(self, genericVariableDeclaration, expression, optionalControlStructureBody):
         self.genericVariableDeclaration = genericVariableDeclaration
         self.expression = expression
         self.optionalControlStructureBody = optionalControlStructureBody
     def accept(self, Visitor):
-        Visitor.visitForStatementConcrete(self)
+        Visitor.visitCompoundForStatementConcrete(self)
 
 class WhileStatement_PV(ac.LoopStatement):
     def __init__(self, expression):
         self.expression = expression
     def accept(self, Visitor):
         Visitor.visitWhileStatement_PV(self)
-
 
 class WhileStatement_CBS(ac.LoopStatement):
     def __init__(self, expression, controlStructureBody):
@@ -525,17 +531,6 @@ class WhileStatement_CBS(ac.LoopStatement):
     def accept(self, Visitor):
         Visitor.visitWhileStatement_CBS(self)
 
-class WhileStatement(ac.LoopStatement):
-    def __init__(self, whileStatement):
-        self.whileStatement = whileStatement
-    def accept(self, Visitor):
-        Visitor.visitWhileStatementD(self)
-
-class DoWhileStatement(ac.LoopStatement):
-    def __init__(self, doWhileStatement):
-        self.doWhileStatement = doWhileStatement
-    def accept(self, Visitor):
-        Visitor.visitDoWhileStatement(self)
 ########################################################################
 class SimpleDoWhileStatement(ac.LoopStatement):
     def __init__(self, expression):
@@ -551,17 +546,30 @@ class CompoundDoWhileStatement(ac.LoopStatement):
         Visitor.visitCompoundDoWhileStatement(self)
 ########################################################################
 class SimpleChamadaDeFuncao(ac.ChamadaDeFuncao):
-    def __init__(self, simpleIdentifier):
-        self.simpleIdentifier = simpleIdentifier
+    def __init__(self, statement):
+        self.statement = statement
     def accept(self, Visitor):
         Visitor.visitSimpleChamadaDeFuncao(self)
 
-class SimpleChamadaDeFuncao(ac.ChamadaDeFuncao):
-    def __init__(self, simpleIdentifier, expression):
-        self.simpleIdentifier = simpleIdentifier
-        self.expression = expression
+class CompoundChamadaDeFuncao(ac.ChamadaDeFuncao):
+    def __init__(self, statement, parametersFunction):
+        self.statement = statement
+        self.parametersFunction = parametersFunction
     def accept(self, Visitor):
-        Visitor.visitSimpleChamadaDeFuncao(self)
+        Visitor.visitCompoundChamadaDeFuncao(self)
+
+class SimpleParametersFunction(ac.ChamadaDeFuncao):
+    def __init__(self, primaryExpression):
+        self.primaryExpression = primaryExpression
+    def accept(self, Visitor):
+        Visitor.visitSimpleParametersFunction(self)
+
+class CompoundParametersFunction(ac.ChamadaDeFuncao):
+    def __init__(self, primaryExpression, parametersFunction):
+        self.primaryExpression = primaryExpression
+        self.parametersFunction = parametersFunction
+    def accept(self, Visitor):
+        Visitor.visitCompoundParametersFunction(self)
 ########################################################################
 class AssignmentConcrete(ac.Assignment):
     def __init__(self,directlyAssignableExpression, expression):

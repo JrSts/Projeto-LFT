@@ -177,12 +177,12 @@ def p_type(p):
     else:
         p[0] = cc.TypeConcrete(None, p[1])
 
-def p_optionalTypeModifiers(p):
-    '''optionalTypeModifiers : typeModifiers '''
-    if len(p) == 2:
-        p[0] = cc.OptionalTypeModifiersConcrete(p[1])
-    else:
-        p[0] = cc.OptionalTypeModifiersConcrete(None)
+# def p_optionalTypeModifiers(p):
+#     '''optionalTypeModifiers : typeModifiers '''
+#     if len(p) == 2:
+#         p[0] = cc.OptionalTypeModifiersConcrete(p[1])
+#     else:
+#         p[0] = cc.OptionalTypeModifiersConcrete(None)
 #####################################################################
 def p_opType(p):
     '''optype : parenthesizedType
@@ -320,21 +320,16 @@ def p_loopStatement(p):
                      | whileStatement
                      | doWhileStatement '''
     p[0] = p[1]
-
-########################################################################
-def p_optionalControlStructureBody(p):
-    ''' optionalControlStructureBody : controlStructureBody
-                                     | '''
-    if len(p) == 2:
-        p[0] = cc.ControlStructureBody(p[1])
-    else:
-        p[0] = cc.ControlStructureBody(None)
 ########################################################################
 
 def p_forStatement(p):
     ''' forStatement : FOR LPAREN genericVariableDeclaration IN expression RPAREN controlStructureBody
                      | FOR LPAREN genericVariableDeclaration IN expression RPAREN '''
-  #  p[0] = cc.ForStatementConcrete(p[3], p[5], p[7])
+    if len(p) == 7:
+        p[0] = cc.SimpleForStatementConcrete(p[3], p[5])
+    else:
+        p[0] = cc.CompoundForStatementConcrete(p[3], p[5], p[7])
+
 ########################################################################
 def p_whileStatement(p):
     ''' whileStatement : WHILE LPAREN expression RPAREN controlStructureBody
@@ -358,14 +353,18 @@ def p_doWhileStatement(p):
 def p_parametersFunction(p):
     ''' parametersFunction : primaryExpression
                            | primaryExpression COMMA parametersFunction '''
+    if len(p) == 2:
+        p[0] = cc.SimpleParametersFunction(p[1])
+    else:
+        p[0] = cc.CompoundParametersFunction(p[1])
 
 def p_chamadaDeFuncao(p):
     ''' chamadaDeFuncao : statement LPAREN RPAREN
                         | statement LPAREN parametersFunction RPAREN '''
-    # if len(p) == 2:
-    #     p[0] = cc.SimpleChamadaDeFuncao(p[1])
-    # else:
-    #     p[0] = cc.CompoundChamadaDeFuncao(p[1], p[3])
+    if len(p) == 2:
+        p[0] = cc.SimpleChamadaDeFuncao(p[1])
+    else:
+        p[0] = cc.CompoundChamadaDeFuncao(p[1], p[3])
 
 ########################################################################
 def p_assignment(p):
@@ -868,7 +867,8 @@ def p_typeConstraints(p):
 
 def p_ifExpression(p):
     ''' ifExpression : IF LPAREN expression RPAREN controlStructureBodyOrPV
-                     | IF LPAREN expression RPAREN optionalControlStructureBody optionalPV ELSE controlStructureBodyOrPV '''
+                     | IF LPAREN expression RPAREN controlStructureBody optionalPV ELSE controlStructureBodyOrPV
+                     | IF LPAREN expression RPAREN optionalPV ELSE controlStructureBodyOrPV '''
     if len(p) == 6:
         p[0] = cc.SimpleIfExpression(p[3], p[5])
     else:
