@@ -251,7 +251,7 @@ class Visitor:
         CompoundFunctionType.functionTypeParameters.accept(self)
         CompoundFunctionType.type.accept(self)
 
-    def visitSFunctionTypeParametersConcrete(self,FunctionTypeParametersConcrete):
+    def visitFunctionTypeParametersConcrete(self,FunctionTypeParametersConcrete):
         FunctionTypeParametersConcrete.optionalParameterOrType.accept(self)
         FunctionTypeParametersConcrete.parameterOrTypeRecursive.accept(self)
         FunctionTypeParametersConcrete.optionalCOMMA.accept(self)
@@ -331,7 +331,7 @@ class Visitor:
         SimpleForStatement_VD.variableDeclaration.accept(self)
         SimpleForStatement_VD.expression.accept(self)
 
-    def visitCompoundForStatement_MD(self,CompoundForStatement_VD):
+    def visitCompoundForStatement_VD(self,CompoundForStatement_VD):
         CompoundForStatement_VD.variableDeclaration.accept(self)
         CompoundForStatement_VD.expression.accept(self)
         CompoundForStatement_VD.controlStructureBody.accept(self)
@@ -557,7 +557,7 @@ class Visitor:
     def visitSimpleIndexingSuffixRecursive(self,SimpleIndexingSuffixRecursive):
         SimpleIndexingSuffixRecursive.expression.accept(self)
 
-    def visitSimpleIndexingSuffixRecursive(self,CompoundIndexingSuffixRecursive):
+    def visitCompoundIndexingSuffixRecursive(self,CompoundIndexingSuffixRecursive):
         CompoundIndexingSuffixRecursive.expression.accept(self)
         CompoundIndexingSuffixRecursive.indexingSuffix.accept(self)
 
@@ -630,7 +630,7 @@ class Visitor:
     def visitFunctionLiteralConcrete(self,FunctionLiteralConcrete):
         FunctionLiteralConcrete.functionLiteral.accept(self)
 
-    def CollectionLiteralConcrete(self,CollectionLiteralConcrete):
+    def visitCollectionLiteralConcrete(self,CollectionLiteralConcrete):
         CollectionLiteralConcrete.collectionLiteral.accept(self)
 
     def visitIfExpressionConcrete(self,IfExpressionConcrete):
@@ -670,7 +670,7 @@ class Visitor:
         ParameterWithOptionalTypeConcrete.optionalParameterModifiers.accept(self)
         ParameterWithOptionalTypeConcrete.optionalType.accept(self)
 
-    def visitParameterWithOptionalTypeConcrete(self,OptionalParameterModifiersConcrete):
+    def visitOptionalParameterModifiersConcrete(self,OptionalParameterModifiersConcrete):
         OptionalParameterModifiersConcrete.parameterModifiers.acccept(self)
 
     def visitVararg(self,VarargConcrete):
@@ -735,7 +735,7 @@ class Visitor:
         print(')', end='')
         SimpleIfExpression.controlStructureBodyOrPV.accept(self)
 
-    def visitSimpleIfExpression(self,CompoundIfExpression):
+    def visitCompoundIfExpression(self,CompoundIfExpression):
         print('if(', end='')
         CompoundIfExpression.expression.accept(self)
         print(')', end='')
@@ -778,7 +778,7 @@ class Visitor:
         CallableReferenceConcrete.optionalReceiverType.accept(self)
         CallableReferenceConcrete.simpleIdentifierOrClass.accept(self)
 
-    def visitCallableReferenceConcrete(self,OptionalReceiverType):
+    def visitOptionalReceiverType(self,OptionalReceiverType):
         OptionalReceiverType.receiverType.accept(self)
 
     def visitClassConcrete(self,ClassConcrete):
@@ -788,7 +788,7 @@ class Visitor:
         MAISIGUAL.maisIgual.accept(self)
         print('+=')
 
-    def visitMENOSIGUAL(self,):
+    def visitMENOSIGUAL(self,MENOSIGUAL):
         MENOSIGUAL.menosIgual.accept(self)
         print('-=')
 

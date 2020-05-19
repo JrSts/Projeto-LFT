@@ -436,7 +436,7 @@ class FunctionTypeParametersConcrete(ac.FunctionTypeParametersConcrete):
         self.parameterOrTypeRecursive = parameterOrTypeRecursive
         self.optionalCOMMA = optionalCOMMA
     def accept(self, Visitor):
-        Visitor.visitSFunctionTypeParametersConcrete(self)
+        Visitor.visitFunctionTypeParametersConcrete(self)
 
 class SimpleParameterOrTypeRecursive(ac.ParameterOrTypeRecursive):
     def __init__(self, optionalParameterOrType):
@@ -991,7 +991,7 @@ class CompoundIndexingSuffixRecursive(ac.IndexingSuffixRecursive):
         self.expression=expression
         self.indexingSuffix = indexingSuffix
     def accept(self,Visitor):
-        Visitor.visitSimpleIndexingSuffixRecursive(self)
+        Visitor.visitCompoundIndexingSuffixRecursive(self)
 ########################################################################
 # class ParenthesizedExpressionConcrete(ac.NavigationSuffix):
 #     def __init__(self, expression):
@@ -1211,7 +1211,7 @@ class OptionalParameterModifiersConcrete(ac.OptionalParameterModifiers):
     def __init__(self, parameterModifiers):
         self.parameterModifiers = parameterModifiers
     def accept(self, Visitor):
-        Visitor.visitParameterWithOptionalTypeConcrete(self)
+        Visitor.visitOptionalParameterModifiersConcrete(self)
 ########################################################################
 class VarargConcrete(ac.ParameterModifiers):
     def __init__(self):
@@ -1331,7 +1331,7 @@ class CompoundIfExpression(ac.IfExpression):
         self.optionalPV = optionalPV
         self.optionalControlStructureBody = optionalControlStructureBody
     def accept(self, Visitor):
-        Visitor.visitSimpleIfExpression(self)
+        Visitor.visitCompoundIfExpression(self)
 
 class PV(ac.IfExpression):
     def __init__(self, PV):
@@ -1392,7 +1392,7 @@ class OptionalReceiverType(ac.CallableReference):
     def __init__(self, receiverType):
         self.receiverType = receiverType
     def accept(self, Visitor):
-        Visitor.visitCallableReferenceConcrete(self)
+        Visitor.visitOptionalReceiverType(self)
 
 class ClassConcrete(ac.CallableReference):
     def __init__(self, CLASS):
