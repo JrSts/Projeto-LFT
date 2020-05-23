@@ -546,14 +546,14 @@ class CompoundDoWhileStatement(ac.LoopStatement):
         Visitor.visitCompoundDoWhileStatement(self)
 ########################################################################
 class SimpleChamadaDeFuncao(ac.ChamadaDeFuncao):
-    def __init__(self, statement):
-        self.statement = statement
+    def __init__(self, id):
+        self.id = id
     def accept(self, Visitor):
         Visitor.visitSimpleChamadaDeFuncao(self)
 
 class CompoundChamadaDeFuncao(ac.ChamadaDeFuncao):
-    def __init__(self, statement, parametersFunction):
-        self.statement = statement
+    def __init__(self, id, parametersFunction):
+        self.id = id
         self.parametersFunction = parametersFunction
     def accept(self, Visitor):
         Visitor.visitCompoundChamadaDeFuncao(self)

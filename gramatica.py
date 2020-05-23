@@ -18,23 +18,31 @@ def p_kotlinFile(p):
 
 def p_optionalType(p):
     ''' optionalType : DOISP type
-                     | '''
-    if len(p) == 3:
-        p[0] = cc.OptionalType(p[2])
-    else:
-        p[0] = cc.OptionalType(None)
+                     '''
+    p[0] = cc.OptionalType(p[2])
+
 
 def p_optionalBlock(p):
     ''' optionalBlock : block
-                      | '''
-    if len(p) == 2:
-        p[0] = cc.OptionalBlock(p[1])
-    else:
-        p[0] = cc.OptionalBlock(None)
+                      '''
+
+    p[0] = cc.OptionalBlock(p[1])
+
 
 def p_functionDeclaration(p):
-    ''' functionDeclaration : FUN simpleIdentifier functionValueParameters optionalType optionalBlock '''
-    p[0] = cc.FunctionDeclaration(p[1], p[2], p[3], p[4], p[5])
+    ''' functionDeclaration : FUN simpleIdentifier functionValueParameters ATRIBUICAO expression
+                            | FUN simpleIdentifier functionValueParameters optionalType ATRIBUICAO expression
+                            | FUN simpleIdentifier functionValueParameters optionalBlock
+                            | FUN simpleIdentifier functionValueParameters optionalType optionalBlock'''
+    if len(p) == 6:
+        p[0] = cc.FunctionDeclaration(p[1], p[2], p[3], p[4], p[5])
+    elif len(p) == 4:
+        p[0] = cc.FunctionDeclaration(p[1], p[2], p[3], cc.OptionalType(None), cc.OptionalBlock(None))
+    elif isinstance(p[4], cc.OptionalType):
+        p[0] = cc.FunctionDeclaration(p[1], p[2], p[3], p[4], cc.OptionalBlock(None))
+    elif isinstance(p[4], cc.OptionalBlock):
+        p[0] = cc.FunctionDeclaration(p[1], p[2], p[3], cc.OptionalType(None), p[4])
+
 ###########################################################
 def p_optionalPv(p):
     ''' optionalPv : PV
@@ -358,8 +366,8 @@ def p_parametersFunction(p):
         p[0] = cc.CompoundParametersFunction(p[1])
 
 def p_chamadaDeFuncao(p):
-    ''' chamadaDeFuncao : statement LPAREN RPAREN
-                        | statement LPAREN parametersFunction RPAREN '''
+    ''' chamadaDeFuncao : ID LPAREN RPAREN
+                        | ID LPAREN parametersFunction RPAREN '''
     if len(p) == 2:
         p[0] = cc.SimpleChamadaDeFuncao(p[1])
     else:
@@ -769,7 +777,8 @@ def p_parametersWithOptionalTypeRecursive(p):
         p[0] = cc.CompoundParametersWithOptionalTypeRecursive(p[1], p[3])
 ########################################################################
 def p_parameterWithOptionalType(p):
-    ''' parameterWithOptionalType : optionalParameterModifiers simpleIdentifier optionalType '''
+    ''' parameterWithOptionalType : optionalParameterModifiers simpleIdentifier optionalType
+                                   | optionalParameterModifiers simpleIdentifier '''
     p[0] = cc.ParameterWithOptionalTypeConcrete(p[1], p[2], p[3])
 
 def p_optionalParameterModifiers(p):
@@ -817,7 +826,8 @@ def p_lambdaParameters(p):
 ########################################################################
 def p_lambdaParameter(p):
     ''' lambdaParameter : variableDeclaration
-                        | multiVariableDeclaration optionalType '''
+                        | multiVariableDeclaration optionalType
+                        | multiVariableDeclaration '''
 
     if len(p) == 1:
         p[0] = cc.VariableDeclarationConcrete(p[1])
@@ -850,7 +860,8 @@ def p_optionalFunctionBody(p):
         p[0] = cc.OptionalFunctionBodyConcrete(None)
 
 def p_anonymousFunction(p):
-    ''' anonymousFunction : FUN optionalTypePonto parametersWithOptionalType optionalType optionalTypeConstraints optionalFunctionBody '''
+    ''' anonymousFunction : FUN optionalTypePonto parametersWithOptionalType optionalType optionalTypeConstraints optionalFunctionBody
+                           | FUN optionalTypePonto parametersWithOptionalType optionalTypeConstraints optionalFunctionBody'''
     p[0] = cc.AnonimousFunction(p[2], p[3], p[4], p[5], p[6])
 
 ########################################################################
