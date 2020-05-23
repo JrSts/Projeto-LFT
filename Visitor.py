@@ -1,4 +1,5 @@
-class Visitor:
+from AbstractVisitor import AbstractVisitor
+class Visitor (AbstractVisitor):
     '''def visitSomaExp(self, somaExp):
         somaExp.exp1.accept(self)
         print('+')
