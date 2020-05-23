@@ -5,7 +5,6 @@ from AbstrataClass import abstractmethod
 import AbstrataClass as ac
 import ConcretaClass as cc
 import os
-from ConcretaClass import Compound2ValueArgument, CompoundCallSuffixConcrete, SimpleCallSuffixConcrete
 
 ###########################################################
 def p_kotlinFile(p):
@@ -625,9 +624,9 @@ def p_callSuffix(p):
                   | optionalTypeArguments optionalValueArguments '''
 
     if len(p) == 4:
-        p[0] = CompoundCallSuffixConcrete(p[1], p[2], p[3])
+        p[0] = cc.CompoundCallSuffixConcrete(p[1], p[2], p[3])
     else:
-        p[0] = SimpleCallSuffixConcrete(p[1], p[2])
+        p[0] = cc.SimpleCallSuffixConcrete(p[1], p[2])
 
 def p_optionalTypeArguments(p):
     ''' optionalTypeArguments : typeArguments
@@ -695,7 +694,7 @@ def p_valueArgument(p):
     elif len(p) == 4:
         p[0] = cc.Compound1ValueArgument(p[1], p[3])
     else:
-        p[0] = Compound2ValueArgument(p[1], p[4])
+        p[0] = cc.Compound2ValueArgument(p[1], p[4])
 ########################################################################
 def p_primaryExpression(p):
     ''' primaryExpression : parenthesizedExpression
