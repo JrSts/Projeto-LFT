@@ -89,13 +89,20 @@ class CompoundKotlinFile(ac.KotlinFile):
     def accept(self, Visitor):
         Visitor.visitCompoundKotlinFile(self)
 ###########################################################
-class FunctionDeclaration(ac.FunctionDeclaration):
-    def __init__(self, FUN, simpleIdentifier, functionValueParameters, optionalType, optionalBlock):
-        self.FUN = FUN
+class SimpleFunctionDeclaration(ac.FunctionDeclaration):
+    def __init__(self, simpleIdentifier, functionValueParameters, functionBody):
+        self.simpleIdentifier = simpleIdentifier
+        self.functionValueParameters = functionValueParameters
+        self.functionBody = functionBody
+    def accept(self, Visitor):
+        Visitor.visitFuncrionDeclaration(self)
+
+class CompoundFunctionDeclaration(ac.FunctionDeclaration):
+    def __init__(self, simpleIdentifier, functionValueParameters, optionalType, functionBody):
         self.simpleIdentifier = simpleIdentifier
         self.functionValueParameters = functionValueParameters
         self.optionalType = optionalType
-        self.optionalBlock = optionalBlock
+        self.functionBody = functionBody
     def accept(self, Visitor):
         Visitor.visitFuncrionDeclaration(self)
 
@@ -104,12 +111,6 @@ class OptionalType(ac.FunctionDeclaration, ac.ParameterWithOptionalType, ac.Lamb
         self.type = type
     def accept(self, Visitor):
         Visitor.visitOptionalType(self)
-
-class OptionalBlock(ac.FunctionDeclaration):
-    def __init__(self, block):
-        self.block = block
-    def accept(self, Visitor):
-        Visitor.visitOptionalBlock(self)
 ###########################################################
 
 class PropertyDeclarationConcrete(ac.PropertyDeclaration, ac.Statement):
@@ -546,14 +547,14 @@ class CompoundDoWhileStatement(ac.LoopStatement):
         Visitor.visitCompoundDoWhileStatement(self)
 ########################################################################
 class SimpleChamadaDeFuncao(ac.ChamadaDeFuncao):
-    def __init__(self, statement):
-        self.statement = statement
+    def __init__(self, id):
+        self.id = id
     def accept(self, Visitor):
         Visitor.visitSimpleChamadaDeFuncao(self)
 
 class CompoundChamadaDeFuncao(ac.ChamadaDeFuncao):
-    def __init__(self, statement, parametersFunction):
-        self.statement = statement
+    def __init__(self, id, parametersFunction):
+        self.id = id
         self.parametersFunction = parametersFunction
     def accept(self, Visitor):
         Visitor.visitCompoundChamadaDeFuncao(self)

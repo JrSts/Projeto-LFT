@@ -75,9 +75,9 @@ class Visitor (AbstractVisitor):
         OptinalType.type.accept(self)
 
     def visitOptionalBlock(self,OptionalBlock):
-        print('{')
+        print('{', end='')
         OptionalBlock.block.accept(self)
-        print('}')
+        print('}', end='')
 
     def visitPropertyDeclaration(self, PropertyDeclarationConcrete):
         PropertyDeclarationConcrete.varOrVal.accept(self)
@@ -87,10 +87,13 @@ class Visitor (AbstractVisitor):
         PropertyDeclarationConcrete.expression.accept(self)
 
     def visitMultiVariableDeclaration(self,MultiVariableDeclaration):
+        print('(', end='')
         MultiVariableDeclaration.multiVariableDeclaration.accept(self)
+        print(')', end='')
 
     def visitVariableDeclaration(self,VariableDeclaration):
         VariableDeclaration.variableDeclaration.accept(self)
+        print(':')
 
     def visitPd1_var(self,Var):
         Var.var.accept(self)
@@ -109,15 +112,20 @@ class Visitor (AbstractVisitor):
         print(';')
 
     def visitTypePatameters(self,TypeParametersConcrete):
+        print('<', end='')
         TypeParametersConcrete.typeParameter.accept(self)
         TypeParametersConcrete.typeParametersRecursive.accept(self)
         TypeParametersConcrete.optionalCOMMA.accept(self)
+        print('>', end='')
 
     def visitSimpleTypeParameterRecursive(self,SimpleTypeParametersRecursive):
+        print(',')
         SimpleTypeParametersRecursive.typeParameter.accept(self)
 
     def visitCompoundTypeParametersRecursive(self,CompoundTypeParametersRecursive):
+        print(',')
         CompoundTypeParametersRecursive.typeParameter.accept(self)
+        print(',')
         CompoundTypeParametersRecursive.typeParametersRecursive.accept(self)
 
     def visitOptionalCOMMA(self,OptionalCOMMA):
@@ -905,3 +913,4 @@ class Visitor (AbstractVisitor):
         print('safeNav')
     
 v= Visitor()
+

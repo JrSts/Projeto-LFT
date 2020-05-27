@@ -8,8 +8,8 @@ import os
 
 ###########################################################
 def p_kotlinFile(p):
-    '''kotlinFile : functionDeclaration kotlinFile
-				  | functionDeclaration'''
+    ''' kotlinFile : functionDeclaration kotlinFile
+				   | functionDeclaration '''
     if len(p) == 2:
         p[0] = cc.SimpleKotlinFile(p[1])
     else:
@@ -17,32 +17,18 @@ def p_kotlinFile(p):
 ###########################################################
 
 def p_optionalType(p):
-    ''' optionalType : DOISP type
-                     | '''
-    if len(p) == 3:
-        p[0] = cc.OptionalType(p[2])
-    else:
-        p[0] = cc.OptionalType(None)
+    ''' optionalType : DOISP type '''
+    p[0] = cc.OptionalType(p[2])
 
-def p_optionalBlock(p):
-    ''' optionalBlock : block
-                      | '''
-    if len(p) == 2:
-        p[0] = cc.OptionalBlock(p[1])
-    else:
-        p[0] = cc.OptionalBlock(None)
 
 def p_functionDeclaration(p):
-    ''' functionDeclaration : FUN simpleIdentifier functionValueParameters optionalType optionalBlock '''
-    p[0] = cc.FunctionDeclaration(p[1], p[2], p[3], p[4], p[5])
-###########################################################
-def p_optionalPv(p):
-    ''' optionalPv : PV
-                   | '''
-    if len(p) == 2:
-        p[0] = cc.OptionalPv(p[1])
+    ''' functionDeclaration : FUN simpleIdentifier functionValueParameters functionBody
+                            | FUN simpleIdentifier functionValueParameters optionalType functionBody '''
+    if len(p) == 5:
+        p[0] = cc.SimpleFunctionDeclaration([2], p[3], p[4])
     else:
-        p[0]: cc.OptionalPv(None)
+        p[0] = cc.CompoundFunctionDeclaration(p[2], p[3], p[4], p[5])
+
 ###########################################################
 def p_genericVariableDeclaration(p):
     ''' genericVariableDeclaration : multiVariableDeclaration
@@ -52,7 +38,6 @@ def p_genericVariableDeclaration(p):
     else:
         p[0] = cc.VariableDeclaration(p[1])
 ########################################################################
-
 def p_expression(p):
     ''' expression : disjunction '''
     p[0] = p[1]
@@ -65,50 +50,47 @@ def p_varOrVal(p):
     else:
         p[0] = cc.Val(p[1])
 
-def p_optionalTypeParameters(p):
-    ''' optionalTypeParameters : typeParameters
-                                | '''
-    if len(p) == 2:
-        p[0] = cc.OptionalTypeParameters(p[1])
+###########################################################
+def p_propertyDeclarationPV(p):
+    ''' propertyDeclaration : varOrVal typeParameters genericVariableDeclaration ATRIBUICAO expression PV
+                            | varOrVal genericVariableDeclaration ATRIBUICAO expression PV '''
+    if len(p) == 6:
+        p[0] = cc.SimplePropertyDeclarationPV(p[1], p[2], p[4])
     else:
-        p[0]: cc.OptionalTypeParameters(None)
-###########################################################
-def p_propertyDeclaration(p):
-    ''' propertyDeclaration : varOrVal optionalTypeParameters genericVariableDeclaration ATRIBUICAO expression optionalPv'''
-    p[0] = cc.PropertyDeclarationConcrete(p[1], p[2], p[3], p[5], p[6])
-###########################################################
+        p[0] = cc.CompoundPropertyDeclarationPV(p[1], p[2], p[3], p[5])
 
+def p_propertyDeclaration(p):
+    ''' propertyDeclaration : varOrVal genericVariableDeclaration ATRIBUICAO expression
+                            | varOrVal typeParameters genericVariableDeclaration ATRIBUICAO expression '''
+    if len(p) == 5:
+        p[0] = cc.SimplePropertyDeclaration(p[1], p[2], p[4])
+    else:
+        p[0] = cc.CompoundPropertyDeclaration(p[1], p[2], p[3], p[5])
+###########################################################
 def p_typeParameters(p):
-    ''' typeParameters : MENOR typeParameter typeParametersRecursive optionalCOMMA MAIOR '''
-    p[0] = cc.TypeParameters(p[2], p[3], p[4])
+    ''' typeParameters : MENOR typeParameter typeParametersRecursive MAIOR '''
+    p[0] = cc.TypeParameters(p[2], p[3])
 ###########################################################
 def p_typeParametersRecursive(p):
     ''' typeParametersRecursive : COMMA typeParameter
-                               | COMMA typeParameter typeParametersRecursive '''
+                                | COMMA typeParameter typeParametersRecursive '''
     if len(p) == 3:
         p[0] = cc.SimpleTypeParametersRecursive(p[2])
     else:
         p[0] = cc.SimpleTypeParametersRecursive(p[2], p[3])
-###########################################################
-def p_optionalCOMMA(p):
-    ''' optionalCOMMA : COMMA
-                      | '''
-    if len(p) == 3:
-        p[0] = cc.OptionalCOMMA(p[2])
-    else:
-        p[0] = cc.OptionalCOMMA(None)
+
 ###########################################################
 def p_typeParameter(p):
     ''' typeParameter : simpleIdentifier
-                    | simpleIdentifier DOISP type'''
-    if len(p) == 2:
+                      | simpleIdentifier DOISP type'''
+    if len(p) == 4:
         p[0] = cc.CompoundTypeParameter(p[1], p[3])
     else:
         p[0] = cc.SimpleTypeParameter(p[1])
 ###########################################################
 def p_functionBody(p):
     ''' functionBody : block
-                    | ATRIBUICAO expression '''
+                     | ATRIBUICAO expression '''
     if len(p) == 2:
         p[0] = cc.SimpleFunctionBody(p[1])
     else:
@@ -116,7 +98,7 @@ def p_functionBody(p):
 ###########################################################
 def p_functionValueParameters(p): 
     '''functionValueParameters : LPAREN functionValueParametersRecursive RPAREN
-                                | LPAREN RPAREN '''
+                               | LPAREN RPAREN '''
     if len(p) == 3:
         p[0] = cc.SimpleFunctionValueParameters()
     else:
@@ -124,7 +106,7 @@ def p_functionValueParameters(p):
 
 def p_functionValueParametersRecursive(p):
     ''' functionValueParametersRecursive : functionValueParameter
-                                        | functionValueParameter COMMA functionValueParametersRecursive  '''
+                                         | functionValueParameter COMMA functionValueParametersRecursive  '''
 
     if len(p) == 2:
         p[0] = cc.SimpleFunctionValueParametersRecursive(p[1], None)
@@ -165,23 +147,17 @@ def p_multiVariableDeclarationRecursive(p):
         p[0] = cc.CompoundMultiVariableDeclarationRecursive(p[1], p[3])
 #######################################################################
 def p_parameter(p):
-    ''' parameter : simpleIdentifier DOISP type '''
-    p[0] = cc.ParameterConcrete(p[1], p[3])
+    ''' parameter : simpleIdentifier optionalType '''
+    p[0] = cc.ParameterConcrete(p[1], p[2])
 ######################################################################
 def p_type(p):
-    ''' type :  typeModifiers optype
-              | optype '''
-    if (len(p) == 3):
+    ''' type : typeModifiers optype
+             | optype '''
+    if len(p) == 3:
         p[0] = cc.TypeConcrete(p[1], p[2])
     else:
         p[0] = cc.TypeConcrete(None, p[1])
 
-# def p_optionalTypeModifiers(p):
-#     '''optionalTypeModifiers : typeModifiers '''
-#     if len(p) == 2:
-#         p[0] = cc.OptionalTypeModifiersConcrete(p[1])
-#     else:
-#         p[0] = cc.OptionalTypeModifiersConcrete(None)
 #####################################################################
 def p_opType(p):
     '''optype : parenthesizedType
@@ -250,28 +226,24 @@ def p_functionType(p):
     else:
         p[0] = cc.CompoundFunctionType(p[1], p[3], p[5])
 ########################################################################
-def p_optionalParameterOrType(p):
-    ''' optionalParameterOrType : parameter
-                               | type
-                               | '''
+def p_parameterOrType(p):
+    ''' parameterOrType : parameter
+                        | type '''
     if len(p) == 2 and isinstance(p[1], ac.Parameter):
         p[0] = cc.ParameterConcrete(p[1])
-    elif len(p) == 2:
-        p[0] = cc.TypeConcrete(p[1])
     else:
-        p[0] = cc.TypeConcrete(None)
+        p[0] = cc.TypeConcrete(p[1])
 
 def p_parameterOrTypeRecursive(p):
-    ''' parameterOrTypeRecursive : COMMA optionalParameterOrType
-                                 | COMMA optionalParameterOrType parameterOrTypeRecursive
-                                 | '''
+    ''' parameterOrTypeRecursive : COMMA parameterOrType
+                                 | COMMA parameterOrType parameterOrTypeRecursive '''
     if len(p) == 3:
         p[0] = cc.SimpleParameterOrTypeRecursive(p[2])
     else:
         p[0] = cc.CompoundParameterOrTypeRecursive(p[2], p[3])
 
 def p_functionTypeParameters(p):
-    '''functionTypeParameters : LPAREN optionalParameterOrType parameterOrTypeRecursive optionalCOMMA RPAREN '''
+    '''functionTypeParameters : LPAREN parameterOrType parameterOrTypeRecursive RPAREN '''
     p[0] = cc.FunctionTypeParametersConcrete(p[2], p[3], p[4])
 ########################################################################
 def p_parenthesizedType(p):
@@ -358,8 +330,8 @@ def p_parametersFunction(p):
         p[0] = cc.CompoundParametersFunction(p[1])
 
 def p_chamadaDeFuncao(p):
-    ''' chamadaDeFuncao : statement LPAREN RPAREN
-                        | statement LPAREN parametersFunction RPAREN '''
+    ''' chamadaDeFuncao : ID LPAREN RPAREN
+                        | ID LPAREN parametersFunction RPAREN '''
     if len(p) == 2:
         p[0] = cc.SimpleChamadaDeFuncao(p[1])
     else:
@@ -413,7 +385,7 @@ def p_comparison(p):
 ########################################################################
 def p_infixOperation(p):
     '''infixOperation : elvisExpression infixOperationRecursive
-                      | elvisExpression'''
+                      | elvisExpression '''
     if len(p) == 2:
         p[0] = cc.SimpleInfixOperation(p[1])
     else:
@@ -620,29 +592,25 @@ def p_navigationSuffix(p):
         p[0] = cc.SimpleIdentifier(p[1], p[2])
 ########################################################################
 def p_callSuffix(p):
-    '''callSuffix : optionalTypeArguments optionalValueArguments annotatedLambda
-                  | optionalTypeArguments optionalValueArguments '''
-
+    '''callSuffix : typeArguments valueArguments annotatedLambda
+                  | typeArguments valueArguments
+                  | annotatedLambda '''
     if len(p) == 4:
-        p[0] = cc.CompoundCallSuffixConcrete(p[1], p[2], p[3])
+        p[0] = cc.Compound2CallSuffixConcrete(p[1], p[2], p[3])
+    elif len(p) == 3:
+        p[0] = cc.Compound1CallSuffixConcrete(p[1], p[2])
     else:
-        p[0] = cc.SimpleCallSuffixConcrete(p[1], p[2])
+        p[0] = cc.SimpleCallSuffixConcrete(p[1])
 
-def p_optionalTypeArguments(p):
-    ''' optionalTypeArguments : typeArguments
-                              | '''
-    if len(p) == 2:
-        p[0] = cc.TypeArgumentsConcrete(p[1])
-    else:
-        p[0] = cc.TypeArgumentsConcrete(None)
 
-def p_optionalValueArguments(p):
-    '''optionalValueArguments : valueArguments
-                              | '''
-    if len(p) == 2:
-        p[0] = cc.ValueArgumentsConcrete(p[1])
+def p_callSuffixVA(p):
+    '''callSuffix : valueArguments annotatedLambda
+                  | valueArguments '''
+    if len(p) == 3:
+        p[0] = cc.Compound1CallSuffixVAConcrete(p[1], p[2])
     else:
-        p[0] = cc.ValueArgumentsConcrete(None)
+        p[0] = cc.SimpleCallSuffixVAConcrete(p[1])
+
 ########################################################################
 def p_annotatedLambda(p):
     ''' annotatedLambda : lambdaLiteral '''
@@ -762,23 +730,27 @@ def p_parametersWithOptionalType(p):
 ########################################################################
 def p_parametersWithOptionalTypeRecursive(p):
     ''' parametersWithOptionalTypeRecursive : parameterWithOptionalType
-                                            | parameterWithOptionalType COMMA parametersWithOptionalTypeRecursive COMMA '''
+                                            | parameterWithOptionalType COMMA parametersWithOptionalTypeRecursive '''
     if len(p) == 2:
         p[0] = cc.SimpleParametersWithOptionalTypeRecursive(p[1])
     else:
         p[0] = cc.CompoundParametersWithOptionalTypeRecursive(p[1], p[3])
 ########################################################################
 def p_parameterWithOptionalType(p):
-    ''' parameterWithOptionalType : optionalParameterModifiers simpleIdentifier optionalType '''
-    p[0] = cc.ParameterWithOptionalTypeConcrete(p[1], p[2], p[3])
-
-def p_optionalParameterModifiers(p):
-    ''' optionalParameterModifiers : parameterModifiers
-                                    | '''
+    ''' parameterWithOptionalType : parameterModifiers simpleIdentifier optionalType
+                                  | parameterModifiers simpleIdentifier
+                                  | simpleIdentifier optionalType
+                                  | simpleIdentifier '''
     if len(p) == 2:
-        p[0] = cc.OptionalParameterModifiersConcrete(p[1])
+        p[0] = p[1]
+    elif len(p) == 4:
+        p[0] = cc.ParameterWithOptionalTypeConcrete(p[1], p[2], p[3])
+    elif len(p) == 3 and isinstance(p[1], ac.SimpleIdentifier):
+        p[0] = cc.ParameterWithOptionalTypeSIConcrete(p[1], p[2])
     else:
-        p[0] = cc.OptionalParameterModifiersConcrete(None)
+        p[0] = cc.ParameterWithOptionalTypePMConcrete(p[1], p[2])
+
+
 ########################################################################
 def p_parameterModifiers(p):
     ''' parameterModifiers : VARARG
@@ -817,7 +789,8 @@ def p_lambdaParameters(p):
 ########################################################################
 def p_lambdaParameter(p):
     ''' lambdaParameter : variableDeclaration
-                        | multiVariableDeclaration optionalType '''
+                        | multiVariableDeclaration optionalType
+                        | multiVariableDeclaration '''
 
     if len(p) == 1:
         p[0] = cc.VariableDeclarationConcrete(p[1])
@@ -825,32 +798,32 @@ def p_lambdaParameter(p):
         p[0] = cc.MultiVariableDeclarationConcrete(p[1], p[2])
 ########################################################################
 
-def p_optionalTypePonto(p):
-    ''' optionalTypePonto : type PONTO
-                         | '''
-    if len(p) == 2:
-        p[0] = cc.OptionalTypePontoConcrete(p[1])
-    else:
-        p[0] = cc.OptionalTypePontoConcrete(None)
-
-def p_optionalTypeConstraints(p):
-    ''' optionalTypeConstraints : typeConstraints
-                               | '''
-    if len(p) == 2:
-        p[0] = cc.OptionalTypeConstraintsConcrete(p[1])
-    else:
-        p[0] = cc.OptionalTypeConstraintsConcrete(None)
-
-def p_optionalFunctionBody(p):
-    ''' optionalFunctionBody : functionBody
-                             | '''
-    if len(p) == 2:
-        p[0] = cc.OptionalFunctionBodyConcrete(p[1])
-    else:
-        p[0] = cc.OptionalFunctionBodyConcrete(None)
+def p_typePonto(p):
+    ''' typePonto : type PONTO '''
+    p[0] = cc.OptionalTypePontoConcrete(p[1])
 
 def p_anonymousFunction(p):
-    ''' anonymousFunction : FUN optionalTypePonto parametersWithOptionalType optionalType optionalTypeConstraints optionalFunctionBody '''
+    ''' anonymousFunction : FUN typePonto parametersWithOptionalType optionalType typeConstraints functionBody
+
+                          | FUN parametersWithOptionalType optionalType typeConstraints functionBody
+                          | FUN typePonto parametersWithOptionalType typeConstraints functionBody
+                          | FUN typePonto parametersWithOptionalType optionalType functionBody
+                          | FUN typePonto parametersWithOptionalType optionalType typeConstraints
+
+                          | FUN parametersWithOptionalType typeConstraints functionBody
+                          | FUN parametersWithOptionalType optionalType functionBody
+                          | FUN parametersWithOptionalType optionalType typeConstraints
+                          | FUN typePonto parametersWithOptionalType functionBody
+                          | FUN typePonto parametersWithOptionalType typeConstraints
+                          | FUN typePonto parametersWithOptionalType optionalType
+
+                          | FUN typePonto parametersWithOptionalType
+                          | FUN parametersWithOptionalType functionBody
+                          | FUN parametersWithOptionalType optionalType
+                          | FUN parametersWithOptionalType typeConstraints
+
+                          | FUN parametersWithOptionalType '''
+
     p[0] = cc.AnonimousFunction(p[2], p[3], p[4], p[5], p[6])
 
 ########################################################################
@@ -866,8 +839,9 @@ def p_typeConstraints(p):
 
 def p_ifExpression(p):
     ''' ifExpression : IF LPAREN expression RPAREN controlStructureBodyOrPV
-                     | IF LPAREN expression RPAREN controlStructureBody optionalPV ELSE controlStructureBodyOrPV
-                     | IF LPAREN expression RPAREN optionalPV ELSE controlStructureBodyOrPV '''
+                     | IF LPAREN expression RPAREN controlStructureBody PV ELSE controlStructureBodyOrPV
+                     | IF LPAREN expression RPAREN PV ELSE controlStructureBodyOrPV
+                     | IF LPAREN expression RPAREN controlStructureBody ELSE controlStructureBodyOrPV '''
     if len(p) == 6:
         p[0] = cc.SimpleIfExpression(p[3], p[5])
     else:
@@ -881,26 +855,16 @@ def p_controlStructureBodyOrPV(p):
     else:
         p[0] = cc.ControlStructureBody(p[1])
 
-
-
-def p_optionalPV(p):
-    ''' optionalPV : PV
-                  | '''
-    if len(p) == 2:
-        p[0] = cc.PV(p[1])
-    else:
-        p[0] = cc.PV(None)
-
 ########################################################################
 
 # VERIFICAR Expression 
 def p_jumpExpression(p):
-    ''' jumpExpression :  RETURN expression
-                         | RETURN_AT expression
-                         | CONTINUE
-                         | CONTINUE_AT
-                         | BREAK
-                         | BREAK_AT'''
+    ''' jumpExpression : RETURN expression
+                       | RETURN_AT expression
+                       | CONTINUE
+                       | CONTINUE_AT
+                       | BREAK
+                       | BREAK_AT'''
     p[0] = p[1]
     # if isinstance(p[1], ac.Return):
     #     p[0] = cc.ReturnConcrete(p[1], p[2])
@@ -918,16 +882,9 @@ def p_jumpExpression(p):
     #     p[0] = cc.BreakAtConcrete(p[1])
 ########################################################################
 def p_callableReference(p):
-    ''' callableReference : optionalReceiverType COLONCOLON simpleIdentifierOrClass '''
+    ''' callableReference : receiverType COLONCOLON simpleIdentifierOrClass
+                          | COLONCOLON simpleIdentifierOrClass '''
     p[0] = cc.CallableReferenceConcrete(p[1], p[3])
-
-def p_optionalReceiverType(p):
-    ''' optionalReceiverType : receiverType
-                             | '''
-    if len(p) == 2:
-        p[0] = cc.OptionalReceiverType(p[1])
-    else:
-        p[0] = cc.OptionalReceiverType(None)
 
 def p_simpleIdentifierOrClass(p):
     ''' simpleIdentifierOrClass : simpleIdentifier
@@ -1020,7 +977,7 @@ def p_multiplicativeOperator(p):
 ########################################################################
 def p_asOperator(p):
     ''' asOperator : AS
-                 | AS asOperator '''
+                   | AS asOperator '''
     if len(p) == 2:
         p[0] = cc.SimpleAsOperator(p[1])
     else:
@@ -1076,14 +1033,14 @@ def p_label(p):
 
 def p_simpleIdentifier(p):
     ''' simpleIdentifier : ID 
-                        | CROSSINLINE
-                        | IMPORT
-                        | INIT
-                        | NOINLINE
-                        | OUT
-                        | VARARG
-                        | WHERE
-                        | OPERATOR '''
+                         | CROSSINLINE
+                         | IMPORT
+                         | INIT
+                         | NOINLINE
+                         | OUT
+                         | VARARG
+                         | WHERE
+                         | OPERATOR '''
     p[0] = p[1]
 
 def p_error(p):
