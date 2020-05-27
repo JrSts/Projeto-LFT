@@ -904,19 +904,4 @@ class Visitor (AbstractVisitor):
         SafeNavConcrete.safeNav.accept(self)
         print('safeNav')
     
-
-
-
-
-
-
-
-
-
-    
-    
-
-
-
-    
-
+v= Visitor()
