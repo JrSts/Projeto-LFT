@@ -135,21 +135,28 @@ class Visitor (AbstractVisitor):
         SimpleTypeParameter.simpleIdentifier.accept(self)
 
     def visitCompoundTypePatameter (self,  CompoundTypeParameter):
-        CompoundTypeParameter.type.accept(self)
         CompoundTypeParameter.simpleIdentifier.accept(self)
+        print(':')
+        CompoundTypeParameter.type.accept(self)
+        
 
     def visitSimpleFunctionBody(self, SimpleFunctionBody):
         print('{')
         SimpleFunctionBody.block.accept(self)
         print('}')
     def visitCompoundFunctionBody(self, CompoundFunctionBody):
+        print('=')
         CompoundFunctionBody.expression.accept(self)
 
     def visitSimpleFunctionValueParameters(self,SimpleFunctionValueParameters):
         SimpleFunctionValueParameters.accept(self)
+        print('(')
+        print(')')
 
     def visitCompoundFunctionValueParameters(self,CompoundFunctionValueParameters):
+        print('(')
         CompoundFunctionValueParameters.fvps.accept(self)
+        print(')')
 
     def visitSimpleFunctionValueParametersRecursive(self,SimpleFunctionValueParametersRecursive):
         SimpleFunctionValueParametersRecursive.fvp.accept(self)
@@ -157,6 +164,7 @@ class Visitor (AbstractVisitor):
 
     def visitCompoundFunctionValueParametersRecursive(self,CompoundFunctionValueParametersRecursive):
         CompoundFunctionValueParametersRecursive.fvp.accept(self)
+        print(',')
         CompoundFunctionValueParametersRecursive.functionValueParametersRecursive.accept(self)
 
     def visitSimpleFunctionValueParameter(self,SimpleFunctionValueParameter):
@@ -164,25 +172,32 @@ class Visitor (AbstractVisitor):
 
     def visitCompoundFunctionValueParameter(self,CompoundFunctionValueParameter):
         CompoundFunctionValueParameter.parameter.accept(self)
+        print('=')
         CompoundFunctionValueParameter.exp.accept(self)
 
     def visitSimpleMultiVariableDeclaration(self,SimpleMultiVariableDeclaration):
         SimpleMultiVariableDeclaration.accept(self)
+        print('(')
+        print(')')
 
     def visitCompoundMultiVariableDeclaration(self,CompoundMultiVariableDeclaration):
+        print('(')
         CompoundMultiVariableDeclaration.mvd.accept(self)
+        print(')')
 
     def visitSimpleVariableDeclaration(self,SimpleVariableDeclaration):
         SimpleVariableDeclaration.simpleIdentifier.accept(self)
 
     def visitCompoundVariableDeclaration(self,CompoundVariableDeclaration):
         CompoundVariableDeclaration.simpleIdentifier.accept(self)
+        print(':')
         CompoundVariableDeclaration.type.accept(self)
 
     def visitSimpleMultiVariableDeclarationRecursive(self,SimpleMultiVariableDeclarationRecursive):
         SimpleMultiVariableDeclarationRecursive.variableDeclaration.accept(self)
 
     def visitCompoundMultiVariableDeclarationRecursive(self,CompoundMultiVariableDeclarationRecursive):
+        print(',')
         CompoundMultiVariableDeclarationRecursive.mvd.accept(self)
         CompoundMultiVariableDeclarationRecursive.variableDeclaration.accept(self)
 
@@ -254,21 +269,28 @@ class Visitor (AbstractVisitor):
 
     def visitSimpleFunctionType(self,SimpleFunctionType):
         SimpleFunctionType.functionTypeParameters.accept(self)
+        print('->',end='')
 
     def visitCompoundFunctionType(self, CompoundFunctionType):
         CompoundFunctionType.receiverType.accept(self)
+        print('.',end='')
         CompoundFunctionType.functionTypeParameters.accept(self)
+        print('->',end='')
         CompoundFunctionType.type.accept(self)
 
     def visitFunctionTypeParametersConcrete(self,FunctionTypeParametersConcrete):
+        print('(',end='')
         FunctionTypeParametersConcrete.optionalParameterOrType.accept(self)
         FunctionTypeParametersConcrete.parameterOrTypeRecursive.accept(self)
+        print(')',end='')
         FunctionTypeParametersConcrete.optionalCOMMA.accept(self)
 
     def visitSimpleParameterOrTypeRecursive(self,SimpleParameterOrTypeRecursive):
+        print(',',end='')
         SimpleParameterOrTypeRecursive.optionalParameterOrType.accept(self)
 
     def visitCompoundParameterOrTypeRecursive(self, CompoundParameterOrTypeRecursive):
+        print(',',end='')
         CompoundParameterOrTypeRecursive.optionalParameterOrType.accept(self)
         CompoundParameterOrTypeRecursive.parameterOrTypeRecursive.accept(self)
 
@@ -296,7 +318,9 @@ class Visitor (AbstractVisitor):
         Expression.accept(self)
 
     def visitBlock(self,Block):
+        print('{',end='')
         Block.accept(self)
+        print('}',end='')
 
     def visitBlock(self,StatementConcrete):
         StatementConcrete.accept(self)
@@ -346,14 +370,20 @@ class Visitor (AbstractVisitor):
         CompoundForStatement_VD.controlStructureBody.accept(self)
 
     def visitSimpleDoWhileStatement(self, SimpleDoWhileStatement):
+        print('do while (',end='')
         SimpleDoWhileStatement.expression.accept(self)
+        print(')',end='')
 
     def visitCompoundDoWhileStatement(self,CompoundDoWhileStatement):
+        print('do',end='')
         CompoundDoWhileStatement.controlStructureBody.accept(self)
+        print('while (',end='')
         CompoundDoWhileStatement.expression.accept(self)
+        print(')',end='')
 
     def visitAssignmentConcrete(self,AssignmentConcrete):
         AssignmentConcrete.directlyAssignableExpression.accept(self)
+        print('=',end='')
         AssignmentConcrete.expression.accept(self)
 
     def visitAssignmentAndOperatorConcrete(self,AssignmentAndOperatorConcrete):
@@ -369,6 +399,7 @@ class Visitor (AbstractVisitor):
 
     def visitCompoundDisjunction(self,CompoundDisjunction):
         CompoundDisjunction.conjunction.accept(self)
+        print('or',end='')
         CompoundDisjunction.disjunction.accept(self)
 
     def vistSimpleConjunction(self, SimpleConjunction):
@@ -376,6 +407,7 @@ class Visitor (AbstractVisitor):
 
     def vistCompoundConjunction(self,CompoundConjunction):
         CompoundConjunction.equality.accept(self)
+        print('and',end='')
         CompoundConjunction.conjunction.accept(self)
 
     def visitSimpleEquality(self,SimpleEquality):
@@ -440,6 +472,7 @@ class Visitor (AbstractVisitor):
 
     def visitCompoundRangeExpression(self,CompoundRangeExpression):
         CompoundRangeExpression.additiveExpression.accept(self)
+        print('..',end='')
         CompoundRangeExpression.rangeExpression.accept(self)
 
     def visitSimpleAdditiveExpression(self,SimpleAdditiveExpression):
@@ -514,6 +547,7 @@ class Visitor (AbstractVisitor):
 
     def visitNavigationSuffixConcrete(self,NavigationSuffixConcrete):
         NavigationSuffixConcrete.navigationSuffix.accept(self)
+        print('class',end='')
 
     def visitIncremento(self,Incremento):
         Incremento.incremento.accept(self)
@@ -525,6 +559,13 @@ class Visitor (AbstractVisitor):
 
     def visitSimpleTypeArguments(self,SimpleTypeArguments):
         SimpleTypeArguments.accept(self)
+        print('<',end='')
+        print('>',end='')
+    
+    def visitCompoundTypeArguments(self,CompoundTypeArguments):
+        print('<',end='')
+        CompoundTypeArguments.typeArgumentsRecursive.accept(self)
+        print('>',end='')
 
     def visitTa(self,Ta):
         Ta.ta.accept(self)
@@ -546,7 +587,9 @@ class Visitor (AbstractVisitor):
         SimpleDirectlyAssignableExpression.simpleIdentifier.accept(self)
 
     def visitParenthesizedDirectlyAssignableExpressionConcrete(self,ParenthesizedDirectlyAssignableExpressionConcrete):
+        print('(',end='')
         ParenthesizedDirectlyAssignableExpressionConcrete.directlyAssignableExpression.accept(self)
+        print(')',end='')
 
     def visitParenthesizedAssignableExpressionConcrete(self,ParenthesizedAssignableExpressionConcrete):
         ParenthesizedAssignableExpressionConcrete.parenthesizedAssignableExpression.accept(self)
@@ -555,19 +598,26 @@ class Visitor (AbstractVisitor):
         PrefixUnaryExpressionConcrete.prefixUnaryExpression.accept(self)
 
     def visitAssignableExpressionConcrete(self,AssignableExpressionConcrete):
+        print('(',end='')
         AssignableExpressionConcrete.assignableExpression.accept(self)
+        print(')',end='')
 
     def visitSimpleIndexingSuffix(self,SimpleIndexingSuffix):
         SimpleIndexingSuffix.accept(self)
+        print('[',end='')
+        print(']',end='')
 
     def visitCompoundIndexingSuffix(self,CompoundIndexingSuffix):
+        print('[',end='')
         CompoundIndexingSuffix.indexingSuffix.accept(self)
+        print(']',end='')
 
     def visitSimpleIndexingSuffixRecursive(self,SimpleIndexingSuffixRecursive):
         SimpleIndexingSuffixRecursive.expression.accept(self)
 
     def visitCompoundIndexingSuffixRecursive(self,CompoundIndexingSuffixRecursive):
         CompoundIndexingSuffixRecursive.expression.accept(self)
+        print(',',end='')
         CompoundIndexingSuffixRecursive.indexingSuffix.accept(self)
 
     def visitparenthesizedExpressionConcrete(self,ParenthesizedExpressionConcrete):
@@ -593,30 +643,30 @@ class Visitor (AbstractVisitor):
     def visitLambdaLiteralConcrete(self,LambdaLiteralConcrete):
         LambdaLiteralConcrete.lambdaLiteral.accept(self)
 
-    def visitSimpleTypeArguments(self,SimpleTypeArguments):
-        SimpleTypeArguments.accept(self)
-
-    def visitCompoundTypeArguments(self,CompoundTypeArguments):
-        CompoundTypeArguments.typeArgumentsRecursive.accept(self)
-
     def visitSimpleTypeArgumentsRecursive(self,SimpleTypeArgumentsRecursive):
         SimpleTypeArgumentsRecursive.typeProjection.accept(self)
 
     def visitCompoundCompoundTypeArgumentsRecursive(self,CompoundTypeArgumentsRecursive):
         CompoundTypeArgumentsRecursive.typeProjection.accept(self)
+        print(',',end='')
         CompoundTypeArgumentsRecursive.typeArgumentsRecursive.accept(self)
 
     def visitSimpleValueArguments(self,SimpleValueArguments):
         SimpleValueArguments.accept(self)
+        print('(',end='')
+        print(')',end='')
 
     def visitCompoundValueArguments(self,CompoundValueArguments):
+        print('(',end='')
         CompoundValueArguments.valueArgumentsRecursive.accept(self)
+        print(')',end='')
 
     def visitSimpleValueArgumentsRecursive(self,SimpleValueArgumentsRecursive):
         SimpleValueArgumentsRecursive.valueArgument.accept(self)
 
     def visitCompoundValueArgumentsRecursive(self,CompoundValueArgumentsRecursive):
         CompoundValueArgumentsRecursive.valueArgument.accept(self)
+        print(',',end='')
         CompoundValueArgumentsRecursive.valueArgumentsRecursive.accept(self)
 
     def visitSimpleValueArgument(self,SimpleValueArgument):
@@ -624,10 +674,12 @@ class Visitor (AbstractVisitor):
 
     def visitCompound1ValueArgument(self,Compound1ValueArgument):
         Compound1ValueArgument.simpleIdentifier.accept(self)
+        print('=',end='')
         Compound1ValueArgument.expression.accept(self)
 
     def visitCompound2ValueArgument(self,Compound2ValueArgument):
         Compound2ValueArgument.simpleIdentifier.accept(self)
+        print('=*',end='')
         Compound2ValueArgument.expression.accept(self)
 
     def visitLITERAL_STRINGConcrete(self,LITERAL_STRINGConcrete):
@@ -650,28 +702,38 @@ class Visitor (AbstractVisitor):
 
     def visitSimpleCollectionLiteral(self,SimpleCollectionLiteral):
         SimpleCollectionLiteral.accept(self)
+        print('[',end='')
+        print(']',end='')
 
     def visitCompoundCollectionLiteral(self,CompoundCollectionLiteral):
+        print('[',end='')
         CompoundCollectionLiteral.collectionLiteralRecursive.accept(self)
+        print(']',end='')
 
     def visitSimpleCollectionLiteralRecursive(self,SimpleCollectionLiteralRecursive):
         SimpleCollectionLiteralRecursive.expression.accept(self)
 
     def visitCompoundCollectionLiteralRecursive(self,CompoundCollectionLiteralRecursive):
         CompoundCollectionLiteralRecursive.expression.accept(self)
+        print(',',end='')
         CompoundCollectionLiteralRecursive.collectionLiteralRecursive.accept(self)
 
     def visitSimpleParametersWithOptionalType(self,SimpleParametersWithOptionalType):
         SimpleParametersWithOptionalType.accept(self)
+        print('(',end='')
+        print(')',end='')
 
     def visitCompoundParametersWithOptionalType(self,CompoundParametersWithOptionalType):
+        print('(',end='')
         CompoundParametersWithOptionalType.parametersWithOptionalTypeRecursive.accept(self)
+        print(')',end='')
 
     def visitSimpleParametersWithOptionalTypeRecursive(self,SimpleParametersWithOptionalTypeRecursive):
         SimpleParametersWithOptionalTypeRecursive.parameterWithOptionalType.accept(self)
 
     def visitCompoundParametersWithOptionalTypeRecursive(self,CompoundPwot):
         CompoundPwot.parameterWithOptionalType.accept(self)
+        print(',',end='')
         CompoundPwot.parametersWithOptionalTypeRecursive.accept(self)
 
     def visitParameterWithOptionalTypeConcrete(self,ParameterWithOptionalTypeConcrete):
@@ -692,16 +754,20 @@ class Visitor (AbstractVisitor):
         CrossinlineConcrete.accept(self)
 
     def visitlambdaLiteral(self,LambdaLiteral):
+        print('{',end='')
         LambdaLiteral.optionsLambdaLiteral.accept(self)
+        print('}',end='')
 
     def visitSimpleOptionsLambdaLiteral(self,SimpleOptionsLambdaLiteral):
         SimpleOptionsLambdaLiteral.statements.accept(self)
 
     def visitCompound1OptionsLambdaLiteral(self,Compound1OptionsLambdaLiteral):
+        print('->',end='')
         Compound1OptionsLambdaLiteral.statements.accept(self)
 
     def visitCompound2OptionsLambdaLiteral(self,Compound2OptionsLambdaLiteral):
         Compound2OptionsLambdaLiteral.lambdaParameters.accept(self)
+        print('->',end='')
         Compound2OptionsLambdaLiteral.statements.accept(self)
 
     def visitSimpleLambdaParameters(self,SimpleLambdaParameters):
@@ -709,6 +775,7 @@ class Visitor (AbstractVisitor):
 
     def visitCompoundLambdaParameters(self,CompoundLambdaParameters):
         CompoundLambdaParameters.lambdaParameter.accept(self)
+        print(',',end='')
         CompoundLambdaParameters.lambdaParameters.accept(self)
 
     def visitVariableDeclaration(self,VariableDeclarationConcrete):
@@ -727,9 +794,11 @@ class Visitor (AbstractVisitor):
 
     def visitOptinalTypePontoConcrete(self,OptinalTypePontoConcrete):
         OptinalTypePontoConcrete.type.accept(self)
+        print('.',end='')
 
     def visitOptionalTypeConstraintsConcrete(self,OptionalTypeConstraintsConcrete):
         OptionalTypeConstraintsConcrete.typeConstraints.accept(self)
+        print(':',end='')
 
     def visitOptionalFunctionBodyConcrete(self,OptionalFunctionBodyConcrete):
         OptionalFunctionBodyConcrete.functionBody.accept(self)
