@@ -113,15 +113,39 @@ class OptionalType(ac.FunctionDeclaration, ac.ParameterWithOptionalType, ac.Lamb
         Visitor.visitOptionalType(self)
 ###########################################################
 
-class PropertyDeclarationConcrete(ac.PropertyDeclaration, ac.Statement):
-    def __init__(self, varOrVal, optionalTypeParameters, MvOrV, expression, optionalPv):
+class SimplePropertyDeclarationPV(ac.PropertyDeclarationPV):
+    def __init__(self, varOrVal, genericVariableDeclaration, expression):
         self.varOrVal = varOrVal
-        self.MvOrV = MvOrV
-        self.optionalTypeParameters = optionalTypeParameters
-        self.optionalPv = optionalPv
+        self.genericVariableDeclaration = genericVariableDeclaration
         self.expression = expression
     def accept(self, Visitor):
-        Visitor.visitPropertyDeclaration(self)
+        Visitor.visitSimplePropertyDeclarationPV(self)
+
+class CompoundPropertyDeclarationPV(ac.PropertyDeclarationPV):
+    def __init__(self, varOrVal, typeParameters, genericVariableDeclaration, expression):
+        self.varOrVal = varOrVal
+        self.typeParameters = typeParameters
+        self.genericVariableDeclaration = genericVariableDeclaration
+        self.expression = expression
+    def accept(self, Visitor):
+        Visitor.visitCompoundPropertyDeclarationPV(self)
+
+class SimplePropertyDeclaration(ac.PropertyDeclarationPV):
+    def __init__(self, varOrVal, genericVariableDeclaration, expression):
+        self.varOrVal = varOrVal
+        self.genericVariableDeclaration = genericVariableDeclaration
+        self.expression = expression
+    def accept(self, Visitor):
+        Visitor.visitSimplePropertyDeclaration(self)
+
+class CompoundPropertyDeclaration(ac.PropertyDeclarationPV):
+    def __init__(self, varOrVal, typeParameters, genericVariableDeclaration, expression):
+        self.varOrVal = varOrVal
+        self.typeParameters = typeParameters
+        self.genericVariableDeclaration = genericVariableDeclaration
+        self.expression = expression
+    def accept(self, Visitor):
+        Visitor.visitCompoundPropertyDeclaration(self)
 
 class MultiVariableDeclaration(ac.GenericVariableDeclaration):
     def __init__(self, multiVariableDeclaration):
@@ -147,24 +171,11 @@ class Val(ac.VarOrVal):
     def accept(self, Visitor):
         Visitor.visitVal(self)
 
-class OptionalTypeParameters(ac.PropertyDeclaration):
-    def __init__(self, typeParameters):
-        self.typeParameters = typeParameters
-    def accept(self, Visitor):
-        Visitor.visitOptionalTypeParameters(self)
-
-class OptionalPv(ac.PropertyDeclaration):
-    def __init__(self, pv):
-        self.pv = pv
-    def accept(self, Visitor):
-        Visitor.visitOptionalPv(self)
-
 ###########################################################
 class TypeParametersConcrete(ac.TypeParameters):
-    def __init__(self, typeParameter, typeParametersRecursive, optionalCOMMA):
+    def __init__(self, typeParameter, typeParametersRecursive):
         self.typeParameter = typeParameter
         self.typeParametersRecursive = typeParametersRecursive
-        self.optionalCOMMA = optionalCOMMA
     def accept(self, Visitor):
         Visitor.visitTypePatameters(self)
 
@@ -225,9 +236,8 @@ class CompoundFunctionValueParameters(ac.KotlinFile):
         Visitor.visitCompoundFunctionValueParameters(self)
 ################################################################
 class SimpleFunctionValueParametersRecursive(ac.FunctionValueParametersRecursive):
-    def __init__(self, fvp, optionalCOMMA):
+    def __init__(self, fvp):
         self.fvp=fvp
-        self.optionalCOMMA = optionalCOMMA
     def accept(self, Visitor):
         Visitor.visitSimpleFunctionValueParametersRecursive(self)
 
@@ -296,18 +306,19 @@ class ParameterConcrete(ac.Parameter):
     def accept(self, Visitor):
         Visitor.visitParameter(self)
 ######################################################################
-class TypeConcrete(ac.Type):
-    def __init__(self,optionalTypeModifiers, optype):
-        self.optionalTypeModifiers = optionalTypeModifiers
+class SimpleType(ac.Type):
+    def __init__(self, optype):
         self.optype = optype
     def accept(self, Visitor):
-        Visitor.visitTypeConcrete(self)
+        Visitor.visitSimpleType(self)
 
-class OptionalTypeModifiersConcrete(ac.Type):
-    def __init__(self, typeModifiers):
+class CompoundType(ac.Type):
+    def __init__(self, typeModifiers, optype):
+        self.optype = optype
         self.typeModifiers = typeModifiers
     def accept(self, Visitor):
-        Visitor.visitOptionalTypeModifiersConcrete(self)
+        Visitor.visitCompoundType(self)
+
 #######################################################################
 # class OpTypeConcrete(ac.Type):
 #     def __init__(self, typeModifiers):
@@ -640,9 +651,10 @@ class SimpleComparison(ac.Equality):
         Visitor.vistSimpleComparison(self)
     
 class CompoundComparison(ac.Equality):
-    def __init__(self, infixOperation, comparisonOperator):
-        self.infixOperation=infixOperation
-        self.comparisonOperator=comparisonOperator
+    def __init__(self, infixOperation, comparisonOperator, infixOperation2):
+        self.infixOperation = infixOperation
+        self.comparisonOperator = comparisonOperator
+        self.infixOperation2 = infixOperation2
     def accept (self,Visitor):
         Visitor.vistCompoundComparison(self)
 ########################################################################
@@ -884,11 +896,27 @@ class NavigationSuffixConcrete(ac.PostfixUnarySuffix):
     def accept(self, Visitor):
         Visitor.visitNavigationSuffixConcrete(self)
 
-# class NavigationSuffixConcrete(ac.AssignableSuffix):
-#     def __init__(self, navigationSuffix):
-#         self.navigationSuffix =navigationSuffix
-#     def accept(self, Visitor):
-#         Visitor.visitNavigationSuffix(self)
+class NavigationSuffixSI(ac.NavigationSuffix):
+    def __init__(self, memberAccessOperator, simpleIdentifier):
+        self.memberAccessOperator = memberAccessOperator
+        self.simpleIdentifier = simpleIdentifier
+    def accept(self, Visitor):
+        Visitor.visitNavigationSuffixSI(self)
+
+class NavigationSuffixClass(ac.NavigationSuffix):
+    def __init__(self, memberAccessOperator, Class):
+        self.memberAccessOperator = memberAccessOperator
+        self.Class = Class
+    def accept(self, Visitor):
+        Visitor.visitNavigationSuffixClass(self)
+
+class NavigationSuffixPE(ac.NavigationSuffix):
+    def __init__(self, memberAccessOperator, parenthesizedExpression):
+        self.memberAccessOperator = memberAccessOperator
+        self.parenthesizedExpression = parenthesizedExpression
+    def accept(self, Visitor):
+        Visitor.visitNavigationSuffixPE(self)
+
 # ########################################################################
 class Incremento(ac.PostfixUnaryOperator):
     def __init__(self, incremento):
@@ -939,9 +967,10 @@ class ParenthesizedDirectlyAssignableExpression(ac.DirectlyAssignableExpression)
     def accept(self, Visitor):
         Visitor.visitParenthesizedDirectlyAssignableExpression(self)
 
-class SimpleDirectlyAssignableExpression(ac.DirectlyAssignableExpression):
-    def __init__(self,simpleIdentifier):
-        self.simpleIdentifier=simpleIdentifier
+class DirectlyAssignableExpression(ac.DirectlyAssignableExpression):
+    def __init__(self,postfixUnaryExpression, assignableSuffix):
+        self.postfixUnaryExpression=postfixUnaryExpression
+        self.assignableSuffix = assignableSuffix
     def accept(self, Visitor):
         Visitor.visitSimpleDirectlyAssignableExpression(self)
 ########################################################################
@@ -1008,19 +1037,38 @@ class ParenthesizedExpressionConcrete(ac.PrimaryExpression, ac.NavigationSuffix)
 ########################################################################
 
 class SimpleCallSuffixConcrete(ac.CallSuffix):
+    def  __init__(self, annotatedLambda):
+        self.annotatedLambda = annotatedLambda
+    def accept(self, Visitor):
+        Visitor.visitSimpleCallSuffixConcrete(self)
+
+class Compound1CallSuffixConcrete(ac.CallSuffix):
     def  __init__(self, optionalTypeArguments, optionalValueArguments):
         self.optionalTypeArguments = optionalTypeArguments
         self.optionalValueArguments = optionalValueArguments
     def accept(self, Visitor):
         Visitor.visitSimpleCallSuffixConcrete(self)
 
-class CompoundCallSuffixConcrete(ac.CallSuffix):
+class Compound2CallSuffixConcrete(ac.CallSuffix):
     def  __init__(self, optionalTypeArguments, optionalValueArguments, annotatedLambda):
         self.optionalTypeArguments = optionalTypeArguments
         self.optionalValueArguments = optionalValueArguments
         self.annotatedLambda = annotatedLambda
     def accept(self, Visitor):
         Visitor.visitCompoundCallSuffixConcrete(self)
+
+class CompoundCallSuffixVAConcrete(ac.CallSuffix):
+    def __init__(self, valueArguments, annotatedLambda):
+        self.valueArguments = valueArguments
+        self.annotatedLambda = annotatedLambda
+    def accept(self, Visitor):
+        Visitor.visitCompoundCallSuffixVAConcrete(self)
+
+class SimpleCallSuffixVAConcrete(ac.CallSuffix):
+    def __init__(self, valueArguments, annotatedLambda):
+        self.valueArguments = valueArguments
+    def accept(self, Visitor):
+        Visitor.visitSimpleCallSuffixVAConcrete(self)
 
 class ValueArgumentsConcrete(ac.CallSuffix):
     def __init__(self, valueArguments):
@@ -1193,7 +1241,7 @@ class SimpleParametersWithOptionalTypeRecursive(ac.ParametersWithOptionalTypeRec
     def accept(self, Visitor):
         Visitor.visitSimpleParametersWithOptionalTypeRecursive(self)
 
-class CompoundPwot(ac.ParametersWithOptionalTypeRecursive):
+class CompoundParametersWithOptionalTypeRecursive(ac.ParametersWithOptionalTypeRecursive):
     def __init__(self, parameterWithOptionalType, parametersWithOptionalTypeRecursive):
         self.parameterWithOptionalType = parameterWithOptionalType
         self.parametersWithOptionalTypeRecursive = parametersWithOptionalTypeRecursive
@@ -1208,11 +1256,21 @@ class ParameterWithOptionalTypeConcrete(ac.ParameterWithOptionalType):
     def accept(self, Visitor):
         Visitor.visitParameterWithOptionalTypeConcrete(self)
 
-class OptionalParameterModifiersConcrete(ac.OptionalParameterModifiers):
-    def __init__(self, parameterModifiers):
-        self.parameterModifiers = parameterModifiers
+class ParameterWithOptionalTypeSIConcrete(ac.ParameterWithOptionalType):
+    def __init__(self, simpleIdentifier, optionalType):
+        self.simpleIdentifier = simpleIdentifier
+        self.optionalType = optionalType
     def accept(self, Visitor):
-        Visitor.visitOptionalParameterModifiersConcrete(self)
+        Visitor.visitParameterWithOptionalTypeSIConcrete(self)
+
+class ParameterWithOptionalTypePMConcrete(ac.ParameterWithOptionalType):
+    def __init__(self, parameterModifiers, optionalType):
+        self.parameterModifiers = parameterModifiers
+        self.optionalType = optionalType
+    def accept(self, Visitor):
+        Visitor.visitParameterWithOptionalTypePMConcrete(self)
+
+
 ########################################################################
 class VarargConcrete(ac.ParameterModifiers):
     def __init__(self):
@@ -1311,12 +1369,18 @@ class OptionalFunctionBodyConcrete(ac.AnonymousFunction):
     def accept(self, Visitor):
         Visitor.visitOptionalFunctionBodyConcrete(self)
 ########################################################################
+class TypeConcrete(ac.Type):
+    def __init__(self, type):
+        self.type = type
+    def accept(self,Visitor):
+        Visitor.visitTypeConcrete(self)
+
 class TypeConstraintConcrete(ac.TypeConstraint):
     def __init__(self,simpleIdentifier, type):
         self.simpleIdentifier = simpleIdentifier
         self.type = type
     def accept(self,Visitor):
-        Visitor.visitTypeConstraint(self)
+        Visitor.visitTypeConstraintConcrete(self)
 ########################################################################
 class SimpleIfExpression(ac.IfExpression):
     def __init__(self, expression, controlStructureBodyOrPV):

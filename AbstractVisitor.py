@@ -5,7 +5,6 @@ class AbstractVisitor(metaclass=ABCMeta):
     @abstractmethod
     def visitSimpleKotlinFile(self, KotlinFile):
         pass
-
     @abstractmethod
     def visitCompoundKotlinFile(self,KotlinFile):
         pass
@@ -14,7 +13,7 @@ class AbstractVisitor(metaclass=ABCMeta):
     def visitFuncrionDeclaration(self,FunctionDeclaration):
         pass
 
-    @abstractmethod
+''' @abstractmethod
     def visitOptinalType(self,OptinalType):
         pass
 
@@ -923,4 +922,4 @@ class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
     def visitSafeNavConcrete(self,SafeNavConcrete):
-        pass
+        pass'''

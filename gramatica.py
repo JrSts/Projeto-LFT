@@ -52,8 +52,8 @@ def p_varOrVal(p):
 
 ###########################################################
 def p_propertyDeclarationPV(p):
-    ''' propertyDeclaration : varOrVal typeParameters genericVariableDeclaration ATRIBUICAO expression PV
-                            | varOrVal genericVariableDeclaration ATRIBUICAO expression PV '''
+    ''' propertyDeclarationPV : varOrVal typeParameters genericVariableDeclaration ATRIBUICAO expression PV
+                              | varOrVal genericVariableDeclaration ATRIBUICAO expression PV '''
     if len(p) == 6:
         p[0] = cc.SimplePropertyDeclarationPV(p[1], p[2], p[4])
     else:
@@ -69,7 +69,7 @@ def p_propertyDeclaration(p):
 ###########################################################
 def p_typeParameters(p):
     ''' typeParameters : MENOR typeParameter typeParametersRecursive MAIOR '''
-    p[0] = cc.TypeParameters(p[2], p[3])
+    p[0] = cc.TypeParametersConcrete(p[2], p[3])
 ###########################################################
 def p_typeParametersRecursive(p):
     ''' typeParametersRecursive : COMMA typeParameter
@@ -77,12 +77,12 @@ def p_typeParametersRecursive(p):
     if len(p) == 3:
         p[0] = cc.SimpleTypeParametersRecursive(p[2])
     else:
-        p[0] = cc.SimpleTypeParametersRecursive(p[2], p[3])
+        p[0] = cc.CompoundTypeParametersRecursive(p[2], p[3])
 
 ###########################################################
 def p_typeParameter(p):
     ''' typeParameter : simpleIdentifier
-                      | simpleIdentifier DOISP type'''
+                      | simpleIdentifier optionalType'''
     if len(p) == 4:
         p[0] = cc.CompoundTypeParameter(p[1], p[3])
     else:
@@ -109,7 +109,7 @@ def p_functionValueParametersRecursive(p):
                                          | functionValueParameter COMMA functionValueParametersRecursive  '''
 
     if len(p) == 2:
-        p[0] = cc.SimpleFunctionValueParametersRecursive(p[1], None)
+        p[0] = cc.SimpleFunctionValueParametersRecursive(p[1])
     else:
         p[0] = cc.CompoundFunctionValueParametersRecursive(p[1], p[3])
 
@@ -123,7 +123,7 @@ def p_functionValueParameter(p):
         p[0] = cc.CompoundFunctionValueParameter(p[1], p[3])
 ########################################################################
 def p_variableDeclaration(p):
-    '''variableDeclaration :  simpleIdentifier DOISP type
+    '''variableDeclaration :  simpleIdentifier optionalType
                             | simpleIdentifier '''
     if len(p) == 2:
         p[0] = cc.SimpleVariableDeclaration(p[1])
@@ -154,9 +154,9 @@ def p_type(p):
     ''' type : typeModifiers optype
              | optype '''
     if len(p) == 3:
-        p[0] = cc.TypeConcrete(p[1], p[2])
+        p[0] = cc.CompoundType(p[1], p[2])
     else:
-        p[0] = cc.TypeConcrete(None, p[1])
+        p[0] = cc.SimpleType(p[1])
 
 #####################################################################
 def p_opType(p):
@@ -271,6 +271,7 @@ def p_statement(p):
                   | loopStatement
                   | expression
                   | propertyDeclaration
+                  | propertyDeclarationPV
                   | chamadaDeFuncao '''
     p[0] = p[1]
 ########################################################################
@@ -410,7 +411,7 @@ def p_inOrIs(p):
 def p_elvisOrType(p):
     ''' elvisOrType : elvisExpression
                     | type '''
-    if isinstance(ac.ElvisExpression):
+    if isinstance(p[1], ac.ElvisExpression):
         p[0] = cc.ElvisExpressionConcrete(p[1])
     else:
         p[0] = cc.TypeConcrete(p[1])
@@ -519,7 +520,7 @@ def p_postfixUnarySuffix(p):
     elif isinstance(p[1], ac.IndexingSuffix):
         p[0] = cc.IndexingSuffixConcrete(p[1])
     elif isinstance(p[1], ac.NavigationSuffix):
-        p[0] = cc.NavigationSuffix(p[1])
+        p[0] = cc.NavigationSuffixConcrete(p[1])
     # p[0] = p[1]
 
 ########################################################################
@@ -530,7 +531,7 @@ def p_directlyAssignableExpression(p):
                                        | simpleIdentifier
                                        | parenthesizedDirectlyAssignableExpression '''
     if len(p) == 3:
-        p[0] = cc.SimpleDirectlyAssignableExpression(p[1], p[2])
+        p[0] = cc.DirectlyAssignableExpression(p[1], p[2])
     elif isinstance(p[1], ac.SimpleIdentifier):
         p[0] = cc.SimpleIdentifier(p[1])
     else:
@@ -544,7 +545,7 @@ def p_assignableExpression(p):
     ''' assignableExpression : prefixUnaryExpression
                              | parenthesizedAssignableExpression '''
     if isinstance(p[1], ac.PrefixUnaryExpression):
-        p[0] = cc.PrefixUnaryExpression(p[1])
+        p[0] = cc.PrefixUnaryExpressionConcrete(p[1])
     elif isinstance(p[1], ac.ParenthesizedAssignableExpression):
         p[0] = cc.ParenthesizedAssignableExpressionConcrete(p[1])
 ########################################################################
@@ -584,12 +585,16 @@ def p_indexingSuffixRecursive(p):
         p[0] = cc.CompoundIndexingSuffixRecursive(p[1], p[3])
 ##########################################################duvida
 def p_navigationSuffix(p):
-    ''' navigationSuffix : memberAccessOperator simpleIdentifier CLASS
-                         | memberAccessOperator parenthesizedExpression CLASS '''
+    ''' navigationSuffix : memberAccessOperator simpleIdentifier
+                         | memberAccessOperator parenthesizedExpression
+                         | memberAccessOperator CLASS '''
     if isinstance(p[2], ac.SimpleIdentifier):
-        p[0] = cc.SimpleIdentifier(p[1], p[2])
-    elif isinstance(p[2], ac.ParenthesizedExpression):
-        p[0] = cc.SimpleIdentifier(p[1], p[2])
+        p[0] = cc.NavigationSuffixSI(p[1], p[2])
+    elif p[2] == 'class':
+        p[0] = cc.NavigationSuffixClass(p[1], p[2])
+    else:
+        p[0] = cc.NavigationSuffixPE(p[1], p[2])
+
 ########################################################################
 def p_callSuffix(p):
     '''callSuffix : typeArguments valueArguments annotatedLambda
@@ -607,7 +612,7 @@ def p_callSuffixVA(p):
     '''callSuffix : valueArguments annotatedLambda
                   | valueArguments '''
     if len(p) == 3:
-        p[0] = cc.Compound1CallSuffixVAConcrete(p[1], p[2])
+        p[0] = cc.CompoundCallSuffixVAConcrete(p[1], p[2])
     else:
         p[0] = cc.SimpleCallSuffixVAConcrete(p[1])
 
@@ -763,10 +768,8 @@ def p_parameterModifiers(p):
     #     p[0] = Noinline(p[1])
     # if isinstance(p[1], Vararg):
     #     p[0] = Crossinline(p[1])
-########################################################################
-def p_lambdaLiteral(p):
-    ''' lambdaLiteral : LCHAVE optionsLambdaLiteral RCHAVE	'''
-    p[0] = cc.LambdaLiteral(p[2])
+
+
 ########################################################################
 def p_optionsLambdaLiteral(p):
     ''' optionsLambdaLiteral : statements
@@ -776,8 +779,13 @@ def p_optionsLambdaLiteral(p):
         p[0] = cc.SimpleOptionsLambdaLiteral(p[1])
     elif len(p) == 3:
         p[0] = cc.Compound1OptionsLambdaLiteral(p[2])
-    else :
+    else:
         p[0] = cc.Compound2OptionsLambdaLiteral(p[1], p[3])
+########################################################################
+def p_lambdaLiteral(p):
+    ''' lambdaLiteral : LCHAVE optionsLambdaLiteral RCHAVE	'''
+    p[0] = cc.LambdaLiteral(p[2])
+
 ########################################################################
 def p_lambdaParameters(p):
     ''' lambdaParameters : lambdaParameter
@@ -833,7 +841,7 @@ def p_functionLiteral(p):
     p[0] = p[1]
 ########################################################################
 def p_typeConstraints(p):
-    ''' typeConstraints : simpleIdentifier DOISP type '''
+    ''' typeConstraints : simpleIdentifier optionalType '''
     p[0] = cc.TypeConstraintConcrete(p[1], p[3])
 ########################################################################
 

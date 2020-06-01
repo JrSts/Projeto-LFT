@@ -34,6 +34,10 @@ class PropertyDeclaration(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
         pass
+class PropertyDeclarationPV(metaclass=ABCMeta):
+    @abstractmethod
+    def accept(self, visitor):
+        pass
 class TypeParameters(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, visitor):
@@ -157,7 +161,7 @@ class PrefixUnaryExpressionRecursive(metaclass=ABCMeta):
     def accept(self, Visitor):
         pass
 
-class Lable(metaclass=ABCMeta):
+class Label(metaclass=ABCMeta):
     @abstractmethod
     def accept(self, Visitor):
         pass

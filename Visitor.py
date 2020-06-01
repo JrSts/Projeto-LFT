@@ -58,6 +58,7 @@ class Visitor (AbstractVisitor):
         print('Exp')'''
 
     def visitSimpleKotlinFile(self, SimpleKotlinFile):
+        print(SimpleKotlinFile.functionDeclaration)
         SimpleKotlinFile.functionDeclaration.accept(self)
 
     def visitCompoundKotlinFile(self,CompoundKotlinFile):
@@ -71,7 +72,7 @@ class Visitor (AbstractVisitor):
         FunctionDeclaration.optinalType.accept(self)
         FunctionDeclaration.optionalBlock.accept(self)
 
-    def visitOptinalType(self,OptinalType):
+'''def visitOptinalType(self,OptinalType):
         OptinalType.type.accept(self)
 
     def visitOptionalBlock(self,OptionalBlock):
@@ -979,7 +980,7 @@ class Visitor (AbstractVisitor):
 
     def visitSafeNavConcrete(self,SafeNavConcrete):
         SafeNavConcrete.safeNav.accept(self)
-        print('safeNav')
+        print('safeNav')'''
     
 v= Visitor()
 
