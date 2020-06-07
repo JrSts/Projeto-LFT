@@ -16,29 +16,12 @@ tokens = (
     'LPAREN',
     'RPAREN',
     'IF',
-    'IMPORT',
-    'NULLABLE',
     'VAR',
     'VAL',
     'FUN',
-    'STRING',
-    'OBJECT',
-    'THIS',
-    'CHAR',
     'WHILE',
     'NULL',
-    'WHEN',
-    'FLOAT',
     'RETURN',
-    'CONST',
-    'OPERATOR',
-    'INT',
-    'CLASS',
-    'CONSTRUCTOR',
-    'DOUBLE',
-    'SMARTCAST',
-    'BOOLEAN',
-    'FUNCTION',
     'FOR',
     'FALSE',
     'MOD',
@@ -56,20 +39,15 @@ tokens = (
     'OR',
     'LCHAVE',
     'RCHAVE',
-    'LCCT',
-    'RCCT',
     'TRUE',
     'ELSE',
     'PV',
     'ID',
     'COMMA',
-    'PONTO',
     'LITERAL_STRING',
     'PONTOPONTO',
-    'SETA',
     'IN',
     'DO',
-    'EOF',
     'CONTINUE',
     'IDENTIDADE',
     'SEMIDENTIDADE',
@@ -81,40 +59,16 @@ tokens = (
     'NOT_IN',
     'NOT_IS',
     'IS',
-    'COLONCOLON',
-    'BREAK_AT',
-    'CONTINUE_AT',
     'BREAK',
-    'RETURN_AT',
-    'SUSPEND',
-    'OUT',
     'ELVIS',
-    'WHERE',
-    'INIT',
-    'NOINLINE',
-    'VARARG',
-    'CROSSINLINE',
     'MAISIGUAL',
     'MENOSIGUAL',
-    'LONG',
 )
 # Regular expression rules for simple tokens
-t_LONG = r'Long'
-t_INIT = r'init'
-t_NOINLINE = r'noinline'
-t_VARARG = r'vararg'
-t_CROSSINLINE = r'crossinline'
 #t_ARRAY = r'Array'
-t_WHERE = r'where'
 t_ELVIS = r'\?:'
-t_OUT = r'out'
-t_SUSPEND = r'suspend'
 t_IS = r'is'
 t_BREAK = r'break'
-t_RETURN_AT = r'return_at'
-t_CONTINUE_AT = r'continue_at'
-t_BREAK_AT = r'break_at'
-t_COLONCOLON = r'::'
 t_NOT_IN = r'not_in'
 t_NOT_IS = r'not_is'
 t_MODIGUAL = r'%='
@@ -125,18 +79,11 @@ t_AS = r'as'
 t_IDENTIDADE = r'==='
 t_SEMIDENTIDADE = r'!=='
 t_CONTINUE = r'continue'
-t_EOF = r'eof'
 t_DO = r'do'
 t_IN = r'in'
-#t_OR = r'or'
-#t_AND = r'and'
-t_SETA = r'-\>'
-t_PONTO = r'\.'
 t_PONTOPONTO = r'\.\.'
 t_COMMA = r','
 t_PLUS = r'\+'
-t_LCCT = r'\['
-t_RCCT = r'\]'
 t_INCREMENTO = r'\+\+'
 t_MINUS = r'-'
 t_DECREMENTO = r'--'
@@ -151,28 +98,12 @@ t_RPAREN = r'\)'
 t_LCHAVE = r'{'
 t_RCHAVE = r'}'
 t_IF = r'if'
-t_IMPORT = r'import'
-t_NULLABLE = r'nullable'
 t_VAR = r'var'
 t_VAL = r'val'
 t_FUN = r'fun'
-t_STRING = r'String'
-t_OBJECT = r'object'
-t_THIS = r'this'
-t_CHAR = r'char'
 t_WHILE = r'while'
 t_NULL = r'null'
-t_WHEN = r'when'
-t_FLOAT = r'Float'
 t_RETURN = r'return'
-t_CONST = r'const'
-t_OPERATOR = r'operator'
-t_INT = r'Int'
-t_CLASS = r'class'
-t_CONSTRUCTOR = r'constructor'
-t_DOUBLE = r'Double'
-t_SMARTCAST = r'Smartcast'
-t_BOOLEAN = r'Boolean'
 t_FOR = r'for'
 t_FALSE = r'false'
 t_MAIOR = r'>'
