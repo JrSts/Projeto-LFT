@@ -21,14 +21,14 @@ def p_functionDeclaration(p):
     ''' functionDeclaration : FUN ID functionValueParameters functionBody
                             | FUN ID functionValueParameters DOISP type functionBody '''
     if len(p) == 5:
-        p[0] = cc.SimpleFunctionDeclaration([2], p[3], p[4])
+        p[0] = cc.SimpleFunctionDeclaration(p[2], p[3], p[4])
     else:
-        p[0] = cc.CompoundFunctionDeclaration(p[2], p[3], p[4], p[5])
+        p[0] = cc.CompoundFunctionDeclaration(p[2], p[3], p[5], p[6])
 
 
 def p_functionValueParameters(p):
-    '''functionValueParameters : LPAREN parameters RPAREN
-                               | LPAREN RPAREN '''
+    ''' functionValueParameters : LPAREN parameters RPAREN
+                                | LPAREN RPAREN '''
     if len(p) == 3:
         p[0] = cc.SimpleFunctionValueParameters()
     else:
@@ -36,27 +36,30 @@ def p_functionValueParameters(p):
 
 def p_parameters(p):
     ''' parameters : parameter
-                    | parameter COMMA parameters  '''
+                   | parameter COMMA parameters  '''
 
     if len(p) == 2:
-        p[0] = cc.SimpleFunctionValueParametersRecursive(p[1])
+        p[0] = cc.SimpleParameters(p[1])
     else:
-        p[0] = cc.CompoundFunctionValueParametersRecursive(p[1], p[3])
+        p[0] = cc.CompoundParameters(p[1], p[3])
 
 def p_parameter(p):
     ''' parameter : ID DOISP type
-                   | ID DOISP type ATRIBUICAO expression'''
-    p[0] = cc.ParameterConcrete(p[1], p[2])
+                  | ID DOISP type ATRIBUICAO expression'''
+    if len(p) == 4:
+        p[0] = cc.SimpleParameter(p[1], p[3])
+    else:
+        p[0] = cc.CompoundParameter(p[1], p[3], p[5])
+
 
 def p_type(p):
-    ''' type :  parenthesizedType
-                | ID '''
+    ''' type : parenthesizedType
+             | ID '''
 
     p[0] = p[1]
 
-
 def p_parenthesizedType(p):
-    '''parenthesizedType : LPAREN type RPAREN '''
+    ''' parenthesizedType : LPAREN type RPAREN '''
     p[0] = cc.ParenthesizedTypeConcrete(p[2])
 
 
@@ -70,8 +73,8 @@ def p_functionBody(p):
 
 
 def p_statements(p):
-    '''statements : statement
-                  | statement statements '''
+    ''' statements : statement
+                   | statement statements '''
     if len(p) == 2:
         p[0] = cc.SimpleStatements(p[1])
     else:
@@ -79,44 +82,81 @@ def p_statements(p):
 
 
 def p_statement(p):
-    '''statement :    open_statement
-                   |  closed_statement
+    ''' statement : open_statement
+                  | closed_statement
     '''
-
+    p[0] = p[1]
 
 def p_open_statement(p):
-    '''
-        open_statement : IF LPAREN expression RPAREN block
+    ''' open_statement : IF LPAREN expression RPAREN block
                        | IF LPAREN expression RPAREN statement
                        | IF LPAREN expression RPAREN block ELSE open_statement
                        | IF LPAREN expression RPAREN closed_statement ELSE open_statement
                        | FOR LPAREN genericVariableDeclaration IN expression RPAREN open_statement
                        | WHILE LPAREN expression RPAREN open_statement
-                       | DO open_statement WHILE LPAREN expression RPAREN
-    '''
+                       | DO open_statement WHILE LPAREN expression RPAREN '''
+
+    if len(p) == 6 and isinstance(p[5], ac.Statement):
+        p[0] = cc.If_statement(p[3], p[5])
+    elif len(p) == 6 and p[1] == 'if':
+        p[0] = cc.If_block(p[3], p[5])
+    elif len(p) == 6 and p[1] == 'while':
+        p[0] = cc.While_Open_statement(p[3], p[5])
+    elif len(p) == 8 and isinstance(p[5], ac.Block):
+        p[0] = cc.SimpleIf_else(p[3], p[5], p[7])
+    elif len(p) == 8:
+        p[0] = cc.CompoundIf_else(p[3], p[5], p[7])
+    elif p[1] == 'for':
+        p[0] = cc.For_Open_statement(p[3], p[5], p[7])
+    else:
+        p[0] = cc.DoWhile_Open_statement(p[2], p[5])
 
 
 def p_closed_statement(p):
-    '''closed_statement :  non_if_statement_block
-                       | IF LPAREN expression RPAREN block ELSE block
-                       | IF LPAREN expression RPAREN closed_statement ELSE block
-                       | IF LPAREN expression RPAREN block ELSE closed_statement
-                       | IF LPAREN expression RPAREN closed_statement ELSE closed_statement
-                       | FOR LPAREN genericVariableDeclaration IN expression RPAREN closed_statement
-                       | WHILE LPAREN expression RPAREN closed_statement
-                       | DO closed_statement WHILE LPAREN expression RPAREN'''
+    '''closed_statement : non_if_statement_block
+                        | IF LPAREN expression RPAREN block ELSE block
+                        | IF LPAREN expression RPAREN closed_statement ELSE block
+                        | IF LPAREN expression RPAREN block ELSE closed_statement
+                        | IF LPAREN expression RPAREN closed_statement ELSE closed_statement
+                        | FOR LPAREN genericVariableDeclaration IN expression RPAREN closed_statement
+                        | WHILE LPAREN expression RPAREN closed_statement
+                        | DO closed_statement WHILE LPAREN expression RPAREN '''
+    if len(p) == 2:
+        p[0] = p[1]
+    elif isinstance(p[5], ac.Block) and isinstance(p[7], ac.Block):
+        p[0] = cc.If_Blocks_Closed_statement(p[3], p[5], p[7])
+    elif isinstance(p[5], ac.Closed_statement) and isinstance(p[7], ac.Block):
+        p[0] = cc.If_Mix1_Closed_statement(p[3], p[5], p[7])
+    elif isinstance(p[5], ac.Block) and isinstance(p[7], ac.Closed_statement):
+        p[0] = cc.If_Mix2_Closed_statement(p[3], p[5], p[7])
+    elif isinstance(p[5], ac.Closed_statement) and isinstance(p[7], ac.Closed_statement):
+        p[0] = cc.If_Closeds_Closed_statement(p[3], p[5], p[7])
+    elif p[1] == 'for':
+        p[0] = cc.For_Closed_statement(p[3], p[5], p[7])
+    elif p[1] == 'while':
+        p[0] = cc.While_Closed_statement(p[3], p[5])
+    else:
+        p[0] = cc.DoWhile_Closed_statement(p[2], p[5])
+
 
 
 def p_non_if_statement(p):
     '''non_if_statement_block : FOR LPAREN genericVariableDeclaration IN expression RPAREN block
-                       | WHILE LPAREN expression RPAREN block
-                       | DO block WHILE LPAREN expression RPAREN
-                       | PV
-                       | propertyDeclarationStm
-                       | assignment
-                       | chamadaDeFuncao
-                       | jumpExpression'''
-
+                              | WHILE LPAREN expression RPAREN block
+                              | DO block WHILE LPAREN expression RPAREN
+                              | PV
+                              | propertyDeclarationStm
+                              | assignment
+                              | chamadaDeFuncao
+                              | jumpExpression '''
+    if p[1] == 'for':
+        p[0] = cc.For_Non_if_statement_block(p[3], p[5], p[7])
+    elif p[1] == 'while':
+        p[0] = cc.While_Non_if_statement_block(p[3], p[5])
+    elif p[1] == 'do':
+        p[0] = cc.DoWhile_Non_if_statement_block(p[2], p[5])
+    else:
+        p[0] = p[1]
 
 def p_assignment(p):
     '''assignment : ID ATRIBUICAO expression
@@ -128,16 +168,16 @@ def p_assignment(p):
 
 def p_block(p):
     '''block : LCHAVE statements RCHAVE '''
-    p[0] = cc.Block(p[2])
+    p[0] = cc.BlockConcrete(p[2])
 
 def p_propertyDeclarationStm(p):
     ''' propertyDeclarationStm : VAR genericVariableDeclaration ATRIBUICAO expression
                                | VAL genericVariableDeclaration ATRIBUICAO expression
 '''
-    if len(p) == 5:
-        p[0] = cc.SimplePropertyDeclaration(p[1], p[2], p[4])
+    if p[1] == 'var':
+        p[0] = cc.PropertyDeclarationStm_Var(p[2], p[4])
     else:
-        p[0] = cc.CompoundPropertyDeclaration(p[1], p[2], p[3], p[5])
+        p[0] = cc.PropertyDeclarationStm_Val(p[2], p[4])
 
 def p_chamadaDeFuncao(p):
     ''' chamadaDeFuncao : ID LPAREN RPAREN
@@ -156,8 +196,8 @@ def p_genericVariableDeclaration(p):
         p[0] = cc.VariableDeclaration(p[1])
 
 def p_variableDeclaration(p):
-    '''variableDeclaration :  ID DOISP type
-                            | ID '''
+    '''variableDeclaration : ID DOISP type
+                           | ID '''
     if len(p) == 2:
         p[0] = cc.SimpleVariableDeclaration(p[1])
     else:
@@ -167,13 +207,13 @@ def p_variableDeclarations(p):
     '''variableDeclarations : variableDeclaration
                             | variableDeclaration COMMA variableDeclarations '''
     if len(p) == 2:
-        p[0] = cc.SimpleMultiVariableDeclarationRecursive(p[1])
+        p[0] = cc.SimpleVariableDeclarations(p[1])
     else:
-        p[0] = cc.CompoundMultiVariableDeclarationRecursive(p[1], p[3])
+        p[0] = cc.CompoundVariableDeclarations(p[1], p[3])
 
 def p_multiVariableDeclaration(p):
     ''' multiVariableDeclaration : LPAREN variableDeclarations RPAREN
-                                | LPAREN RPAREN'''
+                                 | LPAREN RPAREN '''
     if len(p) == 3:
         p[0] = cc.SimpleMultiVariableDeclaration()
     else:
@@ -185,7 +225,7 @@ def p_parametersFunction(p):
     if len(p) == 2:
         p[0] = cc.SimpleParametersFunction(p[1])
     else:
-        p[0] = cc.CompoundParametersFunction(p[1])
+        p[0] = cc.CompoundParametersFunction(p[1], p[3])
 
 
 def p_expression(p):
@@ -195,7 +235,7 @@ def p_expression(p):
 
 def p_disjunction(p):
     ''' disjunction : conjunction
-                     | disjunction  OR  conjunction'''
+                    | disjunction  OR  conjunction'''
     if len(p) == 2:
         p[0] = cc.SimpleDisjunction(p[1])
     else:
@@ -204,7 +244,7 @@ def p_disjunction(p):
 
 def p_conjunction(p):
     '''conjunction : equality
-                  | conjunction  AND  equality'''
+                   | conjunction  AND  equality'''
     if len(p) == 2:
         p[0] = cc.SimpleConjunction(p[1])
     else:
@@ -213,7 +253,7 @@ def p_conjunction(p):
 
 def p_equality(p):
     ''' equality : comparison
-                  | equality equalityOperator comparison  '''
+                 | equality equalityOperator comparison  '''
     if len(p) == 2:
         p[0] = cc.SimpleEquality(p[1])
     else:
@@ -222,7 +262,7 @@ def p_equality(p):
 
 def p_comparison(p):
     ''' comparison : infixOperation
-                     | infixOperation comparisonOperator infixOperation '''
+                   | infixOperation comparisonOperator infixOperation '''
     if len(p) == 2:
         p[0] = cc.SimpleComparison(p[1])
     else:
@@ -230,17 +270,19 @@ def p_comparison(p):
 
 
 def p_infixOperation(p):
-    '''infixOperation :   infixOperation inOperator elvisExpression
-                        | infixOperation isOperator type
-                        | elvisExpression '''
+    '''infixOperation : infixOperation inOperator elvisExpression
+                      | infixOperation isOperator type
+                      | elvisExpression '''
     if len(p) == 2:
-        p[0] = cc.SimpleInfixOperation(p[1])
+        p[0] = p[1]
+    elif isinstance(p[2], ac.InOperator):
+        p[0] = cc.SimpleInfixOperation(p[1], p[3])
     else:
         p[0] = cc.CompoundInfixOperation(p[1], p[2])
 
 def p_elvisExpression(p):
     ''' elvisExpression : rangeExpression
-                          | elvisExpression  ELVIS rangeExpression  '''
+                        | elvisExpression  ELVIS rangeExpression  '''
     if len(p) == 2:
         p[0] = cc.SimpleElvisExpression(p[1])
     else:
@@ -257,7 +299,7 @@ def p_rangeExpression(p):
 
 def p_additiveExpression(p):
     ''' additiveExpression : multiplicativeExpression
-                             | additiveExpression  additiveOperator  multiplicativeExpression'''
+                           | additiveExpression  additiveOperator  multiplicativeExpression'''
     if len(p) == 2:
         p[0] = cc.SimpleAdditiveExpression(p[1])
     else:
@@ -266,7 +308,7 @@ def p_additiveExpression(p):
 
 def p_multiplicativeExpression(p):
     ''' multiplicativeExpression : asExpression
-                                  | multiplicativeExpression  multiplicativeOperator asExpression '''
+                                 | multiplicativeExpression  multiplicativeOperator asExpression '''
     if len(p) == 2:
         p[0] = cc.SimpleMultiplicativeExpression(p[1])
     else:
@@ -275,7 +317,7 @@ def p_multiplicativeExpression(p):
 
 def p_asExpression(p):
     ''' asExpression : unaryExpression
-                       | unaryExpression asOperator type '''
+                     | unaryExpression asOperator type '''
     if len(p) == 2:
         p[0] = cc.SimpleAsExpression(p[1])
     else:
@@ -284,13 +326,15 @@ def p_asExpression(p):
 
 def p_unaryExpression(p):
     ''' unaryExpression : unaryOperator primaryExpression
-                       | primaryExpression
-                       | primaryExpression postfixUnaryOperator
+                        | primaryExpression
+                        | primaryExpression postfixUnaryOperator
                       '''
     if len(p) == 2:
-        p[0] = cc.SimplePrefixUnaryExpression(p[1])
+        p[0] = p[1]
+    elif isinstance(p[1], ac.UnaryExpression):
+        p[0] = cc.SimpleUnaryExpressionConcrete(p[1], p[2])
     else:
-        p[0] = cc.CompoundPrefixUnaryExpression(p[1], p[2])
+        p[0] = cc.CompoundUnaryExpressionConcrete(p[1], p[2])
 
 def p_postfixUnaryOperator(p):
     ''' postfixUnaryOperator : INCREMENTO
@@ -303,23 +347,25 @@ def p_postfixUnaryOperator(p):
 
 def p_primaryExpression(p):
     ''' primaryExpression : NULL
-                           | chamadaDeFuncao
-                           | TRUE
-                           | FALSE
-                           | NUMBER
-                           | LITERAL_STRING
-                           | ID
-                           | parenthesizedExpression
+                          | chamadaDeFuncao
+                          | TRUE
+                          | FALSE
+                          | NUMBER
+                          | LITERAL_STRING
+                          | ID
+                          | parenthesizedExpression
     '''
     p[0] = p[1]
 
 
-# VERIFICAR Expression
 def p_jumpExpression(p):
     ''' jumpExpression : RETURN expression
                        | CONTINUE
                        | BREAK'''
-
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = cc.Return(p[2])
 
 def p_parenthesizedExpression(p):
     ''' parenthesizedExpression : LPAREN expression RPAREN '''
@@ -367,18 +413,18 @@ def p_comparisonOperator(p):
                            | MAIORIGUAL '''
 
     if p[1] == '<':
-        p[0] = cc.Menor(p[1])
+        p[0] = cc.Menor()
     elif p[1] == '>':
-        p[0] = cc.Maior(p[1])
+        p[0] = cc.Maior()
     elif p[1] == '<=':
-        p[0] = cc.MenorIgual(p[1])
+        p[0] = cc.MenorIgual()
     elif p[1] == '>=':
-        p[0] = cc.MaiorIgual(p[1])
+        p[0] = cc.MaiorIgual()
 
 
 def p_inOperator(p):
     ''' inOperator : IN
-                 | NOT_IN '''
+                   | NOT_IN '''
     if p[1] == 'in':
         p[0] = cc.In(p[1])
     elif p[1] == '!in':
@@ -387,7 +433,7 @@ def p_inOperator(p):
 
 def p_isOperator(p):
     '''isOperator : IS
-				| NOT_IS '''
+				  | NOT_IS '''
     if p[1] == 'is':
         p[0] = cc.Is(p[1])
     elif p[1] == '!is':
@@ -405,8 +451,8 @@ def p_additiveOperator(p):
 
 def p_multiplicativeOperator(p):
     ''' multiplicativeOperator : MULT
-                                | DIVIDE
-                                | MOD '''
+                               | DIVIDE
+                               | MOD '''
     if p[1] == '*':
         p[0] = cc.Mult(p[1])
     elif p[1] == '/':
@@ -419,17 +465,17 @@ def p_asOperator(p):
     ''' asOperator : AS
                    | AS asOperator '''
     if len(p) == 2:
-        p[0] = cc.SimpleAsOperator(p[1])
+        p[0] = cc.SimpleAsOperator()
     else:
-        p[0] = cc.CompoundAsOperator(p[1], p[2])
+        p[0] = cc.CompoundAsOperator(p[1])
 
 
 def p_unaryOperator(p):
     ''' unaryOperator : INCREMENTO
-                            | DECREMENTO
-                            | MINUS
-                            | PLUS
-                            | NOT'''
+                      | DECREMENTO
+                      | MINUS
+                      | PLUS
+                      | NOT'''
     if p[1] == '++':
         p[0] = cc.Incremento(p[1])
     elif p[1] == '--':
