@@ -563,7 +563,7 @@ class SimpleConjunction(ac.Conjunction):
         self.equality=equality
 
     def accept (self,Visitor):
-        Visitor.vistSimpleConjunction(self)
+        Visitor.visitSimpleConjunction(self)
 
 
 class CompoundConjunction(ac.Conjunction):
@@ -572,7 +572,7 @@ class CompoundConjunction(ac.Conjunction):
         self.conjunction = conjunction
 
     def accept(self, Visitor):
-        Visitor.vistCompoundConjunction(self)
+        Visitor.visitCompoundConjunction(self)
 
 
 class SimpleEquality(ac.Conjunction):
@@ -598,7 +598,7 @@ class SimpleComparison(ac.Equality):
         self.infixOperation = infixOperation
 
     def accept(self, Visitor):
-        Visitor.vistSimpleComparison(self)
+        Visitor.visitSimpleComparison(self)
 
 
 class CompoundComparison(ac.Equality):
@@ -608,12 +608,13 @@ class CompoundComparison(ac.Equality):
         self.infixOperation2 = infixOperation2
 
     def accept(self, Visitor):
-        Visitor.vistCompoundComparison(self)
+        Visitor.visitCompoundComparison(self)
 
 
 class SimpleInfixOperation(ac.InfixOperation):
-    def __init__(self, infixOperation, elvisExpression):
+    def __init__(self, infixOperation, inOperator, elvisExpression):
         self.infixOperation = infixOperation
+	self.inOperator = inOperator
         self.elvisExpression = elvisExpression
 
     def accept(self, Visitor):
@@ -621,8 +622,9 @@ class SimpleInfixOperation(ac.InfixOperation):
 
 
 class CompoundInfixOperation(ac.InfixOperation):
-    def __init__(self, infixOperation, type):
+    def __init__(self, infixOperation, isOperator,  type):
         self.infixOperation = infixOperation
+	self.isOperator = isOperator
         self.type = type
 
     def accept(self, Visitor):
@@ -745,7 +747,7 @@ class Incremento(ac.PostfixUnaryOperator):
 
 class Decremento(ac.PostfixUnaryOperator):
     def __init__(self, decremento):
-        self.decremento = decremento
+        self
 
     def accept(self, Visitor):
         Visitor.visitDecremento(self)
