@@ -127,7 +127,7 @@ class SimpleFunctionDeclaration(ac.FunctionDeclaration):
         self.functionBody = functionBody
 
     def accept(self, Visitor):
-        Visitor.visitFuncrionDeclaration(self)
+        Visitor.visitSimpleFunctionDeclaration(self)
 
 
 class CompoundFunctionDeclaration(ac.FunctionDeclaration):
@@ -138,7 +138,7 @@ class CompoundFunctionDeclaration(ac.FunctionDeclaration):
         self.functionBody = functionBody
 
     def accept(self, Visitor):
-        Visitor.visitFuncrionDeclaration(self)
+        Visitor.visitCompoundFunctionDeclaration(self)
 
 
 class SimpleFunctionValueParameters(ac.KotlinFile):
@@ -268,7 +268,7 @@ class CompoundIf_else(ac.Open_statement):
         self.open_statement = open_statement
 
     def accept(self, Visitor):
-        Visitor.visitSCompoundIf_else(self)
+        Visitor.visitCompoundIf_else(self)
 
 
 class While_Open_statement(ac.Open_statement):
@@ -368,32 +368,32 @@ class DoWhile_Closed_statement(ac.Closed_statenent):
 
 
 
-class For_Non_if_statement_block(ac.Closed_statement):
+class For_Non_if_statement_block(ac.Non_if_statement_block):
     def __init__(self, genericVariableDeclaration, expression, block):
         self.genericVariableDeclaration=genericVariableDeclaration
         self.expresison=expression
         self.block = block
 
     def accept(self, Visitor):
-        Visitor.visitFor_Closed_statement(self)
+        Visitor.visitFor_Non_if_statement_block(self)
 
 
-class While_Non_if_statement_block(ac.Closed_statement):
+class While_Non_if_statement_block(ac.Non_if_statement_block):
     def __init__(self, expression, block):
         self.expresison=expression
         self.block = block
 
     def accept(self, Visitor):
-        Visitor.visitWhile_Closed_statement(self)
+        Visitor.visitWhile_Non_if_statement_block(self)
 
 
-class DoWhile_Non_if_statement_block(ac.Closed_statement):
+class DoWhile_Non_if_statement_block(ac.Non_if_statement_block):
     def __init__(self, block, expression):
         self.expresison=expression
         self.block = block
 
     def accept(self, Visitor):
-        Visitor.visitDoWhile_Closed_statement(self)
+        Visitor.visitDoWhile_Non_if_statement_block(self)
 
 
 class AssignmentConcrete(ac.Assignment):
@@ -420,7 +420,7 @@ class BlockConcrete(ac.Block):
         self.statements = statements
 
     def accept(self, Visitor):
-        Visitor.visitBlock(self)
+        Visitor.visitBlockConcrete(self)
 
 
 class PropertyDeclarationStm_Var(ac.PropertyDeclaration):
@@ -563,7 +563,7 @@ class SimpleConjunction(ac.Conjunction):
         self.equality=equality
 
     def accept (self,Visitor):
-        Visitor.vistSimpleConjunction(self)
+        Visitor.visitSimpleConjunction(self)
 
 
 class CompoundConjunction(ac.Conjunction):
@@ -572,7 +572,7 @@ class CompoundConjunction(ac.Conjunction):
         self.conjunction = conjunction
 
     def accept(self, Visitor):
-        Visitor.vistCompoundConjunction(self)
+        Visitor.visitCompoundConjunction(self)
 
 
 class SimpleEquality(ac.Conjunction):

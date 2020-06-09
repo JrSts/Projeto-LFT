@@ -1,7 +1,7 @@
 import ply.lex as lex
 import ply.yacc as yacc
 from lex import tokens
-from AbstrataClass import abstractmethod
+#from AbstrataClass import abstractmethod
 
 from Visitor import Visitor
 import AbstrataClass as ac
