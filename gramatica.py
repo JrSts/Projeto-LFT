@@ -276,9 +276,9 @@ def p_infixOperation(p):
     if len(p) == 2:
         p[0] = p[1]
     elif isinstance(p[2], ac.InOperator):
-        p[0] = cc.SimpleInfixOperation(p[1], p[3])
+        p[0] = cc.SimpleInfixOperation(p[1], p[2], p[3])
     else:
-        p[0] = cc.CompoundInfixOperation(p[1], p[2])
+        p[0] = cc.CompoundInfixOperation(p[1], p[2], p[3])
 
 def p_elvisExpression(p):
     ''' elvisExpression : rangeExpression
@@ -331,7 +331,7 @@ def p_unaryExpression(p):
                       '''
     if len(p) == 2:
         p[0] = p[1]
-    elif isinstance(p[1], ac.UnaryExpression):
+    elif isinstance(p[1], ac.UnaryOperator):
         p[0] = cc.SimpleUnaryExpressionConcrete(p[1], p[2])
     else:
         p[0] = cc.CompoundUnaryExpressionConcrete(p[1], p[2])
