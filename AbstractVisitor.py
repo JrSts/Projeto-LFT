@@ -1,22 +1,16 @@
-''' 
+from abc import abstractmethod
+from abc import ABCMeta
+
+class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
     def visitSimpleKotlinFile(self, KotlinFile):
         pass
-<<<<<<< HEAD
+
     @abstractmethod
     def visitCompoundKotlinFile(self,KotlinFile):
         pass
 
-=======
-
-    @abstractmethod
-    def visitCompoundKotlinFile(self, KotlinFile):
-        pass
-
-
-
->>>>>>> 5f6d18de0d8f39af70ca2d38dde7a731142a1759
     @abstractmethod
     def visitSimpleFunctionDeclaration(self,FunctionDeclaration):
         pass
@@ -25,7 +19,7 @@
     def visitCompoundFunctionDeclaration(self,FunctionDeclaration):
         pass
 
-<<<<<<< HEAD
+
     @abstractmethod
     def visitSimpleFunctionValueParameters(self,SimpleFunctionValueParameters):
         pass
@@ -33,21 +27,6 @@
     @abstractmethod
     def visitCompoundFunctionValueParameters(self,CompoundFunctionValueParameters):
         pass
-
-=======
-
-
-
-    @abstractmethod
-    def visitSimpleFunctionValueParameters(self, FunctionValueParameters):
-        pass
-
-    @abstractmethod
-    def visitCompoundFunctionValueParameters(self, FunctionValueParameters):
-        pass
-
-
-
 
     @abstractmethod
     def visitSimpleParameters(self, Parameters):
@@ -58,7 +37,6 @@
         pass
 
 
-
     @abstractmethod
     def visitSimpleParameter(self, Parameter):
         pass
@@ -67,14 +45,9 @@
     def visitCompoundParameter(self, Parameter):
         pass
 
-
-
     @abstractmethod
     def visitParenthesizedTypeConcrete(self, ParenthesizedType):
         pass
-
-
-
 
     @abstractmethod
     def visitSimpleFunctionBody(self, FunctionBody):
@@ -84,8 +57,6 @@
     def visitCompoundFunctionBody(self, FunctionBody):
         pass
 
-
-
     @abstractmethod
     def visitSimpleStatements(self, Statements):
         pass
@@ -94,8 +65,6 @@
     def visitCompoundStatements(self, Statements):
         pass
 
-
-
     @abstractmethod
     def visitSimpleStatement(self, Statement):
         pass
@@ -103,8 +72,6 @@
     @abstractmethod
     def visitCompoundStatement(self, Statement):
         pass
-
-
 
     @abstractmethod
     def visitIf_statement(self, Open_statement):
@@ -135,12 +102,6 @@
         pass
 
     @abstractmethod
-    def visitSimpleFunctionBody(self,SimpleFunctionBody):
-        pass
-
-
-
-    @abstractmethod
     def visitIf_Blocks_Closed_statement(self, Closed_statement):
         pass
 
@@ -168,8 +129,6 @@
     def visitDoWhile_Closed_statement(self, Closed_statement):
         pass
 
-
-
     @abstractmethod
     def visitFor_Non_if_statement_block(self, Non_if_statement_block):
         pass
@@ -182,8 +141,6 @@
     def visitDoWhile_Non_if_statement_block(self, Non_if_statement_block):
         pass
 
-
-
     @abstractmethod
     def visitAssignmentConcrete(self,Assignment):
         pass
@@ -192,13 +149,9 @@
     def visitAssignmentAndOperatorConcrete(self, AssignmentAndOperator):
         pass
 
-
-
     @abstractmethod
     def visitBlockConcrete(self, Block):
         pass
-
-
 
     @abstractmethod
     def visitPropertyDeclarationStm_Var(self, PropertyDeclarationStm):
@@ -208,8 +161,6 @@
     def visitPropertyDeclarationStm_Val(self, PropertyDeclarationStm):
         pass
 
-
-
     @abstractmethod
     def visitSimpleChamadaDeFuncao(self, ChamadaDeFuncao):
         pass
@@ -217,8 +168,6 @@
     @abstractmethod
     def visitCompoundChamadaDeFuncao(self, ChamadaDeFuncao):
         pass
-
-
 
     @abstractmethod
     def visitSimpleVariableDeclaration(self, VariableDeclaration):
@@ -228,7 +177,6 @@
     def visitCompoundVariableDeclaration(self, VariableDeclaration):
         pass
 
-
     @abstractmethod
     def visitSimpleVariableDeclarations(self, VariableDeclarations):
         pass
@@ -236,8 +184,6 @@
     @abstractmethod
     def visitCompoundVariableDeclarations(self, VariableDeclarations):
         pass
-
-
 
     @abstractmethod
     def visitSimpleMultiVariableDeclaration(self, VariableDeclaration):
@@ -247,8 +193,6 @@
     def visitCompoundMultiVariableDeclaration(self, VariableDeclaration):
         pass
 
-
-
     @abstractmethod
     def visitSimpleParametersFunction(self, ParametersFunction):
         pass
@@ -257,17 +201,13 @@
     def visitCompoundParametersFunction(self, ParametersFunction):
         pass
 
-
-
     @abstractmethod
     def visitSimpleDisjunction(self, Disjunction):
         pass
 
-
     @abstractmethod
     def visitCompoundDisjunction(self, Disjunction):
         pass
-
 
     @abstractmethod
     def visitSimpleEquality(self,SimpleEquality):
@@ -278,8 +218,6 @@
         pass
 
 
-
-
     @abstractmethod
     def vistSimpleComparison(self,SimpleComparison):
         pass
@@ -287,9 +225,6 @@
     @abstractmethod
     def vistCompoundComparison(self,CompoundComparison):
         pass
-
-
-
 
     @abstractmethod
     def visitSimpleInfixOperation(self,SimpleInfixOperation):
@@ -299,8 +234,6 @@
     def visitCompoundInfixOperation(self,CompoundInfixOperation):
         pass
 
-
-    
     @abstractmethod
     def visitSimpleElvisExpression(self,SimpleElvisExpression):
         pass
@@ -308,8 +241,6 @@
     @abstractmethod
     def visitCompoundElvisExpression(self,CompoundElvisExpression):
         pass
-
-
 
     @abstractmethod
     def visitSimpleRangeExpression(self,SimpleRangeExpression):
@@ -319,8 +250,6 @@
     def visitCompoundRangeExpression(self,CompoundRangeExpression):
         pass
 
-
-
     @abstractmethod
     def visitSimpleAdditiveExpression(self,SimpleAdditiveExpression):
         pass
@@ -328,8 +257,6 @@
     @abstractmethod
     def visitCompoundAdditiveExpression(self,CompoundAdditiveExpression):
         pass
-
-
 
     @abstractmethod
     def visitSimpleMultiplicativeExpression(self,SimpleMultiplicativeExpression):
@@ -339,8 +266,6 @@
     def visitCompoundMultiplicativeExpression(self,CompoundMultiplicativeExpression):
         pass
 
-
-
     @abstractmethod
     def visitSimpleAsExpression(self,SimpleAsExpression):
         pass
@@ -348,7 +273,6 @@
     @abstractmethod
     def visitCompoundAsExpression(self,CompoundAsExpression):
         pass
-
 
     @abstractmethod
     def visitSimpleUnaryExpressionConcrete(self, UnaryExpression):
@@ -358,8 +282,6 @@
     def visitCompoundUnaryExpressionConcrete(self, UnaryExpression):
         pass
 
-
-
     @abstractmethod
     def visitIncremento(self,Incremento):
         pass
@@ -368,19 +290,13 @@
     def visitDecremento(self,Decremento):
         pass
 
-
-
     @abstractmethod
     def visitReturn(self, Return):
         pass
 
-
-
     @abstractmethod
     def visitParenthesizedExpressionConcrete(self, ParenthesizedExpression):
         pass
-
-
 
     @abstractmethod
     def visitMAISIGUAL(self,MAISIGUAL):
@@ -402,9 +318,6 @@
     def visitMODIGUAL(self,MODIGUAL):
         pass
 
-
-
-
     @abstractmethod
     def visitDiferente(self,Diferente):
         pass
@@ -420,9 +333,6 @@
     @abstractmethod
     def visitSemIdentidade(self,SemIdentidade):
         pass
-
-
-
 
     @abstractmethod
     def visitMenor(self,Menor):
@@ -440,9 +350,6 @@
     def visitMaiorIgual(self,MaiorIgual):
         pass
 
-
-
-
     @abstractmethod
     def visitIn(self,In):
         pass
@@ -450,9 +357,6 @@
     @abstractmethod
     def visitNotIn(self,NotIn):
         pass
-
-
-
 
     @abstractmethod
     def visitNotIs(self,NotIs):
@@ -462,9 +366,6 @@
     def visitIs(self,Is):
         pass
 
-
-
-
     @abstractmethod
     def visitPlus(self,Plus):
         pass
@@ -472,9 +373,6 @@
     @abstractmethod
     def visitMINUS(self,MINUS):
         pass
-
-
-
 
     @abstractmethod
     def visitMult(self,Mult):
@@ -488,9 +386,6 @@
     def visitDivide(self,Divide):
         pass
 
-
-
-
     @abstractmethod
     def visitSimpleAsOperator(self,SimpleAsOperator):
         pass
@@ -499,14 +394,9 @@
     def visitCompoundAsOperator(self,CompoundAsOperator):
         pass
 
-
-
-
     @abstractmethod
     def visitNot(self,Not):
         pass
-
-
 
 
    #
@@ -1128,5 +1018,4 @@
    #
    #  @abstractmethod
    #  def visitSafeNavConcrete(self,SafeNavConcrete):
-   #      pass'''
->>>>>>> 5f6d18de0d8f39af70ca2d38dde7a731142a1759
+   #      pass
