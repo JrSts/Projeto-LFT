@@ -368,32 +368,32 @@ class DoWhile_Closed_statement(ac.Closed_statenent):
 
 
 
-class For_Non_if_statement_block(ac.Non_if_statement_block):
+class For_Non_if_statement_block(ac.Closed_statement):
     def __init__(self, genericVariableDeclaration, expression, block):
         self.genericVariableDeclaration=genericVariableDeclaration
         self.expresison=expression
         self.block = block
 
     def accept(self, Visitor):
-        Visitor.visitFor_Non_if_statement_block(self)
+        Visitor.visitFor_Closed_statement(self)
 
 
-class While_Non_if_statement_block(ac.Non_if_statement_block):
+class While_Non_if_statement_block(ac.Closed_statement):
     def __init__(self, expression, block):
         self.expresison=expression
         self.block = block
 
     def accept(self, Visitor):
-        Visitor.visitWhile_Non_if_statement_block(self)
+        Visitor.visitWhile_Closed_statement(self)
 
 
-class DoWhile_Non_if_statement_block(ac.Non_if_statement_block):
+class DoWhile_Non_if_statement_block(ac.Closed_statement):
     def __init__(self, block, expression):
         self.expresison=expression
         self.block = block
 
     def accept(self, Visitor):
-        Visitor.visitDoWhile_Non_if_statement_block(self)
+        Visitor.visitDoWhile_Closed_statement(self)
 
 
 class AssignmentConcrete(ac.Assignment):
@@ -563,7 +563,7 @@ class SimpleConjunction(ac.Conjunction):
         self.equality=equality
 
     def accept (self,Visitor):
-        Visitor.visitSimpleConjunction(self)
+        Visitor.vistSimpleConjunction(self)
 
 
 class CompoundConjunction(ac.Conjunction):
@@ -572,7 +572,7 @@ class CompoundConjunction(ac.Conjunction):
         self.conjunction = conjunction
 
     def accept(self, Visitor):
-        Visitor.visitCompoundConjunction(self)
+        Visitor.vistCompoundConjunction(self)
 
 
 class SimpleEquality(ac.Conjunction):
@@ -598,7 +598,7 @@ class SimpleComparison(ac.Equality):
         self.infixOperation = infixOperation
 
     def accept(self, Visitor):
-        Visitor.visitSimpleComparison(self)
+        Visitor.vistSimpleComparison(self)
 
 
 class CompoundComparison(ac.Equality):
@@ -608,13 +608,12 @@ class CompoundComparison(ac.Equality):
         self.infixOperation2 = infixOperation2
 
     def accept(self, Visitor):
-        Visitor.visitCompoundComparison(self)
+        Visitor.vistCompoundComparison(self)
 
 
 class SimpleInfixOperation(ac.InfixOperation):
-    def __init__(self, infixOperation, inOperator, elvisExpression):
+    def __init__(self, infixOperation, elvisExpression):
         self.infixOperation = infixOperation
-	self.inOperator = inOperator
         self.elvisExpression = elvisExpression
 
     def accept(self, Visitor):
@@ -622,9 +621,8 @@ class SimpleInfixOperation(ac.InfixOperation):
 
 
 class CompoundInfixOperation(ac.InfixOperation):
-    def __init__(self, infixOperation, isOperator,  type):
+    def __init__(self, infixOperation, type):
         self.infixOperation = infixOperation
-	self.isOperator = isOperator
         self.type = type
 
     def accept(self, Visitor):
@@ -725,7 +723,7 @@ class SimpleUnaryExpressionConcrete(ac.PrefixUnaryExpression):
         self.unaryOperator = unaryOperator
 
     def accept(self,Visitor):
-        Visitor.visitSSimpleUnaryExpressionConcrete(self)
+        Visitor.visitSimpleUnaryExpressionConcrete(self)
 
 
 class CompoundUnaryExpressionConcrete(ac.PrefixUnaryExpression):
@@ -734,19 +732,19 @@ class CompoundUnaryExpressionConcrete(ac.PrefixUnaryExpression):
         self.postfixUnaryExpression = postfixUnaryExpression
 
     def accept(self,Visitor):
-        Visitor.visitCCompoundUnaryExpressionConcrete(self)
+        Visitor.visitCompoundUnaryExpressionConcrete(self)
 
 
 class Incremento(ac.PostfixUnaryOperator):
-    def __init__(self, incremento):
-        self.incremento = incremento
+    def __init__(self):
+        self
 
     def accept(self, Visitor):
         Visitor.visitIncremento(self)
 
 
 class Decremento(ac.PostfixUnaryOperator):
-    def __init__(self, decremento):
+    def __init__(self):
         self
 
     def accept(self, Visitor):
@@ -766,7 +764,7 @@ class ParenthesizedExpressionConcrete(ac.PrimaryExpression, ac.NavigationSuffix)
         self.expression = expression
 
     def accept(self, Visitor):
-        Visitor.visitparenthesizedExpressionConcrete(self)
+        Visitor.visitParenthesizedExpressionConcrete(self)
 
 
 class MAISIGUAL(ac.AssignmentAndOperator):
@@ -842,7 +840,7 @@ class SemIdentidade(ac.EqualityOperator):
 
 
 class Menor(ac.ComparisonOperator):
-    def __init__(self, menor):
+    def __init__(self):
         self
 
     def accept(self, Visitor):
