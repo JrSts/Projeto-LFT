@@ -81,7 +81,7 @@ class Open_statement(metaclass=ABCMeta):
     def accept(self, Visitor):
         pass
 
-
+''
 class Closed_statement(metaclass=ABCMeta):
 
     @abstractmethod
@@ -89,7 +89,7 @@ class Closed_statement(metaclass=ABCMeta):
         pass
 
 
-class Non_if_statement(metaclass=ABCMeta):
+class Non_if_statement_block(metaclass=ABCMeta):
 
     @abstractmethod
     def accept(self, Visitor):

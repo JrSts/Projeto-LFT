@@ -65,11 +65,11 @@ class Visitor (AbstractVisitor):
         CompoundKotlinFile.functionDeclaration.accept(self)
         CompoundKotlinFile.kotlinFile.accept(self)
 
-    def visitSimpleFunctionDeclaration(self, FunctionDeclaration):
+    def visitSimpleFunctionDeclaration(self, SimpleFunctionDeclaration):
         print('fun', end='')
-        FunctionDeclaration.simpleIdentifier.accept(self)
-        FunctionDeclaration.functionValueParameters.accept(self)
-        FunctionDeclaration.functionBody.accept(self)
+        SimpleFunctionDeclaration.simpleIdentifier.accept(self)
+        SimpleFunctionDeclaration.functionValueParameters.accept(self)
+        SimpleFunctionDeclaration.functionBody.accept(self)
 
     def visitCompoundFunctionDeclaration(self, CompoundFunctionDeclaration):
         print('fun',end='')
@@ -120,10 +120,10 @@ class Visitor (AbstractVisitor):
         print('=',emd='')
         CompoundFunctionBody.expression.accept(self)
 
-    def visitSimpleStatemnts(self,SimpleStatements):
+    def visitSimpleStatements(self,SimpleStatements):
         SimpleStatements.statement.accept(self)
 
-    def visitCompoundStatemnts(self,CompoundStatements):
+    def visitCompoundStatements(self,CompoundStatements):
         CompoundStatements.statement.accept(self)
         CompoundStatements.statments.accept(self)
     
@@ -177,9 +177,9 @@ class Visitor (AbstractVisitor):
         If_Mix1_Closed_statement.closed_statement.accept(self)
 
     def visitIf_Mix2_Closed_statement(self, If_Mix2_Closed_statement):
-        If_Mix2_Closed_statement.block.accept(self)
-        If_Mix2_Closed_statement.expression.accept(self)
         If_Mix2_Closed_statement.closed_statement.accept(self)
+        If_Mix2_Closed_statement.expression.accept(self)
+        If_Mix2_Closed_statement.block.accept(self)
 
     def visitIf_Closeds_Closed_statement(self, If_Closeds_Closed_statement):
         If_Closeds_Closed_statement.closed_statement.accept(self)
@@ -348,6 +348,8 @@ class Visitor (AbstractVisitor):
         print('..')
         CompoundRangeExpression.additiveExpression.accept(self)
 
+    def visitSimpleAdditiveExpression(self, SimpleAdditiveExpression):
+        SimpleAdditiveExpression.multiplicativeExpression.accept(self)
 
     def visitCompoundAdditiveExpression(self, CompoundAdditiveExpression):
         CompoundAdditiveExpression.additiveExpression.accept(self)

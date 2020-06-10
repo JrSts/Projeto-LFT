@@ -339,7 +339,7 @@ class If_Closeds_Closed_statement(ac.Closed_statement):
         Visitor.visitIf_Closeds_Closed_statement(self)
 
 
-class For_Closed_statement(ac.Closed_statenent):
+class For_Closed_statement(ac.Closed_statement):
     def __init__(self, genericVariableDeclaration, expression, closed_statement):
         self.closed_statement=closed_statement
         self.expresison=expression
@@ -349,7 +349,7 @@ class For_Closed_statement(ac.Closed_statenent):
         Visitor.visitFor_Closed_statement(self)
 
 
-class While_Closed_statement(ac.Closed_statenent):
+class While_Closed_statement(ac.Closed_statement):
     def __init__(self, expression, closed_statement):
         self.closed_statement=closed_statement
         self.expresison=expression
@@ -358,7 +358,7 @@ class While_Closed_statement(ac.Closed_statenent):
         Visitor.visitWhile_Closed_statement(self)
 
 
-class DoWhile_Closed_statement(ac.Closed_statenent):
+class DoWhile_Closed_statement(ac.Closed_statement):
     def __init__(self, closed_statement, expression):
         self.closed_statement=closed_statement
         self.expresison=expression
@@ -423,7 +423,7 @@ class BlockConcrete(ac.Block):
         Visitor.visitBlockConcrete(self)
 
 
-class PropertyDeclarationStm_Var(ac.PropertyDeclaration):
+class PropertyDeclarationStm_Var(ac.PropertyDeclarationStm):
     def __init__(self, genericVariableDeclaration, expression):
         self.genericVariableDeclaration = genericVariableDeclaration
         self.expression = expression
@@ -432,7 +432,7 @@ class PropertyDeclarationStm_Var(ac.PropertyDeclaration):
         Visitor.visitPropertyDeclarationStm_Var(self)
 
 
-class PropertyDeclarationStm_Val(ac.PropertyDeclaration):
+class PropertyDeclarationStm_Val(ac.PropertyDeclarationStm):
     def __init__(self, genericVariableDeclaration, expression):
         self.genericVariableDeclaration = genericVariableDeclaration
         self.expression = expression
@@ -562,7 +562,7 @@ class SimpleConjunction(ac.Conjunction):
     def __init__(self,equality):
         self.equality=equality
 
-    def accept (self,Visitor):
+    def accept(self,Visitor):
         Visitor.visitSimpleConjunction(self)
 
 
@@ -646,7 +646,7 @@ class CompoundElvisExpression(ac.ElvisExpression):
         Visitor.visitCompoundElvisExpression(self)
 
 
-class SimpleRangeExpression(ac.RageExpression):
+class SimpleRangeExpression(ac.RangeExpression):
     def __init__(self, additiveExpression):
         self.additiveExpression = additiveExpression
 
@@ -654,7 +654,7 @@ class SimpleRangeExpression(ac.RageExpression):
         Visitor.visitSimpleRangeExpression(self)
 
 
-class CompoundRangeExpression(ac.RageExpression):
+class CompoundRangeExpression(ac.RangeExpression):
     def __init__(self, additiveExpression, rangeExpression):
         self.additiveExpression = additiveExpression
         self.rangeExpression = rangeExpression
@@ -717,7 +717,7 @@ class CompoundAsExpression(ac.AsExpression):
         Visitor.visitCompoundAsExpression(self)
 
 
-class SimpleUnaryExpressionConcrete(ac.PrefixUnaryExpression):
+class SimpleUnaryExpressionConcrete(ac.UnaryExpression):
     def __init__(self, unaryOperator, postfixUnaryExpression):
         self.postfixUnaryExpression = postfixUnaryExpression
         self.unaryOperator = unaryOperator
@@ -726,12 +726,12 @@ class SimpleUnaryExpressionConcrete(ac.PrefixUnaryExpression):
         Visitor.visitSimpleUnaryExpressionConcrete(self)
 
 
-class CompoundUnaryExpressionConcrete(ac.PrefixUnaryExpression):
+class CompoundUnaryExpressionConcrete(ac.UnaryExpression):
     def __init__(self, prefixUnaryExpressionRecursive, postfixUnaryExpression):
         self.prefixUnaryExpressionRecursive = prefixUnaryExpressionRecursive
         self.postfixUnaryExpression = postfixUnaryExpression
 
-    def accept(self,Visitor):
+    def accept(self, Visitor):
         Visitor.visitCompoundUnaryExpressionConcrete(self)
 
 
@@ -759,7 +759,7 @@ class Return(ac.PostfixUnaryOperator):
         Visitor.visitReturn(self)
 
 
-class ParenthesizedExpressionConcrete(ac.PrimaryExpression, ac.NavigationSuffix):
+class ParenthesizedExpressionConcrete(ac.PrimaryExpression):
     def __init__(self, expression):
         self.expression = expression
 
@@ -808,7 +808,7 @@ class MODIGUAL(ac.AssignmentAndOperator):
 
 
 class Diferente(ac.EqualityOperator):
-    def __init__(self, diferente): 
+    def __init__(self):
         self
 
     def accept(self, Visitor):
@@ -816,7 +816,7 @@ class Diferente(ac.EqualityOperator):
 
 
 class Identidade(ac.EqualityOperator):
-    def __init__(self, identidade): 
+    def __init__(self):
         self
 
     def accept(self, Visitor):
@@ -824,7 +824,7 @@ class Identidade(ac.EqualityOperator):
 
 
 class Igualdade(ac.EqualityOperator):
-    def __init__(self, igualdade): 
+    def __init__(self):
         self
 
     def accept(self, Visitor):
@@ -832,7 +832,7 @@ class Igualdade(ac.EqualityOperator):
 
 
 class SemIdentidade(ac.EqualityOperator):
-    def __init__(self, semIdentidade): 
+    def __init__(self):
         self
 
     def accept(self, Visitor):
@@ -852,7 +852,7 @@ class Maior(ac.ComparisonOperator):
         self
 
     def accept(self, Visitor):
-        Visitor.visitMAIOR(self)
+        Visitor.visitMaior(self)
 
 
 class MenorIgual(ac.ComparisonOperator):
@@ -916,7 +916,7 @@ class Minus(ac.AdditiveOperator):
         self
 
     def accept(self, Visitor):
-        Visitor.visitMINUS(self)
+        Visitor.visitMinus(self)
 
 
 class Mult(ac.MultiplicativeOperator):
@@ -959,7 +959,7 @@ class CompoundAsOperator(ac.AsOperator):
         Visitor.visitCompoundAsOperator(self)
 
 
-class Not(ac.PrefixUnaryOperator):
+class Not(ac.UnaryOperator):
     def __init__(self):
         self
 
@@ -967,7 +967,7 @@ class Not(ac.PrefixUnaryOperator):
         Visitor.visitNot(self)
 
 
-class Incremento(ac.PrefixUnaryOperator):
+class Incremento(ac.UnaryOperator):
     def __init__(self):
         self
 
@@ -975,7 +975,7 @@ class Incremento(ac.PrefixUnaryOperator):
         Visitor.visitIncremento(self)
 
 
-class Decremento(ac.PrefixUnaryOperator):
+class Decremento(ac.UnaryOperator):
     def __init__(self):
         self
 

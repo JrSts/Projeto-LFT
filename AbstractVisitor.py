@@ -65,13 +65,6 @@ class AbstractVisitor(metaclass=ABCMeta):
     def visitCompoundStatements(self, Statements):
         pass
 
-    @abstractmethod
-    def visitSimpleStatement(self, Statement):
-        pass
-
-    @abstractmethod
-    def visitCompoundStatement(self, Statement):
-        pass
 
     @abstractmethod
     def visitIf_statement(self, Open_statement):
@@ -110,7 +103,7 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitMix2_Closed_statement(self, Closed_statement):
+    def visitIf_Mix2_Closed_statement(self, Closed_statement):
         pass
 
     @abstractmethod
@@ -339,7 +332,7 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitMAIOR(self,MAIOR):
+    def visitMaior(self,MAIOR):
         pass
 
     @abstractmethod
@@ -371,7 +364,7 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitMINUS(self,MINUS):
+    def visitMinus(self,MINUS):
         pass
 
     @abstractmethod
