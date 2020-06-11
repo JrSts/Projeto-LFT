@@ -212,11 +212,11 @@ class AbstractVisitor(metaclass=ABCMeta):
 
 
     @abstractmethod
-    def vistSimpleComparison(self,SimpleComparison):
+    def visitSimpleComparison(self,SimpleComparison):
         pass
 
     @abstractmethod
-    def vistCompoundComparison(self,CompoundComparison):
+    def visitCompoundComparison(self,CompoundComparison):
         pass
 
     @abstractmethod
@@ -300,7 +300,7 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def visitMULTIGUAL(self,MULTIGUAL):
+    def visitMULTIGUAL(self, MULTIGUAL):
         pass
 
     @abstractmethod

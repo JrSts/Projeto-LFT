@@ -121,8 +121,8 @@ class CompoundKotlinFile(ac.KotlinFile):
 
 
 class SimpleFunctionDeclaration(ac.FunctionDeclaration):
-    def __init__(self, simpleIdentifier, functionValueParameters, functionBody):
-        self.simpleIdentifier = simpleIdentifier
+    def __init__(self, id, functionValueParameters, functionBody):
+        self.id = id
         self.functionValueParameters = functionValueParameters
         self.functionBody = functionBody
 
@@ -131,8 +131,8 @@ class SimpleFunctionDeclaration(ac.FunctionDeclaration):
 
 
 class CompoundFunctionDeclaration(ac.FunctionDeclaration):
-    def __init__(self, simpleIdentifier, functionValueParameters, type, functionBody):
-        self.simpleIdentifier = simpleIdentifier
+    def __init__(self, id, functionValueParameters, type, functionBody):
+        self.id = id
         self.functionValueParameters = functionValueParameters
         self.type = type
         self.functionBody = functionBody
@@ -221,7 +221,7 @@ class SimpleStatements(ac.Statements):
         self.statement=statement
 
     def accept(self, Visitor):
-        Visitor.visitSimpleStatemnts(self)
+        Visitor.visitSimpleStatements(self)
 
 
 class CompoundStatements(ac.Statements):
@@ -230,7 +230,7 @@ class CompoundStatements(ac.Statements):
         self.statements=statements
 
     def accept(self, Visitor):
-        Visitor.visitCompoundStatemnts(self)
+        Visitor.visitCompoundStatements(self)
 
 
 class If_statement(ac.Open_statement):
@@ -371,7 +371,7 @@ class DoWhile_Closed_statement(ac.Closed_statement):
 class For_Non_if_statement_block(ac.Non_if_statement_block):
     def __init__(self, genericVariableDeclaration, expression, block):
         self.genericVariableDeclaration=genericVariableDeclaration
-        self.expresison=expression
+        self.expression=expression
         self.block = block
 
     def accept(self, Visitor):
@@ -397,8 +397,8 @@ class DoWhile_Non_if_statement_block(ac.Non_if_statement_block):
 
 
 class AssignmentConcrete(ac.Assignment):
-    def __init__(self,simpleIdentifier, expression):
-        self.simpleIdentifier = simpleIdentifier
+    def __init__(self,id, expression):
+        self.id = id
         self.expression=expression
 
     def accept(self, Visitor):
@@ -406,10 +406,10 @@ class AssignmentConcrete(ac.Assignment):
 
 
 class AssignmentAndOperatorConcrete(ac.AssignmentAndOperator):
-    def __init__(self, simpleIdentifier, assignmentAndOperator ,expression):
+    def __init__(self, id, assignmentAndOperator ,expression):
         self.assignmentAndOperator=assignmentAndOperator
         self.expression=expression
-        self.simpleIdentifier = simpleIdentifier
+        self.id = id
 
     def accept(self, Visitor):
         Visitor.visitAssignmentAndOperatorConcrete(self)
@@ -475,16 +475,16 @@ class VariableDeclaration(ac.GenericVariableDeclaration):
 
 
 class SimpleVariableDeclaration(ac.GenericVariableDeclaration):
-    def __init__(self, simpleIdentifier):
-        self.simpleIdentifier = simpleIdentifier
+    def __init__(self, id):
+        self.id = id
 
     def accept(self, Visitor):
         Visitor.visitSimpleVariableDeclaration(self)
 
 
 class CompoundVariableDeclaration(ac.GenericVariableDeclaration):
-    def __init__(self, simpleIdentifier, type):
-        self.simpleIdentifier = simpleIdentifier
+    def __init__(self, id, type):
+        self.id = id
         self.type = type
 
     def accept(self, Visitor):
@@ -598,7 +598,7 @@ class SimpleComparison(ac.Equality):
         self.infixOperation = infixOperation
 
     def accept(self, Visitor):
-        Visitor.vistSimpleComparison(self)
+        Visitor.visitSimpleComparison(self)
 
 
 class CompoundComparison(ac.Equality):
@@ -608,12 +608,13 @@ class CompoundComparison(ac.Equality):
         self.infixOperation2 = infixOperation2
 
     def accept(self, Visitor):
-        Visitor.vistCompoundComparison(self)
+        Visitor.visitCompoundComparison(self)
 
 
 class SimpleInfixOperation(ac.InfixOperation):
-    def __init__(self, infixOperation, elvisExpression):
+    def __init__(self, infixOperation, inOperator, elvisExpression):
         self.infixOperation = infixOperation
+        self.inOperator = inOperator
         self.elvisExpression = elvisExpression
 
     def accept(self, Visitor):
@@ -621,8 +622,9 @@ class SimpleInfixOperation(ac.InfixOperation):
 
 
 class CompoundInfixOperation(ac.InfixOperation):
-    def __init__(self, infixOperation, type):
+    def __init__(self, infixOperation, isOperator, type):
         self.infixOperation = infixOperation
+        self.isOperator = isOperator
         self.type = type
 
     def accept(self, Visitor):
@@ -768,184 +770,184 @@ class ParenthesizedExpressionConcrete(ac.PrimaryExpression):
 
 
 class MAISIGUAL(ac.AssignmentAndOperator):
-    def __init__(self):
-        self
+    def __init__(self, maisIgual):
+        self.maisIgual = maisIgual
 
     def accept(self, Visitor):
         Visitor.visitMAISIGUAL(self)
 
 
 class MENOSIGUAL(ac.AssignmentAndOperator):
-    def __init__(self):
-        self
+    def __init__(self, menosIgual):
+        self.menosIgual = menosIgual
 
     def accept(self, Visitor):
         Visitor.visitMENOSIGUAL(self)
 
 
 class MULTIGUAL(ac.AssignmentAndOperator):
-    def __init__(self):
-        self
+    def __init__(self, multiIgual):
+        self.multiIgual = multiIgual
 
     def accept(self, Visitor):
         Visitor.visitMULTIGUAL(self)
 
 
 class DIVIGUAL(ac.AssignmentAndOperator):
-    def __init__(self):
-        self
+    def __init__(self, divIgual):
+        self.divIgual = divIgual
 
     def accept(self, Visitor):
         Visitor.visitDIVIGUAL(self)
 
 
 class MODIGUAL(ac.AssignmentAndOperator):
-    def __init__(self):
-        self
+    def __init__(self, modIgual):
+        self.modIgual = modIgual
 
     def accept(self, Visitor):
         Visitor.visitMODIGUAL(self)
 
 
 class Diferente(ac.EqualityOperator):
-    def __init__(self):
-        self
+    def __init__(self, diferente):
+        self.diferente = diferente
 
     def accept(self, Visitor):
         Visitor.visitDiferente(self)
 
 
 class Identidade(ac.EqualityOperator):
-    def __init__(self):
-        self
+    def __init__(self, identidade):
+        self.identidade = identidade
 
     def accept(self, Visitor):
         Visitor.visitIdentidade(self)
 
 
 class Igualdade(ac.EqualityOperator):
-    def __init__(self):
-        self
+    def __init__(self, igualdade):
+        self.igualdade = igualdade
 
     def accept(self, Visitor):
         Visitor.visitIgualdade(self)
 
 
 class SemIdentidade(ac.EqualityOperator):
-    def __init__(self):
-        self
+    def __init__(self, semIdentidade):
+        self.semIdentidade = semIdentidade
 
     def accept(self, Visitor):
         Visitor.visitSemIdentidade(self)
 
 
 class Menor(ac.ComparisonOperator):
-    def __init__(self):
-        self
+    def __init__(self, menor):
+        self.menor = menor
 
     def accept(self, Visitor):
         Visitor.visitMenor(self)
 
 
 class Maior(ac.ComparisonOperator):
-    def __init__(self):
-        self
+    def __init__(self, maior):
+        self.maior = maior
 
     def accept(self, Visitor):
         Visitor.visitMaior(self)
 
 
 class MenorIgual(ac.ComparisonOperator):
-    def __init__(self):
-        self
+    def __init__(self, menorIgual):
+        self.menorIgual = menorIgual
 
     def accept(self, Visitor):
         Visitor.visitMenorIgual(self)
 
 
 class MaiorIgual(ac.ComparisonOperator):
-    def __init__(self):
-        self
+    def __init__(self, maiorIgual):
+        self.maiorIgual = maiorIgual
 
     def accept(self, Visitor):
         Visitor.visitMaiorIgual(self)
 
 
 class In(ac.InOperator):
-    def __init__(self):
-        self
+    def __init__(self, IN):
+        self.IN = IN
 
     def accept(self, Visitor):
         Visitor.visitIn(self)
 
 
 class NotIn(ac.InOperator):
-    def __init__(self):
-        self
+    def __init__(self, notIn):
+        self.notIn = notIn
 
     def accept(self, Visitor):
         Visitor.visitNotIn(self)
 
 
 class NotIs(ac.IsOperator):
-    def __init__(self):
-        self
-
-    def accept(self, Visitor):
-        Visitor.visitNotIs(self)
-
-
-class Is(ac.IsOperator):
-    def __init__(self):
-        self
+    def __init__(self, IS):
+        self.IS = IS
 
     def accept(self, Visitor):
         Visitor.visitIs(self)
 
 
+class Is(ac.IsOperator):
+    def __init__(self, notIs):
+        self.notIs = notIs
+
+    def accept(self, Visitor):
+        Visitor.visitNotIs(self)
+
+
 class Plus(ac.AdditiveOperator):
-    def __init__(self):
-        self
+    def __init__(self, plus):
+        self.plus = plus
 
     def accept(self, Visitor):
         Visitor.visitPlus(self)
 
 
 class Minus(ac.AdditiveOperator):
-    def __init__(self):
-        self
+    def __init__(self, minus):
+        self.minus = minus
 
     def accept(self, Visitor):
         Visitor.visitMinus(self)
 
 
 class Mult(ac.MultiplicativeOperator):
-    def __init__(self):
-        self
+    def __init__(self, mult):
+        self.mult = mult
 
     def accept(self, Visitor):
         Visitor.visitMult(self)
 
 
 class Mod(ac.MultiplicativeOperator):
-    def __init__(self):
-        self
+    def __init__(self, mod):
+        self.mod = mod
 
     def accept(self, Visitor):
         Visitor.visitMod(self)
 
 
 class Divide(ac.MultiplicativeOperator):
-    def __init__(self):
-        self
+    def __init__(self, divide):
+        self.divide = divide
 
     def accept(self, Visitor):
         Visitor.visitDivide(self)
 
 
 class SimpleAsOperator(ac.AsOperator):
-    def __init__(self):
-        self
+    def __init__(self, AS):
+        self.AS = AS
 
     def accept(self, Visitor):
         Visitor.visitSimpleAsOperator(self)
@@ -960,24 +962,24 @@ class CompoundAsOperator(ac.AsOperator):
 
 
 class Not(ac.UnaryOperator):
-    def __init__(self):
-        self
+    def __init__(self, NOT):
+        self.NOT = NOT
 
     def accept(self, Visitor):
         Visitor.visitNot(self)
 
 
 class Incremento(ac.UnaryOperator):
-    def __init__(self):
-        self
+    def __init__(self, incremento):
+        self.incremento = incremento
 
     def accept(self, Visitor):
         Visitor.visitIncremento(self)
 
 
 class Decremento(ac.UnaryOperator):
-    def __init__(self):
-        self
+    def __init__(self, decremento):
+        self.decremento = decremento
 
     def accept(self, Visitor):
         Visitor.visitDecremento(self)

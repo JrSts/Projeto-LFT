@@ -380,15 +380,15 @@ def p_assignmentAndOperator(p):
                                | DIVIGUAL
                                | MODIGUAL	'''
     if p[1] =='+=':
-        p[0] = cc.MAISIGUAL()
+        p[0] = cc.MAISIGUAL(p[1])
     elif p[1] =='-=':
-        p[0] = cc.MENOSIGUAL()
+        p[0] = cc.MENOSIGUAL(p[1])
     elif p[1] == '*=':
-        p[0] = cc.MULTIGUAL()
+        p[0] = cc.MULTIGUAL(p[1])
     elif p[1] == '/=':
-        p[0] = cc.DIVIGUAL()
+        p[0] = cc.DIVIGUAL(p[1])
     elif p[1] == '%=':
-        p[0] = cc.MODIGUAL()
+        p[0] = cc.MODIGUAL(p[1])
 
 
 def p_equalityOperator(p):
@@ -397,13 +397,13 @@ def p_equalityOperator(p):
                          | IGUALDADE
                          | SEMIDENTIDADE	'''
     if p[1] == '==':
-        p[0] = cc.Igualdade()
+        p[0] = cc.Igualdade(p[1])
     elif p[1] == '===':
-        p[0] = cc.Identidade()
+        p[0] = cc.Identidade(p[1])
     elif p[1] == '!=':
-        p[0] = cc.Diferente()
+        p[0] = cc.Diferente(p[1])
     elif p[1] == '!==':
-        p[0] = cc.SemIdentidade()
+        p[0] = cc.SemIdentidade(p[1])
 
 
 def p_comparisonOperator(p):
@@ -413,40 +413,40 @@ def p_comparisonOperator(p):
                            | MAIORIGUAL '''
 
     if p[1] == '<':
-        p[0] = cc.Menor()
+        p[0] = cc.Menor(p[1])
     elif p[1] == '>':
-        p[0] = cc.Maior()
+        p[0] = cc.Maior(p[1])
     elif p[1] == '<=':
-        p[0] = cc.MenorIgual()
+        p[0] = cc.MenorIgual(p[1])
     elif p[1] == '>=':
-        p[0] = cc.MaiorIgual()
+        p[0] = cc.MaiorIgual(p[1])
 
 
 def p_inOperator(p):
     ''' inOperator : IN
                    | NOT_IN '''
     if p[1] == 'in':
-        p[0] = cc.In()
+        p[0] = cc.In(p[1])
     elif p[1] == '!in':
-        p[0] = cc.NotIn()
+        p[0] = cc.NotIn(p[1])
 
 
 def p_isOperator(p):
     '''isOperator : IS
 				  | NOT_IS '''
     if p[1] == 'is':
-        p[0] = cc.Is()
+        p[0] = cc.Is(p[1])
     elif p[1] == '!is':
-        p[0] = cc.NotIs()
+        p[0] = cc.NotIs(p[1])
 
 
 def p_additiveOperator(p):
     ''' additiveOperator : PLUS
                          | MINUS	'''
     if p[1] == '/+':
-        p[0] = cc.Plus()
+        p[0] = cc.Plus(p[1])
     elif p[1] == '-':
-        p[0] = cc.Minus()
+        p[0] = cc.Minus(p[1])
 
 
 def p_multiplicativeOperator(p):
@@ -454,20 +454,20 @@ def p_multiplicativeOperator(p):
                                | DIVIDE
                                | MOD '''
     if p[1] == '*':
-        p[0] = cc.Mult()
+        p[0] = cc.Mult(p[1])
     elif p[1] == '/':
-        p[0] = cc.Mod()
+        p[0] = cc.Mod(p[1])
     elif p[1] == '%':
-        p[0] = cc.Divide()
+        p[0] = cc.Divide(p[1])
 
 
 def p_asOperator(p):
     ''' asOperator : AS
                    | AS asOperator '''
     if len(p) == 2:
-        p[0] = cc.SimpleAsOperator()
+        p[0] = cc.SimpleAsOperator(p[1])
     else:
-        p[0] = cc.CompoundAsOperator(p[1])
+        p[0] = cc.CompoundAsOperator(p[2])
 
 
 def p_unaryOperator(p):
@@ -477,15 +477,15 @@ def p_unaryOperator(p):
                       | PLUS
                       | NOT'''
     if p[1] == '++':
-        p[0] = cc.Incremento()
+        p[0] = cc.Incremento(p[1])
     elif p[1] == '--':
-        p[0] = cc.Decremento()
+        p[0] = cc.Decremento(p[1])
     elif p[1] == '-':
-        p[0] = cc.Minus()
+        p[0] = cc.Minus(p[1])
     elif p[1] == '/+':
-        p[0] = cc.Plus()
+        p[0] = cc.Plus(p[1])
     elif p[1] == '!':
-        p[0] = cc.Not()
+        p[0] = cc.Not(p[1])
 
 
 def p_error(p):
