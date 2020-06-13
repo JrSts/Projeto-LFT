@@ -18,3 +18,4 @@ class SemanticVisitor(AbstractVisitor):
     def __init__(self):
         self.printer = Visitor()
         st.beginScope('main')
+
