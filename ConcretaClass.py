@@ -93,7 +93,7 @@ class SingleParam():
         Visitor.visitSingleParam(self)
 
 
-class AssignExp():
+class AssignExp1():
     def __init__(self, ID, Exp):
         self.ID = ID
         self.Exp = Exp
@@ -737,17 +737,17 @@ class CompoundUnaryExpressionConcrete(ac.UnaryExpression):
         Visitor.visitCompoundUnaryExpressionConcrete(self)
 
 
-class Incremento(ac.PostfixUnaryOperator):
-    def __init__(self):
-        self
+class Incremento(ac.PostfixUnaryOperator, ac.UnaryOperator):
+    def __init__(self, incremento):
+        self.incremento = incremento
 
     def accept(self, Visitor):
         Visitor.visitIncremento(self)
 
 
-class Decremento(ac.PostfixUnaryOperator):
-    def __init__(self):
-        self
+class Decremento(ac.PostfixUnaryOperator, ac.UnaryOperator):
+    def __init__(self, decremento):
+        self.decremento = decremento
 
     def accept(self, Visitor):
         Visitor.visitDecremento(self)
@@ -969,20 +969,20 @@ class Not(ac.UnaryOperator):
         Visitor.visitNot(self)
 
 
-class Incremento(ac.UnaryOperator):
-    def __init__(self, incremento):
-        self.incremento = incremento
+#class Incremento(ac.UnaryOperator):
+#    def __init__(self, incremento):
+#        self.incremento = incremento
 
-    def accept(self, Visitor):
-        Visitor.visitIncremento(self)
+#    def accept(self, Visitor):
+#        Visitor.visitIncremento(self)
 
 
-class Decremento(ac.UnaryOperator):
-    def __init__(self, decremento):
-        self.decremento = decremento
+#class Decremento(ac.UnaryOperator):
+#    def __init__(self, decremento):
+#        self.decremento = decremento
 
-    def accept(self, Visitor):
-        Visitor.visitDecremento(self)
+#    def accept(self, Visitor):
+#        Visitor.visitDecremento(self)
 
 ###########################################################
 ###########################################################

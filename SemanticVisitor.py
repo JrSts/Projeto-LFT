@@ -17,4 +17,25 @@ class SemanticVisitor(AbstractVisitor):
 
     def __init__(self):
         self.printer = Visitor()
-        st.beginScope('main')
+        st.beginScope('Start')
+        
+    def visitSimpleKotlinFile(self, SimpleKotlinFile):
+        SimpleKotlinFile.functionDeclaration.accept(self)
+
+    def visitCompoundKotlinFile(self,CompoundKotlinFile):
+        CompoundKotlinFile.functionDeclaration.accept(self)
+        CompoundKotlinFile.kotlinFile.accept(self)  
+
+    def visitSimpleFunctionDeclaration(self, SimpleFunctionDeclaration):
+        print('fun')
+        print(SimpleFunctionDeclaration.id,end=' ')
+        SimpleFunctionDeclaration.functionValueParameters.accept(self)
+        SimpleFunctionDeclaration.functionBody.accept(self)
+
+    def visitCompoundFunctionDeclaration(self, CompoundFunctionDeclaration):
+        print('fun',end=' ')
+        print(CompoundFunctionDeclaration.id,end='')
+        CompoundFunctionDeclaration.functionValueParameters.accept(self)
+        print(':', end=' ')
+        CompoundFunctionDeclaration.type.accept(self)
+        CompoundFunctionDeclaration.functionBody.accept(self)

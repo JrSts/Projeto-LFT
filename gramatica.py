@@ -340,9 +340,9 @@ def p_postfixUnaryOperator(p):
     ''' postfixUnaryOperator : INCREMENTO
                              | DECREMENTO '''
     if p[1] == '++':
-        p[0] = cc.Incremento()
+        p[0] = cc.Incremento(p[1])
     elif p[1] == '--':
-        p[0] = cc.Decremento()
+        p[0] = cc.Decremento(p[1])
 
 
 def p_primaryExpression(p):

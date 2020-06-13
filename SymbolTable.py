@@ -39,6 +39,7 @@ NAO = 'nao'
 USANDO ='use'
 Number = [INT, FLOAT]
 primitivos = [BYTE,SHORT,INT,LONG]
+
 def beginScope(nameScope):
     global symbolTable
     symbolTable.append({})

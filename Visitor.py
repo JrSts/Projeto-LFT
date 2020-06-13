@@ -254,7 +254,7 @@ class Visitor (AbstractVisitor):
     def visitAssignmentConcrete(self,AssignmentConcrete):
         print(AssignmentConcrete.id, end=' ')
         print('=',end=' ')
-        AssignmentConcrete.expression.accept(self)
+        print(AssignmentConcrete.expression)
     
     def visitAssignmentAndOperatorConcrete(self,AssignmentAndOperatorConcrete):
         print(AssignmentAndOperatorConcrete.id, end=' ')
