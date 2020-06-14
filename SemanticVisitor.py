@@ -17,10 +17,6 @@ class SemanticVisitor(AbstractVisitor):
 
     def __init__(self):
         self.printer = Visitor()
-<<<<<<< HEAD
-        st.beginScope('main')
-
-=======
         st.beginScope('Start')
         
     def visitSimpleKotlinFile(self, SimpleKotlinFile):
@@ -43,4 +39,3 @@ class SemanticVisitor(AbstractVisitor):
         print(':', end=' ')
         CompoundFunctionDeclaration.type.accept(self)
         CompoundFunctionDeclaration.functionBody.accept(self)
->>>>>>> 15dcadafb0eb7d0f83ed5f6765811de2647420d1
