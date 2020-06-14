@@ -12,7 +12,7 @@ def p_kotlinFile(p):
     ''' kotlinFile : functionDeclaration kotlinFile
 				   | functionDeclaration '''
     if len(p) == 2:
-        p[0] = cc.SimpleKotlinFile(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundKotlinFile(p[1], p[2])
 
@@ -39,7 +39,7 @@ def p_parameters(p):
                    | parameter COMMA parameters  '''
 
     if len(p) == 2:
-        p[0] = cc.SimpleParameters(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundParameters(p[1], p[3])
 
@@ -67,7 +67,7 @@ def p_functionBody(p):
     ''' functionBody : block
                      | ATRIBUICAO expression '''
     if len(p) == 2:
-        p[0] = cc.SimpleFunctionBody(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundFunctionBody(p[2])
 
@@ -76,7 +76,7 @@ def p_statements(p):
     ''' statements : statement
                    | statement statements '''
     if len(p) == 2:
-        p[0] = cc.SimpleStatements(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundStatements(p[1], p[2])
 
@@ -182,7 +182,7 @@ def p_propertyDeclarationStm(p):
 def p_chamadaDeFuncao(p):
     ''' chamadaDeFuncao : ID LPAREN RPAREN
                         | ID LPAREN parametersFunction RPAREN '''
-    if len(p) == 2:
+    if len(p) == 4:
         p[0] = cc.SimpleChamadaDeFuncao(p[1])
     else:
         p[0] = cc.CompoundChamadaDeFuncao(p[1], p[3])
@@ -190,16 +190,13 @@ def p_chamadaDeFuncao(p):
 def p_genericVariableDeclaration(p):
     ''' genericVariableDeclaration : multiVariableDeclaration
                                    | variableDeclaration '''
-    if isinstance(p[1], ac.MultiVariableDeclaration):
-        p[0] = cc.MultiVariableDeclaration(p[1])
-    else:
-        p[0] = cc.VariableDeclaration(p[1])
+    p[0] = p[1]
 
 def p_variableDeclaration(p):
     '''variableDeclaration : ID DOISP type
                            | ID '''
     if len(p) == 2:
-        p[0] = cc.SimpleVariableDeclaration(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundVariableDeclaration(p[1], p[3])
 
@@ -207,7 +204,7 @@ def p_variableDeclarations(p):
     '''variableDeclarations : variableDeclaration
                             | variableDeclaration COMMA variableDeclarations '''
     if len(p) == 2:
-        p[0] = cc.SimpleVariableDeclarations(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundVariableDeclarations(p[1], p[3])
 
@@ -223,7 +220,7 @@ def p_parametersFunction(p):
     ''' parametersFunction : primaryExpression
                            | primaryExpression COMMA parametersFunction '''
     if len(p) == 2:
-        p[0] = cc.SimpleParametersFunction(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundParametersFunction(p[1], p[3])
 
@@ -237,7 +234,7 @@ def p_disjunction(p):
     ''' disjunction : conjunction
                     | disjunction  OR  conjunction'''
     if len(p) == 2:
-        p[0] = cc.SimpleDisjunction(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundDisjunction(p[1], p[3])
 
@@ -246,7 +243,7 @@ def p_conjunction(p):
     '''conjunction : equality
                    | conjunction  AND  equality'''
     if len(p) == 2:
-        p[0] = cc.SimpleConjunction(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundConjunction(p[1], p[3])
 
@@ -255,7 +252,7 @@ def p_equality(p):
     ''' equality : comparison
                  | equality equalityOperator comparison  '''
     if len(p) == 2:
-        p[0] = cc.SimpleEquality(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundEquality(p[1], p[2], p[3])
 
@@ -264,7 +261,7 @@ def p_comparison(p):
     ''' comparison : infixOperation
                    | infixOperation comparisonOperator infixOperation '''
     if len(p) == 2:
-        p[0] = cc.SimpleComparison(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundComparison(p[1], p[2], p[3])
 
@@ -284,7 +281,7 @@ def p_elvisExpression(p):
     ''' elvisExpression : rangeExpression
                         | elvisExpression  ELVIS rangeExpression  '''
     if len(p) == 2:
-        p[0] = cc.SimpleElvisExpression(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundElvisExpression(p[1],  p[3])
 
@@ -292,7 +289,7 @@ def p_rangeExpression(p):
     ''' rangeExpression : additiveExpression
 						| rangeExpression PONTOPONTO additiveExpression  '''
     if len(p) == 2:
-        p[0] = cc.SimpleRangeExpression(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundRangeExpression(p[1], p[3])
 
@@ -301,7 +298,7 @@ def p_additiveExpression(p):
     ''' additiveExpression : multiplicativeExpression
                            | additiveExpression  additiveOperator  multiplicativeExpression'''
     if len(p) == 2:
-        p[0] = cc.SimpleAdditiveExpression(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundAdditiveExpression(p[1], p[2], p[3])
 
@@ -310,7 +307,7 @@ def p_multiplicativeExpression(p):
     ''' multiplicativeExpression : asExpression
                                  | multiplicativeExpression  multiplicativeOperator asExpression '''
     if len(p) == 2:
-        p[0] = cc.SimpleMultiplicativeExpression(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundMultiplicativeExpression(p[1], p[2], p[3])
 
@@ -319,7 +316,7 @@ def p_asExpression(p):
     ''' asExpression : unaryExpression
                      | unaryExpression asOperator type '''
     if len(p) == 2:
-        p[0] = cc.SimpleAsExpression(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundAsExpression(p[1], p[2], p[3])
 
@@ -339,20 +336,17 @@ def p_unaryExpression(p):
 def p_postfixUnaryOperator(p):
     ''' postfixUnaryOperator : INCREMENTO
                              | DECREMENTO '''
-    if p[1] == '++':
-        p[0] = cc.Incremento(p[1])
-    elif p[1] == '--':
-        p[0] = cc.Decremento(p[1])
+    p[0] = p[1]
 
 
 def p_primaryExpression(p):
     ''' primaryExpression : NULL
-                          | chamadaDeFuncao
                           | TRUE
                           | FALSE
                           | NUMBER
                           | LITERAL_STRING
                           | ID
+                          | chamadaDeFuncao
                           | parenthesizedExpression
     '''
     p[0] = p[1]
@@ -389,7 +383,7 @@ def p_assignmentAndOperator(p):
         p[0] = cc.DIVIGUAL(p[1])
     elif p[1] == '%=':
         p[0] = cc.MODIGUAL(p[1])
-
+    #p[0] = p[1]
 
 def p_equalityOperator(p):
     ''' equalityOperator : DIFERENTE
@@ -404,7 +398,7 @@ def p_equalityOperator(p):
         p[0] = cc.Diferente(p[1])
     elif p[1] == '!==':
         p[0] = cc.SemIdentidade(p[1])
-
+    #p[0] = p[1]
 
 def p_comparisonOperator(p):
     ''' comparisonOperator : MENOR
@@ -420,7 +414,7 @@ def p_comparisonOperator(p):
         p[0] = cc.MenorIgual(p[1])
     elif p[1] == '>=':
         p[0] = cc.MaiorIgual(p[1])
-
+    #p[0] = p[1]
 
 def p_inOperator(p):
     ''' inOperator : IN
@@ -430,7 +424,7 @@ def p_inOperator(p):
     elif p[1] == '!in':
         p[0] = cc.NotIn(p[1])
 
-
+    #p[0] = p[1]
 def p_isOperator(p):
     '''isOperator : IS
 				  | NOT_IS '''
@@ -439,7 +433,7 @@ def p_isOperator(p):
     elif p[1] == '!is':
         p[0] = cc.NotIs(p[1])
 
-
+    #p[0] = p[1]
 def p_additiveOperator(p):
     ''' additiveOperator : PLUS
                          | MINUS	'''
@@ -447,7 +441,7 @@ def p_additiveOperator(p):
         p[0] = cc.Plus(p[1])
     elif p[1] == '-':
         p[0] = cc.Minus(p[1])
-
+    #p[0] = p[1]
 
 def p_multiplicativeOperator(p):
     ''' multiplicativeOperator : MULT
@@ -459,16 +453,15 @@ def p_multiplicativeOperator(p):
         p[0] = cc.Mod(p[1])
     elif p[1] == '%':
         p[0] = cc.Divide(p[1])
-
+    #p[0] = p[1]
 
 def p_asOperator(p):
     ''' asOperator : AS
                    | AS asOperator '''
     if len(p) == 2:
-        p[0] = cc.SimpleAsOperator(p[1])
+        p[0] = p[1]
     else:
         p[0] = cc.CompoundAsOperator(p[2])
-
 
 def p_unaryOperator(p):
     ''' unaryOperator : INCREMENTO
@@ -487,7 +480,7 @@ def p_unaryOperator(p):
     elif p[1] == '!':
         p[0] = cc.Not(p[1])
 
-
+    #p[0] = p[1]
 def p_error(p):
     print ("Erro Sintático: ", p)
 
