@@ -162,9 +162,9 @@ lexer = lex.lex()
 data = r'''
 fun main(args: Array) {
 
-    var num = 10
+    var num = 20
     val factorial = 1
-    for (i in 1..num) {
+    for (i in 1..num) { 
         factorial *= 10
     }
     println("Factorial of $num = $factorial")

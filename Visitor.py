@@ -1,4 +1,7 @@
 from AbstractVisitor import AbstractVisitor
+
+types = [int, str, float, bool]
+
 class Visitor (AbstractVisitor):
     '''def visitSomaExp(self, somaExp):
         somaExp.exp1.accept(self)
@@ -66,16 +69,19 @@ class Visitor (AbstractVisitor):
 
     def visitSimpleFunctionDeclaration(self, SimpleFunctionDeclaration):
         print('fun', end=' ')
-        print(SimpleFunctionDeclaration.id,end=' ')
+        print(SimpleFunctionDeclaration.id, end=' ')
         SimpleFunctionDeclaration.functionValueParameters.accept(self)
         SimpleFunctionDeclaration.functionBody.accept(self)
 
     def visitCompoundFunctionDeclaration(self, CompoundFunctionDeclaration):
         print('fun',end=' ')
-        print(CompoundFunctionDeclaration.id,end='')
+        print(CompoundFunctionDeclaration.id, end='')
         CompoundFunctionDeclaration.functionValueParameters.accept(self)
         print(':', end=' ')
-        CompoundFunctionDeclaration.type.accept(self)
+        if type(CompoundFunctionDeclaration.type) in types:
+            print(CompoundFunctionDeclaration.type, end='')
+        else:
+            CompoundFunctionDeclaration.type.accept(self)
         CompoundFunctionDeclaration.functionBody.accept(self)
 
     def visitSimpleFunctionValueParameters(self, SimpleFunctionValueParameters):
@@ -89,28 +95,49 @@ class Visitor (AbstractVisitor):
         print(')')
 
     def visitSimpleParameters(self, SimpleParameters):
-        SimpleParameters.parameter.accept(self)
+        if type(SimpleParameters.parameter) in types:
+            print(SimpleParameters.parameter, end='')
+        else:
+            SimpleParameters.parameter.accept(self)
 
     def visitCompoundParameters(self, CompoundParameters):
-        CompoundParameters.parameter.accept(self)
+        if type(CompoundParameters.parameter) in types:
+            print(CompoundParameters.parameter, end='')
+        else:
+            CompoundParameters.parameter.accept(self)
         print(',',end='')
-        CompoundParameters.parameters.accept(self)
+        if type(CompoundParameters.parameters) in types:
+            print(CompoundParameters.parameters, end='')
+        else:
+            CompoundParameters.parameters.accept(self)
 
     def visitSimpleParameter(self, SimpleParameter):
         print(SimpleParameter.id,end=' ')
         print(':',end='')
-        print(SimpleParameter.type,end='')
+        if type(SimpleParameter.type) in types:
+            print(SimpleParameter.type,end='')
+        else:
+            SimpleParameter.type.accept(self)
 
     def visitCompoundParameter(self, CompoundParameter):
         print(CompoundParameter.id, end='')
         print(':',end='')
-        CompoundParameter.type.accept(self)
+        if type(CompoundParameter.type) in types:
+            print(CompoundParameter.type,end='')
+        else:
+            CompoundParameter.type.accept(self)
         print('=',end='')
-        CompoundParameter.expression.accept(self)
+        if type(CompoundParameter.expression) in types:
+            print(CompoundParameter.expression,end='')
+        else:
+            CompoundParameter.expression.accept(self)
 
     def visitParenthesizedTypeConcrete(self,ParenthesizedTypeConcrete):
         print('(',end='')
-        ParenthesizedTypeConcrete.type.accept(self)
+        if type(ParenthesizedTypeConcrete.type) in types:
+            print(ParenthesizedTypeConcrete.type,end='')
+        else:
+            ParenthesizedTypeConcrete.type.accept(self)
         print(')',end='')
 
     def visitSimpleFunctionBody(self, SimpleFunctionBody):
@@ -118,7 +145,10 @@ class Visitor (AbstractVisitor):
     
     def visitCompoundFunctionBody(self, CompoundFunctionBody):
         print('=',emd=' ')
-        CompoundFunctionBody.expression.accept(self)
+        if type(CompoundFunctionBody.expression) in types:
+            print(CompoundFunctionBody.expression,end='')
+        else:
+            CompoundFunctionBody.expression.accept(self)
 
     def visitSimpleStatements(self,SimpleStatements):
         SimpleStatements.statement.accept(self)
@@ -129,19 +159,28 @@ class Visitor (AbstractVisitor):
     
     def visitIf_statement(self, If_statement):
         print('if(',end='')
-        If_statement.expression.accept(self)
+        if type(If_statement.expression) in types:
+            print(If_statement.expression, end='')
+        else:
+            If_statement.expression.accept(self)
         print(')')
         If_statement.statement.accept(self)
 
     def visitIf_block(self, If_block):
         print('if(',end='')
-        If_block.expression.accept(self)
+        if type(If_block.expression) in types:
+            print(If_block.expression, end='')
+        else:
+            If_block.expression.accept(self)
         print(')',end='')
         If_block.block.accept(self)
         
     def visitSimpleIf_else(self, SimpleIf_else):
         print('if(',end='')
-        SimpleIf_else.expression.accept(self)
+        if type(SimpleIf_else.expression) in types:
+            print(SimpleIf_else.expression, end='')
+        else:
+            SimpleIf_else.expression.accept(self)
         print(')')
         SimpleIf_else.block.accept(self)
         print('else')
@@ -149,7 +188,10 @@ class Visitor (AbstractVisitor):
 
     def visitCompoundIf_else(self, CompoundIf_else):
         print('if(',end='')
-        CompoundIf_else.expression.accept(self)
+        if type(CompoundIf_else.expression) in types:
+            print(CompoundIf_else.expression, end='')
+        else:
+            CompoundIf_else.expression.accept(self)
         print(')')
         CompoundIf_else.closed_statement.accept(self)
         print('else')
@@ -157,7 +199,10 @@ class Visitor (AbstractVisitor):
     
     def visitWhile_Open_statement(self, While_Open_statement):
         print('while (', end= '')
-        While_Open_statement.expression.accept(self)
+        if type(While_Open_statement.expression) in types:
+            print(While_Open_statement.expression, end='')
+        else:
+            While_Open_statement.expression.accept(self)
         print(')')
         While_Open_statement.open_statement.accept(self)
 
@@ -165,20 +210,29 @@ class Visitor (AbstractVisitor):
         print('do')
         DoWhile_Open_statement.open_statement.accept(self)
         print('while(', end='')
-        DoWhile_Open_statement.expression.accept(self)
+        if type(DoWhile_Open_statement.expression) in types:
+            print(DoWhile_Open_statement.expression, end='')
+        else:
+            DoWhile_Open_statement.expression.accept(self)
         print(')')
     
     def visitFor_Open_statement(self, For_Open_statement):
         print('for (', end='')
         For_Open_statement.genericVariableDeclaration.accept(self)
         print('in')
-        For_Open_statement.expression.accept(self)
+        if type(For_Open_statement.expression) in types:
+            print(For_Open_statement.expression, end='')
+        else:
+            For_Open_statement.expression.accept(self)
         print(')')
         For_Open_statement.open_statement.accept(self)
 
     def visitIf_Blocks_Closed_statement(self, If_Blocks_Closed_statement):
         print('if (', end='')
-        If_Blocks_Closed_statement.expression.accept(self)
+        if type(If_Blocks_Closed_statement.expression) in types:
+            print(If_Blocks_Closed_statement.expression, end='')
+        else:
+            If_Blocks_Closed_statement.expression.accept(self)
         print(')')
         If_Blocks_Closed_statement.block.accept(self)
         print('else')
@@ -186,7 +240,10 @@ class Visitor (AbstractVisitor):
 
     def visitIf_Mix1_Closed_statement(self, If_Mix1_Closed_statement):
         print('if (', end='')
-        If_Mix1_Closed_statement.expression.accept(self)
+        if type(If_Mix1_Closed_statement.expression) in types:
+            print(If_Mix1_Closed_statement.expression, end='')
+        else:
+            If_Mix1_Closed_statement.expression.accept(self)
         print(')')
         If_Mix1_Closed_statement.block.accept(self)
         print('else')
@@ -194,7 +251,10 @@ class Visitor (AbstractVisitor):
 
     def visitIf_Mix2_Closed_statement(self, If_Mix2_Closed_statement):
         print('if (', end= '')
-        If_Mix2_Closed_statement.expression.accept(self)
+        if type(If_Mix2_Closed_statement.expression) in types:
+            print(If_Mix2_Closed_statement.expression, end='')
+        else:
+            If_Mix2_Closed_statement.expression.accept(self)
         print(')')
         If_Mix2_Closed_statement.closed_statement.accept(self)
         print('else')
@@ -202,7 +262,10 @@ class Visitor (AbstractVisitor):
 
     def visitIf_Closeds_Closed_statement(self, If_Closeds_Closed_statement):
         print('if (', end= '')
-        If_Closeds_Closed_statement.expression.accept(self)
+        if type(If_Closeds_Closed_statement.expression) in types:
+            print(If_Closeds_Closed_statement.expression, end='')
+        else:
+            If_Closeds_Closed_statement.expression.accept(self)
         print(')')
         If_Closeds_Closed_statement.closed_statement.accept(self)
         print('else')
@@ -212,13 +275,19 @@ class Visitor (AbstractVisitor):
         print('for (', end='')
         For_Closed_statement.genericVariableDeclaration.accept(self)
         print('in')
-        For_Closed_statement.expression.accept(self)
+        if type(For_Closed_statement.expression) in types:
+            print(DoWhile_For_Closed_statementOpen_statement.expression, end='')
+        else:
+            For_Closed_statement.expression.accept(self)
         print(')')
         For_Closed_statement.closed_statement.accept(self)
 
     def visitWhile_Closed_statement(self, While_Closed_statement):
         print('while (', end='')
-        While_Closed_statement.expression.accept(self)
+        if type(While_Closed_statement.expression) in types:
+            print(While_Closed_statement.expression, end='')
+        else:
+            While_Closed_statement.expression.accept(self)
         print(')')
         While_Closed_statement.closed_statement.accept(self)
 
@@ -226,20 +295,32 @@ class Visitor (AbstractVisitor):
         print('do')
         DoWhile_Closed_statement.closed_statement.accept(self)
         print('while (', end='')
-        DoWhile_Closed_statement.expression.accept(self)
+        if type(DoWhile_Closed_statement.expression) in types:
+            print(DoWhile_Closed_statement.expression, end='')
+        else:
+            DoWhile_Closed_statement.expression.accept(self)
         print(')')
 
     def visitFor_Non_if_statement_block(self, For_Non_if_statement_block):
         print('for (', end='')
-        For_Non_if_statement_block.genericVariableDeclaration.accept(self)
+        if type(For_Non_if_statement_block.genericVariableDeclaration) in types:
+            print(For_Non_if_statement_block.genericVariableDeclaration, end=' ')
+        else:
+            For_Non_if_statement_block.genericVariableDeclaration.accept(self)
         print('in', end=' ')
-        For_Non_if_statement_block.expression.accept(self)
+        if type(For_Non_if_statement_block.expression) in types:
+            print(For_Non_if_statement_block.expression, end=' ')
+        else:
+            For_Non_if_statement_block.expression.accept(self)
         print(')')
         For_Non_if_statement_block.block.accept(self)
     
     def visitWhile_Non_if_statement_block(self, While_Non_if_statement_block):
         print('while (', end='')
-        While_Non_if_statement_block.expression.accept(self)
+        if type(While_Non_if_statement_block.expression) in types:
+            print(While_Non_if_statement_block.expression, end='')
+        else:
+            While_Non_if_statement_block.expression.accept(self)
         print(')')
         While_Non_if_statement_block.block.accept(self)
 
@@ -247,19 +328,28 @@ class Visitor (AbstractVisitor):
         print('do')
         DoWhile_Non_if_statement_block.block.accept(self)
         print('while (', end='')
-        DoWhile_Non_if_statement_block.expression.accept(self)
+        if type(DoWhile_Non_if_statement_block.expression) in types:
+            print(DoWhile_Non_if_statement_block.expression, end='')
+        else:
+            DoWhile_Non_if_statement_block.expression.accept(self)
         print(')')
 
 
     def visitAssignmentConcrete(self,AssignmentConcrete):
         print(AssignmentConcrete.id, end=' ')
         print('=',end=' ')
-        print(AssignmentConcrete.expression)
+        if type(AssignmentConcrete.expression) in types:
+            print(AssignmentConcrete.expression, end='')
+        else:
+            AssignmentConcrete.expression.accept(self)
     
     def visitAssignmentAndOperatorConcrete(self,AssignmentAndOperatorConcrete):
         print(AssignmentAndOperatorConcrete.id, end=' ')
         AssignmentAndOperatorConcrete.assignmentAndOperator.accept(self)
-        AssignmentAndOperatorConcrete.expression.accept(self)
+        if type(AssignmentAndOperatorConcrete.expression) in types:
+            print(AssignmentAndOperatorConcrete.expression)
+        else:
+            AssignmentAndOperatorConcrete.expression.accept(self)
 
     def visitBlockConcrete(self, BlockConcrete):
         print('{')
@@ -268,25 +358,41 @@ class Visitor (AbstractVisitor):
 
     def visitPropertyDeclarationStm_Var(self, PropertyDeclarationStm_Var):
         print('var',end=' ')
-        PropertyDeclarationStm_Var.genericVariableDeclaration.accept(self)
-        print('=',end=' ')
-        PropertyDeclarationStm_Var.expression.accept(self)
-    
+        if type(PropertyDeclarationStm_Var.genericVariableDeclaration) in types:
+            print(PropertyDeclarationStm_Var.genericVariableDeclaration, end=' ')
+        else:
+            PropertyDeclarationStm_Var.genericVariableDeclaration.accept(self)
+        print('=', end=' ')
+        if type(PropertyDeclarationStm_Var.expression) in types:
+            print(PropertyDeclarationStm_Var.expression)
+        else:
+            PropertyDeclarationStm_Var.expression.accept(self)
+
     def visitPropertyDeclarationStm_Val(self, PropertyDeclarationStm_Val):
         print('val',end=' ')
-        PropertyDeclarationStm_Val.genericVariableDeclaration.accept(self)
+        if type(PropertyDeclarationStm_Val.genericVariableDeclaration) in types:
+            print(PropertyDeclarationStm_Val.genericVariableDeclaration, end=' ')
+        else:
+            PropertyDeclarationStm_Val.genericVariableDeclaration.accept(self)
         print('=',end=' ')
-        PropertyDeclarationStm_Val.expression.accept(self)
+        if type(PropertyDeclarationStm_Val.expression) in types:
+            print(PropertyDeclarationStm_Val.expression)
+        else:
+            PropertyDeclarationStm_Val.expression.accept(self)
+
 
     def visitSimpleChamadaDeFuncao(self, SimpleChamadaDeFuncao):
         print(SimpleChamadaDeFuncao.id, end='')
-        print('(',end='')
+        print('(',end=' ')
         print(')')
 
     def visitCompoundChamadaDeFuncao(self, CompoundChamadaDeFuncao):
         print(CompoundChamadaDeFuncao.id, end='')
         print('(',end='')
-        CompoundChamadaDeFuncao.parametersFunction.accept(self)
+        if type(CompoundChamadaDeFuncao.parametersFunction) in types:
+            print(CompoundChamadaDeFuncao.parametersFunction, end='')
+        else:
+            CompoundChamadaDeFuncao.parametersFunction.accept(self)
         print(')')
 
     def visitVariableDeclaration(self, VariableDeclaration):
@@ -322,7 +428,10 @@ class Visitor (AbstractVisitor):
         print(')',end='')
 
     def visitSimpleParametersFunction(self, SimpleParametersFunction):
-        print(SimpleParametersFunction.primaryExpression, end=' ')
+        if type(SimpleParametersFunction.primaryExpression) in types:
+            print(SimpleParametersFunction.primaryExpression)
+        else:
+            SimpleParametersFunction.primaryExpression.accept(self)
 
     def visitCompoundParametersFunction(self, CompoundParametersFunction):
         CompoundParametersFunction.primaryExpression.accept(self)
@@ -383,9 +492,16 @@ class Visitor (AbstractVisitor):
         SimpleRangeExpression.additiveExpression.accept(self)
 
     def visitCompoundRangeExpression(self, CompoundRangeExpression):
-        CompoundRangeExpression.rangeExpression.accept(self)
-        print('..')
-        CompoundRangeExpression.additiveExpression.accept(self)
+        if type(CompoundRangeExpression.additiveExpression) in types:
+            print(CompoundRangeExpression.additiveExpression, end='')
+        else:
+            CompoundRangeExpression.additiveExpression.accept(self)
+        print('..', end='')
+        if type(CompoundRangeExpression.rangeExpression) in types:
+            print(CompoundRangeExpression.rangeExpression, end='')
+        else:
+            CompoundRangeExpression.rangeExpression.accept(self)
+
 
     def visitSimpleAdditiveExpression(self, SimpleAdditiveExpression):
         SimpleAdditiveExpression.multiplicativeExpression.accept(self)
@@ -421,11 +537,17 @@ class Visitor (AbstractVisitor):
 
     def visitReturn(self, Return):
         print('return')
-        Return.expression.accept(self)
+        if type(Return.expression) in types:
+            print(Return.expression, end='')
+        else:
+            Return.expression.accept(self)
 
     def visitParenthesizedExpressionConcrete(self, ParenthesizedExpressionConcrete):
         print('(')
-        ParenthesizedExpressionConcrete.expression.accept(self)
+        if type(ParenthesizedExpressionConcrete.expression) in types:
+            print(ParenthesizedExpressionConcrete.expression, end='')
+        else:
+            ParenthesizedExpressionConcrete.expression.accept(self)
         print(')')
 
     def visitMAISIGUAL(self, MAISIGUAL):
@@ -513,5 +635,5 @@ class Visitor (AbstractVisitor):
     def visitNot(self, Not):
         print(Not.NOT, end=' ')
 
-v= Visitor()
+
 
