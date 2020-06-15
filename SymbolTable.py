@@ -60,10 +60,12 @@ def endScope():
 def addVar(name, type):
     global symbolTable
     symbolTable[-1][name] = {BINDABLE: VARIABLE, TYPE : type}
+    print(symbolTable)
 
 def addFunction(name, params, returnType):
     global symbolTable
     symbolTable[-1][name] = {BINDABLE: FUNCTION, PARAMS: params, TYPE : returnType}
+    print(symbolTable)
 
 def getBindable(bindableName):
     global symbolTable

@@ -119,10 +119,9 @@ class CompoundKotlinFile(ac.KotlinFile):
        return Visitor.visitCompoundKotlinFile(self)
 
 
-
 class SimpleFunctionDeclaration(ac.FunctionDeclaration):
-    def __init__(self, id, functionValueParameters, functionBody):
-        self.id = id
+    def __init__(self, Id, functionValueParameters, functionBody):
+        self.Id = Id
         self.functionValueParameters = functionValueParameters
         self.functionBody = functionBody
 

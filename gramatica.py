@@ -485,5 +485,5 @@ def p_error(p):
 parser = yacc.yacc()
 result = parser.parse(debug=True)
 #v = Visitor()
-vs= sv.SemanticVisitor()
+vs = sv.SemanticVisitor()
 result.accept(vs)
