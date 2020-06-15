@@ -3,6 +3,7 @@ import SymbolTable as st
 from Visitor import Visitor
 from lex import lex
 import ConcretaClass as co
+import AbstrataClass as ac
 
 def coercion(type1, type2):
     if (type1 in st.Number and type2 in st.Number):
@@ -63,8 +64,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitCompoundParameters(self, CompoundParameters):
-        CompoundParameters.parameter.accept(self)
-        CompoundParameters.parameters.accept(self)
+        return [CompoundParameters.id, CompoundParameters.type] + CompoundParameters.parameters.accept(self)
 
 
     def visitSimpleParameter(self, SimpleParameter):
@@ -175,7 +175,7 @@ class SemanticVisitor(AbstractVisitor):
         else:
             If_Mix1_Closed_statement.expresison.accept(self.printer)
             print("\n\t[ERRO] A expressao ",
-                  If_Blocks_Closed_statement.expresison.accept(self.printer),
+                  If_Mix1_Closed_statement.expresison.accept(self.printer),
                   ' eh ', type, ' Deveria ser boolean')
 
 
@@ -186,7 +186,7 @@ def visitIf_Mix2_Closed_statement(self, If_Mix2_Closed_statement):
     else:
         If_Mix2_Closed_statement.expresison.accept(self.printer)
         print("\n\t[ERRO] A expressao ",
-              If_Blocks_Closed_statement.expresison.accept(self.printer),
+              If_Mix2_Closed_statement.expresison.accept(self.printer),
               ' eh ', type, ' Deveria ser boolean')
 
 def visitIf_Closeds_Closed_statement(self, If_Closeds_Closed_statement):

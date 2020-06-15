@@ -7,7 +7,7 @@ from Visitor import Visitor
 import AbstrataClass as ac
 import ConcretaClass as cc
 import os
-
+import SemanticVisitor as sv
 def p_kotlinFile(p):
     ''' kotlinFile : functionDeclaration kotlinFile
 				   | functionDeclaration '''
@@ -484,5 +484,6 @@ def p_error(p):
 
 parser = yacc.yacc()
 result = parser.parse(debug=True)
-v = Visitor()
-result.accept(v)
+#v = Visitor()
+vs= sv.SemanticVisitor()
+result.accept(vs)
