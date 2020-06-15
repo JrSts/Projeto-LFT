@@ -60,8 +60,8 @@ class Visitor (AbstractVisitor):
         AssighExp.Exp.accept(self)
         print('Exp')'''
 
-    def visitSimpleKotlinFile(self, SimpleKotlinFile):
-        SimpleKotlinFile.functionDeclaration.accept(self)
+    # def visitSimpleKotlinFile(self, SimpleKotlinFile):
+    #     SimpleKotlinFile.functionDeclaration.accept(self)
 
 
     def visitCompoundKotlinFile(self,CompoundKotlinFile):
@@ -102,11 +102,11 @@ class Visitor (AbstractVisitor):
         print(')')
 
 
-    def visitSimpleParameters(self, SimpleParameters):
-        if type(SimpleParameters.parameter) in types:
-            print(SimpleParameters.parameter, end='')
-        else:
-            SimpleParameters.parameter.accept(self)
+    # def visitSimpleParameters(self, SimpleParameters):
+    #     if type(SimpleParameters.parameter) in types:
+    #         print(SimpleParameters.parameter, end='')
+    #     else:
+    #         SimpleParameters.parameter.accept(self)
 
 
     def visitCompoundParameters(self, CompoundParameters):
@@ -133,21 +133,21 @@ class Visitor (AbstractVisitor):
             SimpleParameter.type.accept(self)
 
 
-    def visitCompoundParameter(self, CompoundParameter):
-        print(CompoundParameter.id, end='')
-        print(':',end='')
-
-        if type(CompoundParameter.type) in types:
-            print(CompoundParameter.type,end='')
-        else:
-            CompoundParameter.type.accept(self)
-
-        print('=',end='')
-
-        if type(CompoundParameter.expression) in types:
-            print(CompoundParameter.expression,end='')
-        else:
-            CompoundParameter.expression.accept(self)
+    # def visitCompoundParameter(self, CompoundParameter):
+    #     print(CompoundParameter.id, end='')
+    #     print(':',end='')
+    #
+    #     if type(CompoundParameter.type) in types:
+    #         print(CompoundParameter.type,end='')
+    #     else:
+    #         CompoundParameter.type.accept(self)
+    #
+    #     print('=',end='')
+    #
+    #     if type(CompoundParameter.expression) in types:
+    #         print(CompoundParameter.expression,end='')
+    #     else:
+    #         CompoundParameter.expression.accept(self)
 
 
     def visitParenthesizedTypeConcrete(self,ParenthesizedTypeConcrete):
@@ -161,8 +161,8 @@ class Visitor (AbstractVisitor):
         print(')',end='')
 
 
-    def visitSimpleFunctionBody(self, SimpleFunctionBody):
-        SimpleFunctionBody.block.accept(self)
+    # def visitSimpleFunctionBody(self, SimpleFunctionBody):
+    #     SimpleFunctionBody.block.accept(self)
     
 
     def visitCompoundFunctionBody(self, CompoundFunctionBody):
@@ -174,8 +174,8 @@ class Visitor (AbstractVisitor):
             CompoundFunctionBody.expression.accept(self)
 
 
-    def visitSimpleStatements(self,SimpleStatements):
-        SimpleStatements.statement.accept(self)
+    # def visitSimpleStatements(self,SimpleStatements):
+    #     SimpleStatements.statement.accept(self)
 
 
     def visitCompoundStatements(self,CompoundStatements):
@@ -489,16 +489,16 @@ class Visitor (AbstractVisitor):
         print(')')
 
  
-    def visitVariableDeclaration(self, VariableDeclaration):
-        VariableDeclaration.variableDeclaration.accept(self)
+    # def visitVariableDeclaration(self, VariableDeclaration):
+    #     VariableDeclaration.variableDeclaration.accept(self)
+    #
+    #
+    # def visitMultiVariableDeclaration(self, MultiVariableDeclaration):
+    #     MultiVariableDeclaration.multiVariableDeclaration.accept(self)
 
- 
-    def visitMultiVariableDeclaration(self, MultiVariableDeclaration):
-        MultiVariableDeclaration.multiVariableDeclaration.accept(self)
 
-
-    def visitSimpleVariableDeclaration(self, SimpleVariableDeclaration):
-        print(SimpleVariableDeclaration.id, end=' ')
+    # def visitSimpleVariableDeclaration(self, SimpleVariableDeclaration):
+    #     print(SimpleVariableDeclaration.id, end=' ')
 
 
     def visitCompoundVariableDeclaration(self, CompoundVariableDeclaration):
@@ -510,8 +510,8 @@ class Visitor (AbstractVisitor):
             CompoundVariableDeclaration.type.accept(self)
 
 
-    def visitSimpleVariableDeclarations(self, SimpleVariableDeclarations):
-        SimpleVariableDeclarations.variableDeclaration.accept(self)
+    # def visitSimpleVariableDeclarations(self, SimpleVariableDeclarations):
+    #     SimpleVariableDeclarations.variableDeclaration.accept(self)
 
 
     def visitCompoundVariableDeclarations(self, CompoundVariableDeclarations):
@@ -532,11 +532,11 @@ class Visitor (AbstractVisitor):
         print(')',end='')
 
 
-    def visitSimpleParametersFunction(self, SimpleParametersFunction):
-        if type(SimpleParametersFunction.primaryExpression) in types:
-            print(SimpleParametersFunction.primaryExpression)
-        else:
-            SimpleParametersFunction.primaryExpression.accept(self)
+    # def visitSimpleParametersFunction(self, SimpleParametersFunction):
+    #     if type(SimpleParametersFunction.primaryExpression) in types:
+    #         print(SimpleParametersFunction.primaryExpression)
+    #     else:
+    #         SimpleParametersFunction.primaryExpression.accept(self)
 
 
     def visitCompoundParametersFunction(self, CompoundParametersFunction):
@@ -545,11 +545,11 @@ class Visitor (AbstractVisitor):
         CompoundParametersFunction.parametersFunction.accept(self)
 
 
-    def visitSimpleDisjunction(self, SimpleDisjunction):
-        if type(SimpleDisjunction.conjunction) in types:
-            print(SimpleDisjunction.conjunction, end='')
-        else:
-            SimpleDisjunction.conjunction.accept(self)
+    # def visitSimpleDisjunction(self, SimpleDisjunction):
+    #     if type(SimpleDisjunction.conjunction) in types:
+    #         print(SimpleDisjunction.conjunction, end='')
+    #     else:
+    #         SimpleDisjunction.conjunction.accept(self)
 
 
     def visitCompoundDisjunction(self, CompoundDisjunction):
@@ -566,8 +566,8 @@ class Visitor (AbstractVisitor):
             CompoundDisjunction.conjunction.accept(self)
 
 
-    def visitSimpleConjunction(self, SimpleConjunction):
-        SimpleConjunction.equality.accept(self)
+    # def visitSimpleConjunction(self, SimpleConjunction):
+    #     SimpleConjunction.equality.accept(self)
 
 
     def visitCompoundConjunction(self, CompoundConjunction):
@@ -584,8 +584,8 @@ class Visitor (AbstractVisitor):
             CompoundConjunction.conjunction.accept(self)   
 
   
-    def visitSimpleEquality(self, SimpleEquality):
-        SimpleEquality.comparison.accept(self)
+    # def visitSimpleEquality(self, SimpleEquality):
+    #     SimpleEquality.comparison.accept(self)
 
 
     def visitCompoundEquality(self, CompoundEquality):
@@ -605,8 +605,8 @@ class Visitor (AbstractVisitor):
             CompoundEquality.equality.accept(self)
 
 
-    def visitSimpleComparison(self, SimpleComparison):
-        print(SimpleComparison.infixOperation)
+    # def visitSimpleComparison(self, SimpleComparison):
+    #     print(SimpleComparison.infixOperation)
 
 
     def visitCompoundComparison(self, CompoundComparison):
@@ -660,8 +660,8 @@ class Visitor (AbstractVisitor):
             CompoundInfixOperation.type.accept(self)
 
 
-    def visitSimpleElvisExpression(self, SimpleElvisExpression):
-        SimpleElvisExpression.rangeExpression.accept(self)
+    # def visitSimpleElvisExpression(self, SimpleElvisExpression):
+    #     SimpleElvisExpression.rangeExpression.accept(self)
 
 
     def visitCompoundElvisExpression(self, CompoundElvisExpression):
@@ -678,8 +678,8 @@ class Visitor (AbstractVisitor):
             CompoundElvisExpression.rangeExpression.accept(self)
 
 
-    def visitSimpleRangeExpression(self, SimpleRangeExpression):
-        SimpleRangeExpression.additiveExpression.accept(self)
+    # def visitSimpleRangeExpression(self, SimpleRangeExpression):
+    #     SimpleRangeExpression.additiveExpression.accept(self)
 
 
     def visitCompoundRangeExpression(self, CompoundRangeExpression):
@@ -696,8 +696,8 @@ class Visitor (AbstractVisitor):
             CompoundRangeExpression.rangeExpression.accept(self)
 
 
-    def visitSimpleAdditiveExpression(self, SimpleAdditiveExpression):
-        SimpleAdditiveExpression.multiplicativeExpression.accept(self)
+    # def visitSimpleAdditiveExpression(self, SimpleAdditiveExpression):
+    #     SimpleAdditiveExpression.multiplicativeExpression.accept(self)
 
 
     def visitCompoundAdditiveExpression(self, CompoundAdditiveExpression):
@@ -717,8 +717,8 @@ class Visitor (AbstractVisitor):
             CompoundAdditiveExpression.multiplicativeExpression.accept(self)
 
 
-    def visitSimpleMultiplicativeExpression(self, SimpleMultiplicativeExpression):
-        SimpleMultiplicativeExpression.asExpression.accept(self)
+    # def visitSimpleMultiplicativeExpression(self, SimpleMultiplicativeExpression):
+    #     SimpleMultiplicativeExpression.asExpression.accept(self)
 
 
     def visitCompoundMultiplicativeExpression(self, CompoundMultiplicativeExpression):
@@ -738,8 +738,8 @@ class Visitor (AbstractVisitor):
             CompoundMultiplicativeExpression.asExpression.accept(self)
 
 
-    def visitSimpleAsExpression(self, SimpleAsExpression):
-        SimpleAsExpression.unaryExpression.accept(self)
+    # def visitSimpleAsExpression(self, SimpleAsExpression):
+    #     SimpleAsExpression.unaryExpression.accept(self)
 
 
     def visitCompoundAsExpression(self, CompoundAsExpression):
@@ -771,16 +771,16 @@ class Visitor (AbstractVisitor):
             SimpleUnaryExpressionConcrete.primaryExpression.accept(self)
 
 
-    def visitCompoundUnaryExpressionConcrete(self, UnaryExpressionConcrete):
-        if type(UnaryExpressionConcrete.primaryExpression) in types:
-            print(UnaryExpressionConcrete.primaryExpression, end=' ')
+    def visitCompoundUnaryExpressionConcrete(self, CompoundUnaryExpressionConcrete):
+        if type(CompoundUnaryExpressionConcrete.primaryExpression) in types:
+            print(CompoundUnaryExpressionConcrete.primaryExpression, end=' ')
         else:
-            UnaryExpressionConcrete.primaryExpression.accept(self)
+            CompoundUnaryExpressionConcrete.primaryExpression.accept(self)
         
-        if type(UnaryExpressionConcrete.postfixUnaryOperator) in types:
-            print(UnaryExpressionConcrete.postfixUnaryOperator)
+        if type(CompoundUnaryExpressionConcrete.postfixUnaryOperator) in types:
+            print(CompoundUnaryExpressionConcrete.postfixUnaryOperator)
         else:
-            UnaryExpressionConcrete.postfixUnaryOperator.accept(self)
+            CompoundUnaryExpressionConcrete.postfixUnaryOperator.accept(self)
 
 
     def visitReturn(self, Return):

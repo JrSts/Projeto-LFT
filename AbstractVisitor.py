@@ -3,9 +3,9 @@ from abc import ABCMeta
 
 class AbstractVisitor(metaclass=ABCMeta):
 
-    @abstractmethod
-    def visitSimpleKotlinFile(self, KotlinFile):
-        pass
+    # @abstractmethod
+    # def visitSimpleKotlinFile(self, KotlinFile):
+    #     pass
 
     @abstractmethod
     def visitCompoundKotlinFile(self,KotlinFile):
@@ -28,9 +28,9 @@ class AbstractVisitor(metaclass=ABCMeta):
     def visitCompoundFunctionValueParameters(self,CompoundFunctionValueParameters):
         pass
 
-    @abstractmethod
-    def visitSimpleParameters(self, Parameters):
-        pass
+    # @abstractmethod
+    # def visitSimpleParameters(self, Parameters):
+    #     pass
 
     @abstractmethod
     def visitCompoundParameters(self, Parameters):
@@ -41,25 +41,25 @@ class AbstractVisitor(metaclass=ABCMeta):
     def visitSimpleParameter(self, Parameter):
         pass
 
-    @abstractmethod
-    def visitCompoundParameter(self, Parameter):
-        pass
+    # @abstractmethod
+    # def visitCompoundParameter(self, Parameter):
+    #     pass
 
     @abstractmethod
     def visitParenthesizedTypeConcrete(self, ParenthesizedType):
         pass
 
-    @abstractmethod
-    def visitSimpleFunctionBody(self, FunctionBody):
-        pass
+    # @abstractmethod
+    # def visitSimpleFunctionBody(self, FunctionBody):
+    #     pass
 
     @abstractmethod
     def visitCompoundFunctionBody(self, FunctionBody):
         pass
 
-    @abstractmethod
-    def visitSimpleStatements(self, Statements):
-        pass
+    # @abstractmethod
+    # def visitSimpleStatements(self, Statements):
+    #     pass
 
     @abstractmethod
     def visitCompoundStatements(self, Statements):
@@ -162,17 +162,17 @@ class AbstractVisitor(metaclass=ABCMeta):
     def visitCompoundChamadaDeFuncao(self, ChamadaDeFuncao):
         pass
 
-    @abstractmethod
-    def visitSimpleVariableDeclaration(self, VariableDeclaration):
-        pass
+    # @abstractmethod
+    # def visitSimpleVariableDeclaration(self, VariableDeclaration):
+    #     pass
 
     @abstractmethod
     def visitCompoundVariableDeclaration(self, VariableDeclaration):
         pass
 
-    @abstractmethod
-    def visitSimpleVariableDeclarations(self, VariableDeclarations):
-        pass
+    # @abstractmethod
+    # def visitSimpleVariableDeclarations(self, VariableDeclarations):
+    #     pass
 
     @abstractmethod
     def visitCompoundVariableDeclarations(self, VariableDeclarations):
@@ -186,34 +186,34 @@ class AbstractVisitor(metaclass=ABCMeta):
     def visitCompoundMultiVariableDeclaration(self, VariableDeclaration):
         pass
 
-    @abstractmethod
-    def visitSimpleParametersFunction(self, ParametersFunction):
-        pass
+    # @abstractmethod
+    # def visitSimpleParametersFunction(self, ParametersFunction):
+    #     pass
 
     @abstractmethod
     def visitCompoundParametersFunction(self, ParametersFunction):
         pass
 
-    @abstractmethod
-    def visitSimpleDisjunction(self, Disjunction):
-        pass
+    # @abstractmethod
+    # def visitSimpleDisjunction(self, Disjunction):
+    #     pass
 
     @abstractmethod
     def visitCompoundDisjunction(self, Disjunction):
         pass
 
-    @abstractmethod
-    def visitSimpleEquality(self,SimpleEquality):
-        pass
+    # @abstractmethod
+    # def visitSimpleEquality(self,SimpleEquality):
+    #     pass
 
     @abstractmethod
     def visitCompoundEquality(self,CompoundEquality):
         pass
 
 
-    @abstractmethod
-    def visitSimpleComparison(self,SimpleComparison):
-        pass
+    # @abstractmethod
+    # def visitSimpleComparison(self,SimpleComparison):
+    #     pass
 
     @abstractmethod
     def visitCompoundComparison(self,CompoundComparison):
@@ -227,41 +227,41 @@ class AbstractVisitor(metaclass=ABCMeta):
     def visitCompoundInfixOperation(self,CompoundInfixOperation):
         pass
 
-    @abstractmethod
-    def visitSimpleElvisExpression(self,SimpleElvisExpression):
-        pass
+    # @abstractmethod
+    # def visitSimpleElvisExpression(self,SimpleElvisExpression):
+    #     pass
 
     @abstractmethod
     def visitCompoundElvisExpression(self,CompoundElvisExpression):
         pass
 
-    @abstractmethod
-    def visitSimpleRangeExpression(self,SimpleRangeExpression):
-        pass
+    # @abstractmethod
+    # def visitSimpleRangeExpression(self,SimpleRangeExpression):
+    #     pass
 
     @abstractmethod
     def visitCompoundRangeExpression(self,CompoundRangeExpression):
         pass
 
-    @abstractmethod
-    def visitSimpleAdditiveExpression(self,SimpleAdditiveExpression):
-        pass
+    # @abstractmethod
+    # def visitSimpleAdditiveExpression(self,SimpleAdditiveExpression):
+    #     pass
 
     @abstractmethod
     def visitCompoundAdditiveExpression(self,CompoundAdditiveExpression):
         pass
 
-    @abstractmethod
-    def visitSimpleMultiplicativeExpression(self,SimpleMultiplicativeExpression):
-        pass
+    # @abstractmethod
+    # def visitSimpleMultiplicativeExpression(self,SimpleMultiplicativeExpression):
+    #     pass
 
     @abstractmethod
     def visitCompoundMultiplicativeExpression(self,CompoundMultiplicativeExpression):
         pass
 
-    @abstractmethod
-    def visitSimpleAsExpression(self,SimpleAsExpression):
-        pass
+    # @abstractmethod
+    # def visitSimpleAsExpression(self,SimpleAsExpression):
+    #     pass
 
     @abstractmethod
     def visitCompoundAsExpression(self,CompoundAsExpression):
