@@ -44,12 +44,9 @@ def p_parameters(p):
         p[0] = cc.CompoundParameters(p[1], p[3])
 
 def p_parameter(p):
-    ''' parameter : ID DOISP type
-                  | ID DOISP type ATRIBUICAO expression'''
-    if len(p) == 4:
-        p[0] = cc.SimpleParameter(p[1], p[3])
-    else:
-        p[0] = cc.CompoundParameter(p[1], p[3], p[5])
+    ''' parameter : ID DOISP type '''
+
+    p[0] = cc.SimpleParameter(p[1], p[3])
 
 
 def p_type(p):

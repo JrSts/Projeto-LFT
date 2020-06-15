@@ -3,6 +3,7 @@ INT = 'int'
 FLOAT = 'float'
 BOOL = 'boolean'
 TYPE = 'type'
+UNDEFINED = 'undefined'
 PARAMS = 'params'
 BINDABLE = 'bindable'
 FUNCTION = 'function'
@@ -38,12 +39,13 @@ SIM = 'sim'
 NAO = 'nao'
 USANDO ='use'
 Number = [INT, FLOAT]
-primitivos = [BYTE,SHORT,INT,LONG]
+primitivos = [BYTE, SHORT, INT, LONG, UNDEFINED]
 
 def beginScope(nameScope):
     global symbolTable
     symbolTable.append({})
     symbolTable[-1][SCOPE] = nameScope
+    print(symbolTable)
 
 def endScope():
     global symbolTable
@@ -70,3 +72,4 @@ def getBindable(bindableName):
             symbolTable[i][bindableName][USANDO] = SIM
             return symbolTable[i][bindableName]
     return None
+
