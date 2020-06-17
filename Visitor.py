@@ -683,17 +683,17 @@ class Visitor (AbstractVisitor):
 
 
     def visitCompoundRangeExpression(self, CompoundRangeExpression):
-        if type(CompoundRangeExpression.additiveExpression) in types:
-            print(CompoundRangeExpression.additiveExpression, end='')
-        else:
-            CompoundRangeExpression.additiveExpression.accept(self)
-
-        print('..', end='')
-
         if type(CompoundRangeExpression.rangeExpression) in types:
             print(CompoundRangeExpression.rangeExpression, end='')
         else:
             CompoundRangeExpression.rangeExpression.accept(self)
+        
+        print('..', end='')
+
+        if type(CompoundRangeExpression.additiveExpression) in types:
+            print(CompoundRangeExpression.additiveExpression, end='')
+        else:
+            CompoundRangeExpression.additiveExpression.accept(self)
 
 
     # def visitSimpleAdditiveExpression(self, SimpleAdditiveExpression):

@@ -47,15 +47,9 @@ def beginScope(nameScope):
     symbolTable[-1][SCOPE] = nameScope
     print(symbolTable)
 
-def endScope():
-    global symbolTable
-    dictionarylist = []
-    for x in symbolTable[-1]:
-        if(type(symbolTable[-1][x]) == type({})):
-            if (symbolTable[-1][x][USANDO] == NAO):
-                dictionarylist.append(x)
+def endScope():     
+    global symbolTable     
     symbolTable = symbolTable[0:-1]
-    return dictionarylist
 
 def addVar(name, type):
     global symbolTable
@@ -67,11 +61,10 @@ def addFunction(name, params, returnType):
     symbolTable[-1][name] = {BINDABLE: FUNCTION, PARAMS: params, TYPE : returnType}
     print(symbolTable)
 
-def getBindable(bindableName):
-    global symbolTable
-    for i in reversed(range(len(symbolTable))):
-        if (bindableName in symbolTable[i].keys()):
-            symbolTable[i][bindableName][USANDO] = SIM
-            return symbolTable[i][bindableName]
+def getBindable(bindableName):     
+    global symbolTable     
+    for i in reversed(range(len(symbolTable))):         
+        if (bindableName in symbolTable[i].keys()):             
+            return symbolTable[i][bindableName]     
     return None
 

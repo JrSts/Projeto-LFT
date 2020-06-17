@@ -483,7 +483,7 @@ def p_error(p):
 
 
 parser = yacc.yacc()
-result = parser.parse(debug=True)
+result = parser.parse(debug=False)
 #v = Visitor()
 vs = sv.SemanticVisitor()
 result.accept(vs)

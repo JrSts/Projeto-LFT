@@ -656,7 +656,7 @@ class CompoundElvisExpression(ac.ElvisExpression):
 
 
 class CompoundRangeExpression(ac.RangeExpression):
-    def __init__(self, additiveExpression, rangeExpression):
+    def __init__(self, rangeExpression, additiveExpression):
         self.additiveExpression = additiveExpression
         self.rangeExpression = rangeExpression
 

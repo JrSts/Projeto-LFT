@@ -2,14 +2,18 @@ from AbstractVisitor import AbstractVisitor
 import SymbolTable as st
 from Visitor import Visitor
 from lex import lex
+import re
 import ConcretaClass as co
 import AbstrataClass as ac
 
 def coercion(type1, type2):
     if (type1 in st.Number and type2 in st.Number):
-        if (type1 == st.FLOAT or type2 == st.FLOAT):
+        print('passei aqui')
+        if type1 == st.FLOAT or type2 == st.FLOAT:
+            print('passei')
             return st.FLOAT
         else:
+            print('nao passei')
             return st.INT
     else:
         return None
@@ -27,9 +31,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitSimpleFunctionDeclaration(self, SimpleFunctionDeclaration):
-            
         params = {}
-        
         typeFunction = 'undefined'
         if SimpleFunctionDeclaration.functionValueParameters != None:
             params = SimpleFunctionDeclaration.functionValueParameters.accept(self)
@@ -75,11 +77,11 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitParenthesizedTypeConcrete(self,ParenthesizedTypeConcrete):
-        return ParenthesizedTypeConcrete.type.accept(self)
+        return ParenthesizedTypeConcrete.type
 
 
     def visitCompoundFunctionBody(self, CompoundFunctionBody):
-        CompoundFunctionBody.expression.accept(self)
+        return CompoundFunctionBody.expression.accept(self)
 
 
     def visitCompoundStatements(self,CompoundStatements):
@@ -88,7 +90,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitIf_statement(self, If_statement):
-        if If_statement.expression == sv.BOOLEAN:
+        if If_statement.expression == st.BOOL:
             If_statement.statement.accept(self)
         else:
             If_statement.expression.accept(self.printer)
@@ -98,7 +100,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitIf_block(self, If_block):
-        if If_block.expression == sv.BOOLEAN:
+        if If_block.expression == st.BOOL:
             If_block.block.accept(self)
         else:
             If_block.expression.accept(self.printer)
@@ -108,7 +110,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitSimpleIf_else(self, SimpleIf_else):
-        if SimpleIf_else.expression == sv.BOOLEAN:
+        if SimpleIf_else.expression == st.BOOL:
             SimpleIf_else.block.accept(self)
             SimpleIf_else.open_statement.accept(self)
         else:
@@ -119,7 +121,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitCompoundIf_else(self, CompoundIf_else):
-        if CompoundIf_else.expression == sv.BOOLEAN:
+        if CompoundIf_else.expression == st.BOOL:
             CompoundIf_else.closed_statement.accept(self)
             CompoundIf_else.open_statement.accept(self)
         else:
@@ -145,7 +147,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitFor_Open_statement(self, For_Open_statement):
-        nome = For_Open_statement.genericVariableDeclaration
+        nome = For_Open_statement.genericVariableDeclaration.accept(self)
         print(nome)
         if isinstance(nome, st.STRING):
             if nome[0] != '\'':
@@ -160,7 +162,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitIf_Blocks_Closed_statement(self, If_Blocks_Closed_statement):
-        if If_Blocks_Closed_statement.expression == bool:
+        if If_Blocks_Closed_statement.expression == st.BOOL:
             If_Blocks_Closed_statement.block.accept(self)
             If_Blocks_Closed_statement.block1.accept(self)
         else:
@@ -171,7 +173,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitIf_Mix1_Closed_statement(self, If_Mix1_Closed_statement):
-        if If_Mix1_Closed_statement.expression == bool:
+        if If_Mix1_Closed_statement.expression == st.BOOL:
             If_Mix1_Closed_statement.block.accept(self)
             If_Mix1_Closed_statement.closed_statement.accept(self)
         else:
@@ -182,7 +184,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitIf_Mix2_Closed_statement(self, If_Mix2_Closed_statement):
-        if If_Mix2_Closed_statement.expression == bool:
+        if If_Mix2_Closed_statement.expression == st.BOOL:
             If_Mix2_Closed_statement.closed_statement.accept(self)
             If_Mix2_Closed_statement.block.accept(self)
         else:
@@ -192,7 +194,7 @@ class SemanticVisitor(AbstractVisitor):
               ' eh ', type, ' Deveria ser boolean')
 
     def visitIf_Closeds_Closed_statement(self, If_Closeds_Closed_statement):
-        if If_Closeds_Closed_statement.expression == bool:
+        if If_Closeds_Closed_statement.expression == st.BOOL:
             If_Closeds_Closed_statement.closed_statement.accept(self)
             If_Closeds_Closed_statement.closed_statement.accept(self)
         else:
@@ -203,7 +205,8 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitFor_Closed_statement(self, For_Closed_statement):
-        For_Closed_statement.genericVariableDeclaration.accept(self)
+        nome = For_Closed_statement.genericVariableDeclaration.accept(self)
+        print(nome)
         if For_Closed_statement.expression == st.BOOL:
             For_Closed_statement.closed_statement.accept(self)
         else:
@@ -213,7 +216,7 @@ class SemanticVisitor(AbstractVisitor):
                 ' eh ', type, ' Deveria ser boolean')
 
     def visitWhile_Closed_statement(self, While_Closed_statement):
-        if While_Closed_statement.expression == bool:
+        if While_Closed_statement.expression == st.BOOL:
             While_Closed_statement.closed_statement.accept(self)
         else:
             While_Closed_statement.expression.accept(self.printer)
@@ -223,7 +226,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitDoWhile_Closed_statement(self, DoWhile_Closed_statement):
-        if DoWhile_Closed_statement.expression == bool:
+        if DoWhile_Closed_statement.expression == st.BOOL:
             DoWhile_Closed_statement.closed_statement.accept(self)
         else:
             DoWhile_Closed_statement.expression.accept(self.printer)
@@ -233,13 +236,18 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitFor_Non_if_statement_block(self, For_Non_if_statement_block):
-        For_Non_if_statement_block.genericVariableDeclaration
+        st.beginScope('for')
+        nome = For_Non_if_statement_block.genericVariableDeclaration
+        st.addVar(nome, st.INT)
         For_Non_if_statement_block.expression.accept(self)
+        #print(For_Non_if_statement_block.expression.accept(self.printer))
         For_Non_if_statement_block.block.accept(self)
+        st.endScope()
+        print(st.symbolTable)
 
 
     def visitWhile_Non_if_statement_block(self, While_Non_if_statement_block):
-        if While_Non_if_statement_block.expression == bool:
+        if While_Non_if_statement_block.expression == st.BOOL:
             While_Non_if_statement_block.block.accept(self)
         else:
             While_Non_if_statement_block.expression.accept(self.printer)
@@ -249,7 +257,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitDoWhile_Non_if_statement_block(self, DoWhile_Non_if_statement_block):
-        if DoWhile_Non_if_statement_block.expression == bool:
+        if DoWhile_Non_if_statement_block.expression == st.BOOL:
             DoWhile_Non_if_statement_block.block.accept(self)
         else:
             DoWhile_Non_if_statement_block.expression.accept(self.printer)
@@ -258,14 +266,14 @@ class SemanticVisitor(AbstractVisitor):
                 ' eh ', type, ' Deveria ser boolean')
 
     def visitAssignmentConcrete(self, AssignmentConcrete):
-        typeVar = AssignmentConcrete.expression.accept(self)
+        typeVar = str(type(AssignmentConcrete.expression.accept(self)))[8:11]
         if typeVar != None:
             st.addVar(AssignmentConcrete.id, typeVar)
             return typeVar
         return None
 
     def visitAssignmentAndOperatorConcrete(self, AssignmentAndOperatorConcrete):
-        typeVar = AssignmentAndOperatorConcrete.expression
+        typeVar = str(type(AssignmentAndOperatorConcrete.expression))[8:11]
         if typeVar != None:
             st.addVar(AssignmentAndOperatorConcrete.id, typeVar)
             return typeVar
@@ -277,13 +285,13 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitPropertyDeclarationStm_Var(self, PropertyDeclarationStm_Var):
-       typeVar = PropertyDeclarationStm_Var.expression
+       typeVar = str(type(PropertyDeclarationStm_Var.expression))[8:11]
        st.addVar(PropertyDeclarationStm_Var.genericVariableDeclaration, typeVar)
        return typeVar
 
 
     def visitPropertyDeclarationStm_Val(self, PropertyDeclarationStm_Val):
-       typeVar = PropertyDeclarationStm_Val.expression
+       typeVar = str(type(PropertyDeclarationStm_Val.expression))[8:11]
        st.addVar(PropertyDeclarationStm_Val.genericVariableDeclaration, typeVar)
        return typeVar
 
@@ -317,7 +325,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitCompoundVariableDeclaration(self, CompoundVariableDeclaration):
-        typeVar = CompoundVariableDeclaration.type
+        typeVar = str(type(CompoundVariableDeclaration.type))[8:11]
         if CompoundVariableDeclaration.id != None:
             st.addVar(CompoundVariableDeclaration.id, typeVar)
             return typeVar
@@ -345,6 +353,7 @@ class SemanticVisitor(AbstractVisitor):
     def visitCompoundDisjunction(self, CompoundDisjunction):
         type1 = CompoundDisjunction.conjunction.accept(self)
         type2 = CompoundDisjunction.disjunction.accept(self)
+        print(type1, type2)
         c = coercion(type1, type2)
         if c == None:
             print('[ERRO] - disjunction')
@@ -354,6 +363,7 @@ class SemanticVisitor(AbstractVisitor):
     def visitCompoundConjunction(self, CompoundConjunction):
         type1 = CompoundConjunction.equality.accept(self)
         type2 = CompoundConjunction.conjunction.accept(self)
+        print(type1, type2)
         c = coercion(type1, type2)
         if c == None:
             print('[ERRO] - conjunction')
@@ -363,6 +373,8 @@ class SemanticVisitor(AbstractVisitor):
     def visitCompoundEquality(self, CompoundEquality):
         type1 = CompoundEquality.comparison.accept(self)
         type2 = CompoundEquality.equality.accept(self)
+        print(type1, type2)
+
         c = coercion(type1, type2)
         if c == None:
             print('[ERRO] - equality')
@@ -372,24 +384,26 @@ class SemanticVisitor(AbstractVisitor):
         type1 = CompoundComparison.infixOperation.accept(self)
         CompoundComparison.comparisonOperator.accept(self)
         type2 = CompoundComparison.infixOperation1.accept(self)
+        print(type1, type2)
         c = coercion(type1, type2)
         if c == None:
             print('[ERRO] - Comparison')
         return c
 
     def visitSimpleInfixOperation(self, SimpleInfixOperation):
-        type1 = SimpleInfixOperation.infixOperation.accept(self)
+        type1 = SimpleInfixOperation.infixOperation
         SimpleInfixOperation.inOperator.accept(self)
-        type2 = SimpleInfixOperation.elvisExpression.accept(self)
-        c = coercion(type1, type2)
-        if c == None:
-            print('[ERRO] - sInfixOperation')
-        return c
+        c = bindable = st.getBindable(SimpleInfixOperation.elvisExpression)
+        print(type1, c)
+        if str(type(type1))[8:11] != bindable[st.TYPE] and bindable[st.TYPE] == 'int':
+            print('[ERRO] - infix Esperava um tipo inteiro')
+        return c[st.TYPE]
 
     def visitCompoundInfixOperation(self, CompoundInfixOperation):
         type1 = CompoundInfixOperation.infixOperation.accept(self)
         CompoundInfixOperation.isOperator.accept(self)
         type2 = CompoundInfixOperation.type.accept(self)
+        print(type1, type2)
         c = coercion(type1, type2)
         if c == None:
             print('[ERRO] - cInfixOperation')
@@ -398,19 +412,24 @@ class SemanticVisitor(AbstractVisitor):
     def visitCompoundElvisExpression(self, CompoundElvisExpression):
         type1 = CompoundElvisExpression.elvisExpression.acceept(self)
         type2 = CompoundElvisExpression.rangeExpression.acceept(self)
+        print(type1, type2)
         c = coercion(type1, type2)
         if c == None:
             print('[ERRO] - elvis')
         return c
 
     def visitCompoundRangeExpression(self, CompoundRangeExpression):
-        tipo1 = CompoundRangeExpression.additiveExpression
-        tipo2 = CompoundRangeExpression.rangeExpression
-        c = coercion(tipo1, tipo2)
-        if (type(c) != int):
+        type1 = re.search('int', str(type(CompoundRangeExpression.rangeExpression)))
+        type1 = type1.group(0)
+        bindable = st.getBindable(CompoundRangeExpression.additiveExpression)
+        print('escopo', bindable[st.TYPE])
+        type2 = bindable[st.TYPE]
+        c = coercion(type1, type2)
+        print('c', c, type2)
+
+        if c == None:
             print('[ERRO] - range Esperava um tipo inteiro')
         return c
-
 
 
     def visitCompoundAdditiveExpression(self, CompoundAdditiveExpression):
