@@ -75,7 +75,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitParenthesizedTypeConcrete(self,ParenthesizedTypeConcrete):
-        ParenthesizedTypeConcrete.type.accept(self)
+        return ParenthesizedTypeConcrete.type.accept(self)
 
 
     def visitCompoundFunctionBody(self, CompoundFunctionBody):
@@ -88,7 +88,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitIf_statement(self, If_statement):
-        if If_statement.expression == bool:
+        if If_statement.expression == sv.BOOLEAN:
             If_statement.statement.accept(self)
         else:
             If_statement.expression.accept(self.printer)
@@ -98,7 +98,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitIf_block(self, If_block):
-        if If_block.expression == bool:
+        if If_block.expression == sv.BOOLEAN:
             If_block.block.accept(self)
         else:
             If_block.expression.accept(self.printer)
@@ -108,7 +108,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitSimpleIf_else(self, SimpleIf_else):
-        if SimpleIf_else.expression == bool:
+        if SimpleIf_else.expression == sv.BOOLEAN:
             SimpleIf_else.block.accept(self)
             SimpleIf_else.open_statement.accept(self)
         else:
@@ -119,7 +119,7 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitCompoundIf_else(self, CompoundIf_else):
-        if CompoundIf_else.expression == bool:
+        if CompoundIf_else.expression == sv.BOOLEAN:
             CompoundIf_else.closed_statement.accept(self)
             CompoundIf_else.open_statement.accept(self)
         else:
@@ -130,13 +130,8 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitWhile_Open_statement(self, While_Open_statement):
-        if While_Open_statement.expression == bool:
-            While_Open_statement.open_statement.accept(self)
-        else:
-            While_Open_statement.expression.accept(self.printer)
-            print("\n\t[ERRO] A expressao ",
-                  While_Open_statement.expression.accept(self.printer),
-                  ' eh ', type, ' Deveria ser boolean')
+        While_Open_statement.expression.accept(self)
+        While_Open_statement.open_statement.accept(self)
 
 
     def visitDoWhile_Open_statement(self, DoWhile_Open_statement):
@@ -150,15 +145,18 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitFor_Open_statement(self, For_Open_statement):
-        type = For_Open_statement.expression.accept(self)
-        For_Open_statement.genericVariableDeclaration.accept(self)
-        if type == st.BOOL:
-            For_Open_statement.open_statement.accept(self)
+        nome = For_Open_statement.genericVariableDeclaration
+        print(nome)
+        if isinstance(nome, st.STRING):
+            if nome[0] != '\'':
+                st.addVar(nome, 'int')
+            else:
+                print('ERRO - For')
         else:
-            For_Open_statement.expression.accept(self.printer)
-            print("\n\t[ERRO] A expressao ",
-                  For_Open_statement.expression.accept(self.printer),
-                  ' eh ', type, ' Deveria ser boolean')
+            print('erro')
+        For_Open_statement.open_statement.accept(self)
+        For_Open_statement.expression.accept(self.printer)
+        
 
 
     def visitIf_Blocks_Closed_statement(self, If_Blocks_Closed_statement):
@@ -236,13 +234,8 @@ class SemanticVisitor(AbstractVisitor):
 
     def visitFor_Non_if_statement_block(self, For_Non_if_statement_block):
         For_Non_if_statement_block.genericVariableDeclaration
-        if For_Non_if_statement_block.expression == st.BOOL:
-            For_Non_if_statement_block.block.accept(self)
-        else:
-            For_Non_if_statement_block.expression.accept(self.printer)
-            print("\n\t[ERRO] A expressao ",
-                For_Non_if_statement_block.expression.accept(self.printer),
-                ' eh ', type, ' Deveria ser boolean')
+        For_Non_if_statement_block.expression.accept(self)
+        For_Non_if_statement_block.block.accept(self)
 
 
     def visitWhile_Non_if_statement_block(self, While_Non_if_statement_block):
@@ -272,7 +265,7 @@ class SemanticVisitor(AbstractVisitor):
         return None
 
     def visitAssignmentAndOperatorConcrete(self, AssignmentAndOperatorConcrete):
-        typeVar = AssignmentAndOperatorConcrete.expression.accept(self)
+        typeVar = AssignmentAndOperatorConcrete.expression
         if typeVar != None:
             st.addVar(AssignmentAndOperatorConcrete.id, typeVar)
             return typeVar
@@ -337,11 +330,11 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitSimpleMultiVariableDeclaration(self, SimpleMultiVariableDeclaration):
-        SimpleMultiVariableDeclaration.accept(self)
+        return SimpleMultiVariableDeclaration.accept(self)
 
 
     def visitCompoundMultiVariableDeclaration(self, CompoundMultiVariableDeclaration):
-        CompoundMultiVariableDeclaration.variableDeclarations.accept(self)
+        return CompoundMultiVariableDeclaration.variableDeclarations.accept(self)
 
 
     def visitCompoundParametersFunction(self, CompoundParametersFunction):
@@ -350,59 +343,93 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitCompoundDisjunction(self, CompoundDisjunction):
-        CompoundDisjunction.conjunction.accept(self)
-        CompoundDisjunction.disjunction.accept(self)
+        type1 = CompoundDisjunction.conjunction.accept(self)
+        type2 = CompoundDisjunction.disjunction.accept(self)
+        c = coercion(type1, type2)
+        if c == None:
+            print('[ERRO] - disjunction')
+        return c
 
 
     def visitCompoundConjunction(self, CompoundConjunction):
-        CompoundConjunction.equality.accept(self)
-        CompoundConjunction.conjunction.accept(self)
+        type1 = CompoundConjunction.equality.accept(self)
+        type2 = CompoundConjunction.conjunction.accept(self)
+        c = coercion(type1, type2)
+        if c == None:
+            print('[ERRO] - conjunction')
+        return c
 
 
     def visitCompoundEquality(self, CompoundEquality):
-        CompoundEquality.comparison.accept(self)
-        CompoundEquality.equality.accept(self)
-
+        type1 = CompoundEquality.comparison.accept(self)
+        type2 = CompoundEquality.equality.accept(self)
+        c = coercion(type1, type2)
+        if c == None:
+            print('[ERRO] - equality')
+        return c
 
     def visitCompoundComparison(self, CompoundComparison):
-        CompoundComparison.infixOperation.accept(self)
+        type1 = CompoundComparison.infixOperation.accept(self)
         CompoundComparison.comparisonOperator.accept(self)
-        CompoundComparison.infixOperation1.accept(self)
-
+        type2 = CompoundComparison.infixOperation1.accept(self)
+        c = coercion(type1, type2)
+        if c == None:
+            print('[ERRO] - Comparison')
+        return c
 
     def visitSimpleInfixOperation(self, SimpleInfixOperation):
-        SimpleInfixOperation.infixOperation.accept(self)
+        type1 = SimpleInfixOperation.infixOperation.accept(self)
         SimpleInfixOperation.inOperator.accept(self)
-        SimpleInfixOperation.elvisExpression.accept(self)
-
+        type2 = SimpleInfixOperation.elvisExpression.accept(self)
+        c = coercion(type1, type2)
+        if c == None:
+            print('[ERRO] - sInfixOperation')
+        return c
 
     def visitCompoundInfixOperation(self, CompoundInfixOperation):
-        CompoundInfixOperation.infixOperation.accept(self)
+        type1 = CompoundInfixOperation.infixOperation.accept(self)
         CompoundInfixOperation.isOperator.accept(self)
-        CompoundInfixOperation.type.accept(self)
-
+        type2 = CompoundInfixOperation.type.accept(self)
+        c = coercion(type1, type2)
+        if c == None:
+            print('[ERRO] - cInfixOperation')
+        return c
 
     def visitCompoundElvisExpression(self, CompoundElvisExpression):
-        CompoundElvisExpression.elvisExpression.acceept(self)
-        CompoundElvisExpression.rangeExpression.acceept(self)
-
+        type1 = CompoundElvisExpression.elvisExpression.acceept(self)
+        type2 = CompoundElvisExpression.rangeExpression.acceept(self)
+        c = coercion(type1, type2)
+        if c == None:
+            print('[ERRO] - elvis')
+        return c
 
     def visitCompoundRangeExpression(self, CompoundRangeExpression):
-        CompoundRangeExpression.additiveExpression.accept(self)
-        CompoundRangeExpression.rangeExpression.accept(self)
-       
+        tipo1 = CompoundRangeExpression.additiveExpression
+        tipo2 = CompoundRangeExpression.rangeExpression
+        c = coercion(tipo1, tipo2)
+        if (type(c) != int):
+            print('[ERRO] - range Esperava um tipo inteiro')
+        return c
+
 
 
     def visitCompoundAdditiveExpression(self, CompoundAdditiveExpression):
-        CompoundAdditiveExpression.additiveExpression.accept(self)
+        type1 = CompoundAdditiveExpression.additiveExpression.accept(self)
         CompoundAdditiveExpression.additiveOperator.accept(self)
-        CompoundAdditiveExpression.multiplicativeExpression.accept(self)
-
+        type2 = CompoundAdditiveExpression.multiplicativeExpression.accept(self)
+        c = coercion(type1, type2)
+        if c == None:
+            print('[ERRO] - additive')
+        return c
 
     def visitCompoundMultiplicativeExpression(self, CompoundMultiplicativeExpression):
-        CompoundMultiplicativeExpression.multiplicativeExpression.accept(self)
+        type1 = CompoundMultiplicativeExpression.multiplicativeExpression.accept(self)
         CompoundMultiplicativeExpression.multiplicativeOperator.accept(self)
-        CompoundMultiplicativeExpression.asExpression.accept(self)
+        type2 = CompoundMultiplicativeExpression.asExpression.accept(self)
+        c = coercion(type1, type2)
+        if c == None:
+            print('[ERRO] - multiplicative')
+        return c
 
 
     def visitCompoundAsExpression(self, CompoundAsExpression):
@@ -431,86 +458,86 @@ class SemanticVisitor(AbstractVisitor):
 
     
     def visitParenthesizedExpressionConcrete(self, ParenthesizedExpressionConcrete):
-        ParenthesizedExpressionConcrete.expression.accept(self)
+        return ParenthesizedExpressionConcrete.expression.accept(self)
 
     
     def visitMAISIGUAL(self, MAISIGUAL):
-        MAISIGUAL.maisIgual.accept(self)
+        return MAISIGUAL.maisIgual
         
     def visitMENOSIGUAL(self, MENOSIGUAL):
-        MENOSIGUAL.menosIgual.accept(self)
+        return MENOSIGUAL.menosIgual
 
     def visitMULTIGUAL(self, MULTIGUAL):
-        MULTIGUAL.multiIgual.accept(self)
+        return MULTIGUAL.multiIgual
     
     def visitDIVIGUAL(self, DIVIGUAL):
-        DIVIGUAL.divIgual.accept(self)
+        return DIVIGUAL.divIgual
 
     def visitMODIGUAL(self, MODIGUAL):
-        MODIGUAL.modIgual.accept(self)
+        return MODIGUAL.modIgual
 
     def visitDiferente(self, Diferente):
-        Diferente.diferente.aceept(self)
+        return Diferente.diferente
 
     def visitIgualdade(self, Igualdade):
-        Igualdade.igualdade.accept(self)
+        return Igualdade.igualdade
 
     def visitIdentidade(self, Identidade):
-        Identidade.identidade.accept(self)
+        return Identidade.identidade
 
     def visitSemIdentidade(self, SemIdentidade):
-        SemIdentidade.semIdentidade.accept(self)
+        return SemIdentidade.semIdentidade
 
     def visitMaior(self, Maior):
-        Maior.maior.accpet(self)
+        return Maior.maior
 
     def visitMenor(self, Menor):
-        Menor.menor.accept(self)
+        return Menor.menor
     
     def visitMenorIgual(self, MenorIgual):
-        MenorIgual.menorIgual.accept(self)
+        return MenorIgual.menorIgual
 
     def visitMaiorIgual(self, MaiorIgual):
-        MaiorIgual.maiorIgual.accept(self)
+        return MaiorIgual.maiorIgual
 
     def visitIn(self, In):
-        In.IN.accept(self)
+        return In.IN
 
     def visitNotIn(self, NotIn):
-        NotIn.notIn.accept(self)
+        return NotIn.notIn
 
     def visitIs(self, Is):
-        Is.IS.accept(self)
+        return Is.IS
 
     def visitNotIs(self, NotIs):
-        NotIs.NotIs.accept(self)
+        return NotIs.NotIs
         
     def visitMult(self, Mult):
-        Mult.mult.accept(self)
+        return Mult.mult
 
     def visitMod(self, Mod):
-        Mod.mod.accept(self)
+        return Mod.mod
     
     def visitDivide(self, Divide):
-        Divide.divide.accept(self)
+        return Divide.divide
         
     def visitCompoundAsOperator(self, CompoundAsOperator):
-        CompoundAsOperator.asOperator.accept(self)
+        return CompoundAsOperator.asOperator.accept(self)
     
     def visitSimpleAsOperator(self, SimpleAsOperator):
-        SimpleAsOperator.accept(self)
+        return SimpleAsOperator
                 
     def visitIncremento(self, Incremento):
-        Incremento.incremento.accept(self)
+        return Incremento.incremento
     
     def visitDecremento(self, Decremento):
-        Decremento.decremento.accept(self)
+        return Decremento.decremento
 
     def visitMinus(self, Minus):
-        Minus.minus.accept(self)
+        return Minus.minus
 
     def visitPlus(self, Plus):
-        Plus.plus.accpet(self)
+        return Plus.plus
 
     def visitNot(self, Not):
-        Not.NOT.accept(self)
+        return Not.NOT
