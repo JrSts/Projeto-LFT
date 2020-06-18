@@ -160,6 +160,11 @@ lexer = lex.lex()
 
 # Test it out
 data = r'''
+
+fun soma (a:int, b:int): int {
+    return a + b
+}
+
 fun main(args: Array) {
 
     var num = 5
@@ -167,10 +172,22 @@ fun main(args: Array) {
     for (i in 1..num) { 
         factorial *= 10
     }
-    val a = 3
-    val b = 6
-    val c = a * b
+    
+    var a = 3
+    var b = 6
+    var v = true 
+    soma(a,c)
+    
+    if (a > b) { 
+        b += a
+    }
+    else {
+        b *= a
+    }
+    var c = a * b
+    print()
     println("Factorial of $num = $factorial")
+    
 }
  '''
 # Give the lexer some input

@@ -6,6 +6,7 @@ TYPE = 'type'
 UNDEFINED = 'undefined'
 PARAMS = 'params'
 BINDABLE = 'bindable'
+CONSTANTE = 'constante'
 FUNCTION = 'function'
 VARIABLE = 'variable'
 SCOPE = 'scope'
@@ -35,9 +36,7 @@ BYTE = 'byte'
 SHORT = 'short'
 PRINT = 'print'
 PRINTLN = 'println'
-SIM = 'sim'
-NAO = 'nao'
-USANDO ='use'
+
 Number = [INT, FLOAT]
 primitivos = [BYTE, SHORT, INT, LONG, UNDEFINED]
 
@@ -54,6 +53,11 @@ def endScope():
 def addVar(name, type):
     global symbolTable
     symbolTable[-1][name] = {BINDABLE: VARIABLE, TYPE : type}
+    print(symbolTable)
+
+def addVal(name, type):
+    global symbolTable
+    symbolTable[-1][name] = {BINDABLE: CONSTANTE, TYPE : type}
     print(symbolTable)
 
 def addFunction(name, params, returnType):
