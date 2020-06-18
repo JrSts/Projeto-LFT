@@ -110,26 +110,26 @@ class AssignExp1():
 #        return Visitor.visitSimpleKotlinFile(self)
 
 
-class CompoundKotlinFile(ac.KotlinFile):
+class KotlinFileConcrete(ac.KotlinFile):
     def __init__(self, functionDeclaration, kotlinFile):
         self.functionDeclaration = functionDeclaration
         self.kotlinFile = kotlinFile
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundKotlinFile(self)
+       return Visitor.visitKotlinFileConcrete(self)
 
 
-class SimpleFunctionDeclaration(ac.FunctionDeclaration):
-    def __init__(self, Id, functionValueParameters, functionBody):
-        self.Id = Id
+class FunctionDeclarationNoType(ac.FunctionDeclaration):
+    def __init__(self, id, functionValueParameters, functionBody):
+        self.id = id
         self.functionValueParameters = functionValueParameters
         self.functionBody = functionBody
 
     def accept(self, Visitor):
-       return Visitor.visitSimpleFunctionDeclaration(self)
+       return Visitor.visitFunctionDeclarationNoType(self)
 
 
-class CompoundFunctionDeclaration(ac.FunctionDeclaration):
+class FunctionDeclarationConcrete(ac.FunctionDeclaration):
     def __init__(self, id, functionValueParameters, type, functionBody):
         self.id = id
         self.functionValueParameters = functionValueParameters
@@ -137,22 +137,22 @@ class CompoundFunctionDeclaration(ac.FunctionDeclaration):
         self.functionBody = functionBody
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundFunctionDeclaration(self)
+       return Visitor.visitFunctionDeclarationConcrete(self)
 
 
-class SimpleFunctionValueParameters(ac.KotlinFile):
+class FunctionValueParametersNoParams(ac.KotlinFile):
     def __init__(self):
         self
 
     def accept(self, Visitor):
-       return Visitor.visitSimpleFunctionValueParameters(self)
+       return Visitor.visitFunctionValueParametersNoParams(self)
 
-class CompoundFunctionValueParameters(ac.KotlinFile):
+class FunctionValueParametersConcrete(ac.KotlinFile):
     def __init__(self, parameters):
         self.parameters=parameters
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundFunctionValueParameters(self)
+       return Visitor.visitFunctionValueParametersConcrete(self)
 
 
 # class SimpleParameters(ac.Parameters):
@@ -163,22 +163,22 @@ class CompoundFunctionValueParameters(ac.KotlinFile):
 #        return Visitor.visitSimpleParameters(self)
 
 
-class CompoundParameters(ac.Parameters):
+class ParametersConcrete(ac.Parameters):
     def __init__(self, parameter, parameters):
         self.parameter = parameter
         self.parameters = parameters
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundParameters(self)
+       return Visitor.visitParametersConcrete(self)
 
 
-class SimpleParameter(ac.Parameter):
+class ParameterConcrete(ac.Parameter):
     def __init__(self, id, type):
         self.id = id
         self.type = type
 
     def accept(self, Visitor):
-       return Visitor.visitSimpleParameter(self)
+       return Visitor.visitParameterConcrete(self)
 
 
 # class CompoundParameter(ac.Parameter):
@@ -207,12 +207,12 @@ class ParenthesizedTypeConcrete(ac.ParenthesizedType):
 #        return Visitor.visitSimpleFunctionBody(self)
 
 
-class CompoundFunctionBody(ac.FunctionDeclaration):
+class FunctionBodyConcrete(ac.FunctionDeclaration):
     def __init__(self, expression):
         self.expression = expression
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundFunctionBody(self)
+       return Visitor.visitFunctionBodyConcrete(self)
 
 
 # class SimpleStatements(ac.Statements):
@@ -223,13 +223,13 @@ class CompoundFunctionBody(ac.FunctionDeclaration):
 #        return Visitor.visitSimpleStatements(self)
 
 
-class CompoundStatements(ac.Statements):
+class StatementsConcrete(ac.Statements):
     def __init__(self, statement, statements):
         self.statement=statement
         self.statements=statements
 
     def accept(self, Visitor):
-     return Visitor.visitCompoundStatements(self)
+     return Visitor.visitStatementsConcrete(self)
 
 
 class If_statement(ac.Open_statement):
@@ -440,37 +440,37 @@ class PropertyDeclarationStm_Val(ac.PropertyDeclarationStm):
        return Visitor.visitPropertyDeclarationStm_Val(self)
 
 
-class SimpleChamadaDeFuncao(ac.ChamadaDeFuncao):
+class ChamadaDeFuncaoNoParams(ac.ChamadaDeFuncao):
     def __init__(self, id):
         self.id = id
 
     def accept(self, Visitor):
-      return  Visitor.visitSimpleChamadaDeFuncao(self)
+      return  Visitor.visitChamadaDeFuncaoNoParams(self)
 
 
-class CompoundChamadaDeFuncao(ac.ChamadaDeFuncao):
+class ChamadaDeFuncaoConcrete(ac.ChamadaDeFuncao):
     def __init__(self, id, parametersFunction):
         self.id = id
         self.parametersFunction = parametersFunction
 
     def accept(self, Visitor):
-      return Visitor.visitCompoundChamadaDeFuncao(self)
+      return Visitor.visitChamadaDeFuncaoConcrete(self)
 
 
-class MultiVariableDeclaration(ac.GenericVariableDeclaration):
-    def __init__(self, multiVariableDeclaration):
-        self.multiVariableDeclaration = multiVariableDeclaration
-
-    def accept(self, Visitor):
-      return Visitor.visitMultiVariableDeclaration(self)
-
-
-class VariableDeclaration(ac.GenericVariableDeclaration):
-    def __init__(self, variableDeclaration):
-        self.variableDeclaration = variableDeclaration
-
-    def accept(self, Visitor):
-       return Visitor.visitVariableDeclaration(self)
+# class MultiVariableDeclaration(ac.GenericVariableDeclaration):
+#     def __init__(self, multiVariableDeclaration):
+#         self.multiVariableDeclaration = multiVariableDeclaration
+#
+#     def accept(self, Visitor):
+#       return Visitor.visitMultiVariableDeclaration(self)
+#
+#
+# class VariableDeclaration(ac.GenericVariableDeclaration):
+#     def __init__(self, variableDeclaration):
+#         self.variableDeclaration = variableDeclaration
+#
+#     def accept(self, Visitor):
+#        return Visitor.visitVariableDeclaration(self)
 
 
 # class SimpleVariableDeclaration(ac.GenericVariableDeclaration):
@@ -481,13 +481,13 @@ class VariableDeclaration(ac.GenericVariableDeclaration):
 #        return Visitor.visitSimpleVariableDeclaration(self)
 
 
-class CompoundVariableDeclaration(ac.GenericVariableDeclaration):
+class VariableDeclarationConcrete(ac.GenericVariableDeclaration):
     def __init__(self, id, type):
         self.id = id
         self.type = type
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundVariableDeclaration(self)
+       return Visitor.visitVariableDeclarationConcrete(self)
 
 
 # class SimpleVariableDeclarations(ac.GenericVariableDeclaration):
@@ -498,29 +498,29 @@ class CompoundVariableDeclaration(ac.GenericVariableDeclaration):
 #        return Visitor.visitSimpleVariableDeclarations(self)
 
 
-class CompoundVariableDeclarations(ac.GenericVariableDeclaration):
+class VariableDeclarationsConcrete(ac.GenericVariableDeclaration):
     def __init__(self, variableDeclaration, variableDeclarations):
         self.variableDeclaration = variableDeclaration
         self.variableDeclarations = variableDeclarations
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundVariableDeclarations(self)
+       return Visitor.visitVariableDeclarationsConcrete(self)
 
 
-class SimpleMultiVariableDeclaration(ac.GenericVariableDeclaration):
+class MultiVariableDeclarationNone(ac.GenericVariableDeclaration):
     def __init__(self):
         self
 
     def accept(self, Visitor):
-       return Visitor.visitSimpleMultiVariableDeclaration(self)
+       return Visitor.visitMultiVariableDeclarationNone(self)
 
 
-class CompoundMultiVariableDeclaration(ac.GenericVariableDeclaration):
+class MultiVariableDeclarationConcrete(ac.GenericVariableDeclaration):
     def __init__(self, variableDeclarations):
         self.variableDeclarations=variableDeclarations
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundMultiVariableDeclaration(self)
+       return Visitor.visitMultiVariableDeclarationConcrete(self)
 
 
 # class SimpleParametersFunction(ac.ChamadaDeFuncao):
@@ -531,13 +531,13 @@ class CompoundMultiVariableDeclaration(ac.GenericVariableDeclaration):
 #        return Visitor.visitSimpleParametersFunction(self)
 
 
-class CompoundParametersFunction(ac.ChamadaDeFuncao):
+class ParametersFunctionConcrete(ac.ChamadaDeFuncao):
     def __init__(self, primaryExpression, parametersFunction):
         self.primaryExpression = primaryExpression
         self.parametersFunction = parametersFunction
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundParametersFunction(self)
+       return Visitor.visitParametersFunctionConcrete(self)
 
 
 # class SimpleDisjunction(ac.Disjunction):
@@ -548,30 +548,30 @@ class CompoundParametersFunction(ac.ChamadaDeFuncao):
 #        return Visitor.visitSimpleDisjunction(self)
 
 
-class CompoundDisjunction(ac.Disjunction):
+class DisjunctionConcrete(ac.Disjunction):
     def __init__(self, conjunction, disjunction):
         self.conjunction = conjunction
         self.disjunction = disjunction
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundDisjunction(self)
+       return Visitor.visitDisjunctionConcrete(self)
 
 
-class SimpleConjunction(ac.Conjunction):
-    def __init__(self,equality):
-        self.equality=equality
+# class SimpleConjunction(ac.Conjunction):
+#     def __init__(self,equality):
+#         self.equality=equality
+#
+#     def accept(self,Visitor):
+#       return Visitor.visitSimpleConjunction(self)
 
-    def accept(self,Visitor):
-      return Visitor.visitSimpleConjunction(self)
 
-
-class CompoundConjunction(ac.Conjunction):
+class ConjunctionConcrete(ac.Conjunction):
     def __init__(self, equality, conjunction):
         self.equality = equality
         self.conjunction = conjunction
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundConjunction(self)
+       return Visitor.visitConjunctionConcrete(self)
 
 
 # class SimpleEquality(ac.Conjunction):
@@ -582,14 +582,14 @@ class CompoundConjunction(ac.Conjunction):
 #        return Visitor.visitSimpleEquality(self)
 
 
-class CompoundEquality(ac.Conjunction):
+class EqualityConcrete(ac.Conjunction):
     def __init__(self,comparison, equalityOperator, equality):
         self.comparison=comparison
         self.equalityOperator=equalityOperator
         self.equality=equality
 
     def accept(self,Visitor):
-       return Visitor.visitCompoundEquality(self)
+       return Visitor.visitEqualityConcrete(self)
 
 
 # class SimpleComparison(ac.Equality):
@@ -600,34 +600,34 @@ class CompoundEquality(ac.Conjunction):
 #        return Visitor.visitSimpleComparison(self)
 
 
-class CompoundComparison(ac.Equality):
+class ComparisonConcrete(ac.Equality):
     def __init__(self, infixOperation, comparisonOperator, infixOperation2):
         self.infixOperation = infixOperation
         self.comparisonOperator = comparisonOperator
         self.infixOperation2 = infixOperation2
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundComparison(self)
+       return Visitor.visitComparisonConcrete(self)
 
 
-class SimpleInfixOperation(ac.InfixOperation):
+class InfixOperation_In(ac.InfixOperation):
     def __init__(self, infixOperation, inOperator, elvisExpression):
         self.infixOperation = infixOperation
         self.inOperator = inOperator
         self.elvisExpression = elvisExpression
 
     def accept(self, Visitor):
-       return Visitor.visitSimpleInfixOperation(self)
+       return Visitor.visitInfixOperation_In(self)
 
 
-class CompoundInfixOperation(ac.InfixOperation):
+class InfixOperation_Is(ac.InfixOperation):
     def __init__(self, infixOperation, isOperator, type):
         self.infixOperation = infixOperation
         self.isOperator = isOperator
         self.type = type
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundInfixOperation(self)
+       return Visitor.visitInfixOperation_Is(self)
 
 
 # class SimpleElvisExpression(ac.ElvisExpression):
@@ -638,13 +638,13 @@ class CompoundInfixOperation(ac.InfixOperation):
 #        return Visitor.visitSimpleElvisExpression(self)
 
 
-class CompoundElvisExpression(ac.ElvisExpression):
+class ElvisExpressionConcrete(ac.ElvisExpression):
     def __init__(self, elvisExpression, rangeExpression):
         self.rangeExpression = rangeExpression
         self.elvisExpression = elvisExpression
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundElvisExpression(self)
+       return Visitor.visitElvisExpressionConcrete(self)
 
 
 # class SimpleRangeExpression(ac.RangeExpression):
@@ -655,13 +655,13 @@ class CompoundElvisExpression(ac.ElvisExpression):
 #        return Visitor.visitSimpleRangeExpression(self)
 
 
-class CompoundRangeExpression(ac.RangeExpression):
+class RangeExpressionConcrete(ac.RangeExpression):
     def __init__(self, rangeExpression, additiveExpression):
         self.additiveExpression = additiveExpression
         self.rangeExpression = rangeExpression
 
     def accept(self, Visitor):
-      return Visitor.visitCompoundRangeExpression(self)
+      return Visitor.visitRangeExpressionConcrete(self)
 
 
 # class SimpleAdditiveExpression(ac.AdditiveExpression):
@@ -672,14 +672,14 @@ class CompoundRangeExpression(ac.RangeExpression):
 #        return Visitor.visitSimpleAdditiveExpression(self)
 
 
-class CompoundAdditiveExpression(ac.AdditiveExpression):
+class AdditiveExpressionConcrete(ac.AdditiveExpression):
     def __init__(self, additiveExpression, additiveOperator, multiplicativeExpression):
         self.multiplicativeExpression = multiplicativeExpression
         self.additiveOperator = additiveOperator
         self.additiveExpression = additiveExpression
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundAdditiveExpression(self)
+       return Visitor.visitAdditiveExpressionConcrete(self)
 
 
 # class SimpleMultiplicativeExpression(ac.MultiplicativeExpression):
@@ -690,14 +690,14 @@ class CompoundAdditiveExpression(ac.AdditiveExpression):
 #        return Visitor.visitSimpleMultiplicativeExpression(self)
 
 
-class CompoundMultiplicativeExpression(ac.MultiplicativeExpression):
+class MultiplicativeExpressionConcrete(ac.MultiplicativeExpression):
     def __init__(self, asExpression, multiplicativeOperator, multiplicativeExpression):
         self.asExpression = asExpression
         self.multiplicativeOperator = multiplicativeOperator
         self.multiplicativeExpression = multiplicativeExpression
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundMultiplicativeExpression(self)
+       return Visitor.visitMultiplicativeExpressionConcrete(self)
 
 
 # class SimpleAsExpression(ac.AsExpression):
@@ -708,32 +708,32 @@ class CompoundMultiplicativeExpression(ac.MultiplicativeExpression):
 #        return Visitor.visitSimpleAsExpression(self)
 
 
-class CompoundAsExpression(ac.AsExpression):
+class AsExpressionConcrete(ac.AsExpression):
     def __init__(self, unaryExpression, asOperator, type):
         self.unaryExpression = unaryExpression
         self.asOperator = asOperator
         self.type = type
 
     def accept(self, Visitor):
-        return Visitor.visitCompoundAsExpression(self)
+        return Visitor.visitAsExpressionConcrete(self)
 
 
-class SimpleUnaryExpressionConcrete(ac.UnaryExpression):
+class UnaryExpressionConcrete(ac.UnaryExpression):
     def __init__(self, unaryOperator, primaryExpression):
         self.primaryExpression = primaryExpression
         self.unaryOperator = unaryOperator
 
     def accept(self,Visitor):
-       return Visitor.visitSimpleUnaryExpressionConcrete(self)
+       return Visitor.visitUnaryExpressionConcrete(self)
 
 
-class CompoundUnaryExpressionConcrete(ac.UnaryExpression):
+class UnaryExpressionPostfixConcrete(ac.UnaryExpression):
     def __init__(self, primaryExpression, postfixUnaryExpression):
         self.primaryExpression = primaryExpression
         self.postfixUnaryExpression = postfixUnaryExpression
 
     def accept(self, Visitor):
-       return Visitor.visitCompoundUnaryExpressionConcrete(self)
+       return Visitor.visitUnaryExpressionPostfixConcrete(self)
 
 
 class Incremento(ac.PostfixUnaryOperator, ac.UnaryOperator):
@@ -752,12 +752,12 @@ class Decremento(ac.PostfixUnaryOperator, ac.UnaryOperator):
        return Visitor.visitDecremento(self)
 
 
-class Return(ac.PostfixUnaryOperator):
+class ReturnConcrete(ac.PostfixUnaryOperator):
     def __init__(self, expression):
         self.expression = expression
 
     def accept(self, Visitor):
-       return Visitor.visitReturn(self)
+       return Visitor.visitReturnConcrete(self)
 
 
 class ParenthesizedExpressionConcrete(ac.PrimaryExpression):
@@ -766,14 +766,6 @@ class ParenthesizedExpressionConcrete(ac.PrimaryExpression):
 
     def accept(self, Visitor):
        return Visitor.visitParenthesizedExpressionConcrete(self)
-
-
-class NumberConcrete(ac.PrimaryExpression):
-    def __init__(self, number):
-        self.number = number
-
-    def accept(self, Visitor):
-        Visitor.visitNumberConcrete(self)
 
 
 class MAISIGUAL(ac.AssignmentAndOperator):
@@ -952,15 +944,15 @@ class Divide(ac.MultiplicativeOperator):
        return Visitor.visitDivide(self)
 
 
-class SimpleAsOperator(ac.AsOperator):
-    def __init__(self, AS):
-        self.AS = AS
+# class SimpleAsOperator(ac.AsOperator):
+#     def __init__(self, AS):
+#         self.AS = AS
+#
+#     def accept(self, Visitor):
+#        return Visitor.visitSimpleAsOperator(self)
 
-    def accept(self, Visitor):
-       return Visitor.visitSimpleAsOperator(self)
 
-
-class CompoundAsOperator(ac.AsOperator):
+class AsOperatorConcrete(ac.AsOperator):
     def __init__(self, asOperator):
         self.asOperator = asOperator
 

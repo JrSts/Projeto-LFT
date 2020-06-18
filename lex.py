@@ -165,6 +165,11 @@ fun soma (a:int, b:int): int {
     return a + b
 }
 
+fun produto(a:int, b:int): int {
+    return true
+}
+
+
 fun main(args: Array) {
 
     var num = 5
@@ -177,8 +182,9 @@ fun main(args: Array) {
     var b = 6
     var v = true 
     soma(a,c)
-    
-    if (a > b) { 
+    produto(a,b)
+    produto(a,v)
+    if (a > b || v == a && v > b) { 
         b += a
     }
     else {

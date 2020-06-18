@@ -38,7 +38,7 @@ PRINT = 'print'
 PRINTLN = 'println'
 
 Number = [INT, FLOAT]
-primitivos = [BYTE, SHORT, INT, LONG, UNDEFINED]
+primitivos = [BYTE, SHORT, INT, LONG, UNDEFINED, BOOL]
 
 def beginScope(nameScope):
     global symbolTable
@@ -49,6 +49,7 @@ def beginScope(nameScope):
 def endScope():     
     global symbolTable     
     symbolTable = symbolTable[0:-1]
+    print(symbolTable)
 
 def addVar(name, type):
     global symbolTable

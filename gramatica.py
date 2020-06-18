@@ -14,25 +14,25 @@ def p_kotlinFile(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundKotlinFile(p[1], p[2])
+        p[0] = cc.KotlinFileConcrete(p[1], p[2])
 
 
 def p_functionDeclaration(p):
     ''' functionDeclaration : FUN ID functionValueParameters functionBody
                             | FUN ID functionValueParameters DOISP type functionBody '''
     if len(p) == 5:
-        p[0] = cc.SimpleFunctionDeclaration(p[2], p[3], p[4])
+        p[0] = cc.FunctionDeclarationNoType(p[2], p[3], p[4])
     else:
-        p[0] = cc.CompoundFunctionDeclaration(p[2], p[3], p[5], p[6])
+        p[0] = cc.FunctionDeclarationConcrete(p[2], p[3], p[5], p[6])
 
 
 def p_functionValueParameters(p):
     ''' functionValueParameters : LPAREN parameters RPAREN
                                 | LPAREN RPAREN '''
     if len(p) == 3:
-        p[0] = cc.SimpleFunctionValueParameters()
+        p[0] = cc.FunctionValueParametersNoParams()
     else:
-        p[0] = cc.CompoundFunctionValueParameters(p[2])
+        p[0] = cc.FunctionValueParametersConcrete(p[2])
 
 def p_parameters(p):
     ''' parameters : parameter
@@ -41,12 +41,12 @@ def p_parameters(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundParameters(p[1], p[3])
+        p[0] = cc.ParametersConcrete(p[1], p[3])
 
 def p_parameter(p):
     ''' parameter : ID DOISP type '''
 
-    p[0] = cc.SimpleParameter(p[1], p[3])
+    p[0] = cc.ParameterConcrete(p[1], p[3])
 
 
 def p_type(p):
@@ -66,7 +66,7 @@ def p_functionBody(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundFunctionBody(p[2])
+        p[0] = cc.FunctionBodyConcrete(p[2])
 
 
 def p_statements(p):
@@ -75,7 +75,7 @@ def p_statements(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundStatements(p[1], p[2])
+        p[0] = cc.StatementsConcrete(p[1], p[2])
 
 
 def p_statement(p):
@@ -180,9 +180,9 @@ def p_chamadaDeFuncao(p):
     ''' chamadaDeFuncao : ID LPAREN RPAREN
                         | ID LPAREN parametersFunction RPAREN '''
     if len(p) == 4:
-        p[0] = cc.SimpleChamadaDeFuncao(p[1])
+        p[0] = cc.ChamadaDeFuncaoNoParams(p[1])
     else:
-        p[0] = cc.CompoundChamadaDeFuncao(p[1], p[3])
+        p[0] = cc.ChamadaDeFuncaoConcrete(p[1], p[3])
 
 def p_genericVariableDeclaration(p):
     ''' genericVariableDeclaration : multiVariableDeclaration
@@ -195,7 +195,7 @@ def p_variableDeclaration(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundVariableDeclaration(p[1], p[3])
+        p[0] = cc.VariableDeclarationConcrete(p[1], p[3])
 
 def p_variableDeclarations(p):
     '''variableDeclarations : variableDeclaration
@@ -203,15 +203,15 @@ def p_variableDeclarations(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundVariableDeclarations(p[1], p[3])
+        p[0] = cc.VariableDeclarationsConcrete(p[1], p[3])
 
 def p_multiVariableDeclaration(p):
     ''' multiVariableDeclaration : LPAREN variableDeclarations RPAREN
                                  | LPAREN RPAREN '''
     if len(p) == 3:
-        p[0] = cc.SimpleMultiVariableDeclaration()
+        p[0] = cc.MultiVariableDeclarationNone()
     else:
-        p[0] = cc.CompoundMultiVariableDeclaration(p[2])
+        p[0] = cc.MultiVariableDeclarationConcrete(p[2])
 
 def p_parametersFunction(p):
     ''' parametersFunction : primaryExpression
@@ -219,7 +219,7 @@ def p_parametersFunction(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundParametersFunction(p[1], p[3])
+        p[0] = cc.ParametersFunctionConcrete(p[1], p[3])
 
 
 def p_expression(p):
@@ -233,7 +233,7 @@ def p_disjunction(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundDisjunction(p[1], p[3])
+        p[0] = cc.DisjunctionConcrete(p[1], p[3])
 
 
 def p_conjunction(p):
@@ -242,7 +242,7 @@ def p_conjunction(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundConjunction(p[1], p[3])
+        p[0] = cc.ConjunctionConcrete(p[1], p[3])
 
 
 def p_equality(p):
@@ -251,7 +251,7 @@ def p_equality(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundEquality(p[1], p[2], p[3])
+        p[0] = cc.EqualityConcrete(p[1], p[2], p[3])
 
 
 def p_comparison(p):
@@ -260,7 +260,7 @@ def p_comparison(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundComparison(p[1], p[2], p[3])
+        p[0] = cc.ComparisonConcrete(p[1], p[2], p[3])
 
 
 def p_infixOperation(p):
@@ -270,9 +270,9 @@ def p_infixOperation(p):
     if len(p) == 2:
         p[0] = p[1]
     elif isinstance(p[2], ac.InOperator):
-        p[0] = cc.SimpleInfixOperation(p[1], p[2], p[3])
+        p[0] = cc.InfixOperation_In(p[1], p[2], p[3])
     else:
-        p[0] = cc.CompoundInfixOperation(p[1], p[2], p[3])
+        p[0] = cc.InfixOperation_Is(p[1], p[2], p[3])
 
 def p_elvisExpression(p):
     ''' elvisExpression : rangeExpression
@@ -280,7 +280,7 @@ def p_elvisExpression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundElvisExpression(p[1],  p[3])
+        p[0] = cc.ElvisExpressionConcrete(p[1],  p[3])
 
 def p_rangeExpression(p):
     ''' rangeExpression : additiveExpression
@@ -288,7 +288,7 @@ def p_rangeExpression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundRangeExpression(p[1], p[3])
+        p[0] = cc.RangeExpressionConcrete(p[1], p[3])
 
 
 def p_additiveExpression(p):
@@ -297,7 +297,7 @@ def p_additiveExpression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundAdditiveExpression(p[1], p[2], p[3])
+        p[0] = cc.AdditiveExpressionConcrete(p[1], p[2], p[3])
 
 
 def p_multiplicativeExpression(p):
@@ -306,7 +306,7 @@ def p_multiplicativeExpression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundMultiplicativeExpression(p[1], p[2], p[3])
+        p[0] = cc.MultiplicativeExpressionConcrete(p[1], p[2], p[3])
 
 
 def p_asExpression(p):
@@ -315,7 +315,7 @@ def p_asExpression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundAsExpression(p[1], p[2], p[3])
+        p[0] = cc.AsExpressionConcrete(p[1], p[2], p[3])
 
 
 def p_unaryExpression(p):
@@ -326,9 +326,9 @@ def p_unaryExpression(p):
     if len(p) == 2:
         p[0] = p[1]
     elif isinstance(p[1], ac.UnaryOperator):
-        p[0] = cc.SimpleUnaryExpressionConcrete(p[1], p[2])
+        p[0] = cc.UnaryExpressionConcrete(p[1], p[2])
     else:
-        p[0] = cc.CompoundUnaryExpressionConcrete(p[1], p[2])
+        p[0] = cc.UnaryExpressionPostfixConcrete(p[1], p[2])
 
 def p_postfixUnaryOperator(p):
     ''' postfixUnaryOperator : INCREMENTO
@@ -356,7 +356,7 @@ def p_jumpExpression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.Return(p[2])
+        p[0] = cc.ReturnConcrete(p[2])
 
 def p_parenthesizedExpression(p):
     ''' parenthesizedExpression : LPAREN expression RPAREN '''
@@ -458,7 +458,7 @@ def p_asOperator(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = cc.CompoundAsOperator(p[2])
+        p[0] = cc.AsOperatorConcrete(p[2])
 
 def p_unaryOperator(p):
     ''' unaryOperator : INCREMENTO
