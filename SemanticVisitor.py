@@ -8,15 +8,31 @@ import AbstrataClass as ac
 
 def coercion(type1, type2):
     if (type1 in st.Number and type2 in st.Number):
-        print('passei aqui')
+        #print('passei aqui')
         if type1 == st.FLOAT or type2 == st.FLOAT:
-            print('passei')
+            #print('passei')
             return st.FLOAT
         else:
-            print('nao passei')
+            #print('nao passei')
             return st.INT
     else:
         return None
+
+
+def conversao(type):
+    if isinstance(type, int):
+        return st.INT
+    elif isinstance(type, float):
+        return st.FLOAT
+    elif type == st.TRUE or type == st.FALSE:
+        return st.BOOL
+    elif type[0] == '\"':
+        return st.STRING
+    else:
+        type = st.getBindable(type)
+        if (type != None):
+            return type[st.TYPE]
+        return type
 
 class SemanticVisitor(AbstractVisitor):
 
@@ -90,75 +106,73 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitIf_statement(self, If_statement):
-        if If_statement.expression == st.BOOL:
-            If_statement.statement.accept(self)
-        else:
+        if If_statement.expression.accept(self) != st.BOOL:
+            print('type', If_statement.expression.accept(self))
             If_statement.expression.accept(self.printer)
             print("\n\t[ERRO] A expressao ",
                   If_statement.expression.accept(self.printer),
                   ' eh ', type, ' Deveria ser boolean')
-
+        If_statement.statement.accept(self)
 
     def visitIf_block(self, If_block):
-        if If_block.expression == st.BOOL:
-            If_block.block.accept(self)
-        else:
+        if If_block.expression.accept(self) != st.BOOL:
+            print('type', If_block.expression.accept(self))
             If_block.expression.accept(self.printer)
             print("\n\t[ERRO] A expressao ",
                   If_block.expression.accept(self.printer),
                   ' eh ', type, ' Deveria ser boolean')
+        If_block.block.accept(self)
 
 
     def visitSimpleIf_else(self, SimpleIf_else):
-        if SimpleIf_else.expression == st.BOOL:
-            SimpleIf_else.block.accept(self)
-            SimpleIf_else.open_statement.accept(self)
-        else:
+        if SimpleIf_else.expression.accept(self) != st.BOOL:
+            print('type', SimpleIf_else.expression.accept(self))
             SimpleIf_else.expression.accept(self.printer)
             print("\n\t[ERRO] A expressao ",
                   SimpleIf_else.expression.accept(self.printer),
                   ' eh ', type, ' Deveria ser boolean')
+        SimpleIf_else.block.accept(self)
+        SimpleIf_else.open_statement.accept(self)
 
 
     def visitCompoundIf_else(self, CompoundIf_else):
-        if CompoundIf_else.expression == st.BOOL:
-            CompoundIf_else.closed_statement.accept(self)
-            CompoundIf_else.open_statement.accept(self)
-        else:
+        if CompoundIf_else.expression.accept(self) != st.BOOL:
+            print('type', CompoundIf_else.expression.accept(self))
             CompoundIf_else.expression.accept(self.printer)
             print("\n\t[ERRO] A expressao ",
                   CompoundIf_else.expression.accept(self.printer),
                   ' eh ', type, ' Deveria ser boolean')
-
+        CompoundIf_else.closed_statement.accept(self)
+        CompoundIf_else.open_statement.accept(self)
 
     def visitWhile_Open_statement(self, While_Open_statement):
+        if While_Open_statement.expression.accept(self) != st.BOOL:
+            print('type', While_Open_statement.expression.accept(self))
+            While_Open_statement.expression.accept(self.printer)
+            print("\n\t[ERRO] A expressao ",
+                  While_Open_statement.expression.accept(self.printer),
+                  ' eh ', type, ' Deveria ser boolean')
         While_Open_statement.expression.accept(self)
         While_Open_statement.open_statement.accept(self)
 
 
     def visitDoWhile_Open_statement(self, DoWhile_Open_statement):
-        if DoWhile_Open_statement.expression == st.BOOL:
-            DoWhile_Open_statement.open_statement.accept(self)
-        else:
+        if DoWhile_Open_statement.expression.accept(self) != st.BOOL:
+            print('type', DoWhile_Open_statement.expression.accept(self))
             DoWhile_Open_statement.expression.accept(self.printer)
             print("\n\t[ERRO] A expressao ",
-                  DoWhile_Open_statement.expression.accept(self.printer),
-                  ' eh ', type, ' Deveria ser boolean')
+                 DoWhile_Open_statement.expression.accept(self.printer),
+                 ' eh ', type, ' Deveria ser boolean')
+        DoWhile_Open_statement.open_statement.accept(self)
 
 
     def visitFor_Open_statement(self, For_Open_statement):
-        nome = For_Open_statement.genericVariableDeclaration.accept(self)
-        print(nome)
-        if isinstance(nome, st.STRING):
-            if nome[0] != '\'':
-                st.addVar(nome, 'int')
-            else:
-                print('ERRO - For')
-        else:
-            print('erro')
-        For_Open_statement.open_statement.accept(self)
+        st.beginScope('for')
+        nome = For_Open_statement.genericVariableDeclaration
+        st.addVar(nome, st.INT)
         For_Open_statement.expression.accept(self.printer)
-        
+        For_Open_statement.open_statement.accept(self)
+        st.endScope()
 
 
     def visitIf_Blocks_Closed_statement(self, If_Blocks_Closed_statement):
@@ -240,10 +254,8 @@ class SemanticVisitor(AbstractVisitor):
         nome = For_Non_if_statement_block.genericVariableDeclaration
         st.addVar(nome, st.INT)
         For_Non_if_statement_block.expression.accept(self)
-        #print(For_Non_if_statement_block.expression.accept(self.printer))
         For_Non_if_statement_block.block.accept(self)
         st.endScope()
-        print(st.symbolTable)
 
 
     def visitWhile_Non_if_statement_block(self, While_Non_if_statement_block):
@@ -285,15 +297,29 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitPropertyDeclarationStm_Var(self, PropertyDeclarationStm_Var):
-       typeVar = str(type(PropertyDeclarationStm_Var.expression))[8:11]
-       st.addVar(PropertyDeclarationStm_Var.genericVariableDeclaration, typeVar)
-       return typeVar
+        typeVar = PropertyDeclarationStm_Var.expression
+        if type(typeVar) == int:
+            typeVar = conversao(typeVar)
+            st.addVar(PropertyDeclarationStm_Var.genericVariableDeclaration, typeVar)
+            print('if', typeVar)
+        else:
+            typeVar = PropertyDeclarationStm_Var.expression.accept(self)
+            print('else', typeVar)
+            st.addVar(PropertyDeclarationStm_Var.genericVariableDeclaration, typeVar)
+        return typeVar
 
 
     def visitPropertyDeclarationStm_Val(self, PropertyDeclarationStm_Val):
-       typeVar = str(type(PropertyDeclarationStm_Val.expression))[8:11]
-       st.addVar(PropertyDeclarationStm_Val.genericVariableDeclaration, typeVar)
-       return typeVar
+        typeVar = PropertyDeclarationStm_Val.expression
+        if type(typeVar) == int:
+            typeVar = conversao(typeVar)
+            st.addVar(PropertyDeclarationStm_Val.genericVariableDeclaration, typeVar)
+            print('if', typeVar)
+        else:
+            typeVar = PropertyDeclarationStm_Val.expression.accept(self)
+            print('else', typeVar)
+            st.addVar(PropertyDeclarationStm_Val.genericVariableDeclaration, typeVar)
+        return typeVar
 
     def visitSimpleChamadaDeFuncao(self, SimpleChamadaDeFuncao):
         bindable = st.getBindable(SimpleChamadaDeFuncao.id)
@@ -353,51 +379,46 @@ class SemanticVisitor(AbstractVisitor):
     def visitCompoundDisjunction(self, CompoundDisjunction):
         type1 = CompoundDisjunction.conjunction.accept(self)
         type2 = CompoundDisjunction.disjunction.accept(self)
-        print(type1, type2)
-        c = coercion(type1, type2)
-        if c == None:
-            print('[ERRO] - disjunction')
-        return c
+        if type1 == type2:
+            return type1
+        else:
+            print('[ERRO] - Disjunction')
+            return None
 
 
     def visitCompoundConjunction(self, CompoundConjunction):
         type1 = CompoundConjunction.equality.accept(self)
         type2 = CompoundConjunction.conjunction.accept(self)
-        print(type1, type2)
-        c = coercion(type1, type2)
-        if c == None:
-            print('[ERRO] - conjunction')
-        return c
-
+        if type1 == type2:
+            return type1
+        else:
+            print('[ERRO] - Conjunction')
 
     def visitCompoundEquality(self, CompoundEquality):
-        type1 = CompoundEquality.comparison.accept(self)
-        type2 = CompoundEquality.equality.accept(self)
-        print(type1, type2)
-
-        c = coercion(type1, type2)
-        if c == None:
-            print('[ERRO] - equality')
-        return c
+        type1 = conversao(CompoundEquality.comparison)
+        type2 = conversao(CompoundEquality.equality)
+        if type1 == type2:
+            return type1
+        else:
+            print('[ERRO] - Equality')
 
     def visitCompoundComparison(self, CompoundComparison):
-        type1 = CompoundComparison.infixOperation.accept(self)
-        CompoundComparison.comparisonOperator.accept(self)
-        type2 = CompoundComparison.infixOperation1.accept(self)
-        print(type1, type2)
+        type1 = conversao(CompoundComparison.infixOperation)
+        CompoundComparison.comparisonOperator
+        type2 = conversao(CompoundComparison.infixOperation)
         c = coercion(type1, type2)
         if c == None:
             print('[ERRO] - Comparison')
-        return c
+        return st.BOOL
 
     def visitSimpleInfixOperation(self, SimpleInfixOperation):
-        type1 = SimpleInfixOperation.infixOperation
-        SimpleInfixOperation.inOperator.accept(self)
-        c = bindable = st.getBindable(SimpleInfixOperation.elvisExpression)
-        print(type1, c)
-        if str(type(type1))[8:11] != bindable[st.TYPE] and bindable[st.TYPE] == 'int':
+        type1 = conversao(SimpleInfixOperation.infixOperation)
+        SimpleInfixOperation.inOperator
+        type2 = conversao(SimpleInfixOperation.elvisExpression)
+        print(type1, type2)
+        if type1 == type2:
             print('[ERRO] - infix Esperava um tipo inteiro')
-        return c[st.TYPE]
+        return type1
 
     def visitCompoundInfixOperation(self, CompoundInfixOperation):
         type1 = CompoundInfixOperation.infixOperation.accept(self)
@@ -419,32 +440,29 @@ class SemanticVisitor(AbstractVisitor):
         return c
 
     def visitCompoundRangeExpression(self, CompoundRangeExpression):
-        type1 = re.search('int', str(type(CompoundRangeExpression.rangeExpression)))
-        type1 = type1.group(0)
+        type1 = conversao(CompoundRangeExpression.rangeExpression)
         bindable = st.getBindable(CompoundRangeExpression.additiveExpression)
-        print('escopo', bindable[st.TYPE])
         type2 = bindable[st.TYPE]
         c = coercion(type1, type2)
-        print('c', c, type2)
-
         if c == None:
             print('[ERRO] - range Esperava um tipo inteiro')
         return c
 
 
     def visitCompoundAdditiveExpression(self, CompoundAdditiveExpression):
-        type1 = CompoundAdditiveExpression.additiveExpression.accept(self)
-        CompoundAdditiveExpression.additiveOperator.accept(self)
-        type2 = CompoundAdditiveExpression.multiplicativeExpression.accept(self)
+        print('visitCompoundAdditiveExpression')
+        type1 = conversao(CompoundAdditiveExpression.additiveExpression)
+        CompoundAdditiveExpression.additiveOperator
+        type2 = conversao(CompoundAdditiveExpression.multiplicativeExpression)
         c = coercion(type1, type2)
         if c == None:
             print('[ERRO] - additive')
         return c
 
     def visitCompoundMultiplicativeExpression(self, CompoundMultiplicativeExpression):
-        type1 = CompoundMultiplicativeExpression.multiplicativeExpression.accept(self)
-        CompoundMultiplicativeExpression.multiplicativeOperator.accept(self)
-        type2 = CompoundMultiplicativeExpression.asExpression.accept(self)
+        type1 = conversao(CompoundMultiplicativeExpression.multiplicativeExpression)
+        CompoundMultiplicativeExpression.multiplicativeOperator
+        type2 = conversao(CompoundMultiplicativeExpression.asExpression)
         c = coercion(type1, type2)
         if c == None:
             print('[ERRO] - multiplicative')
@@ -462,8 +480,9 @@ class SemanticVisitor(AbstractVisitor):
 
 
     def visitCompoundUnaryExpressionConcrete(self, CompoundUnaryExpressionConcrete):
-        CompoundUnaryExpressionConcrete.primaryExpression.accept(self)
-        CompoundUnaryExpressionConcrete.postfixUnaryExpression.accept(self)
+        conversao(CompoundUnaryExpressionConcrete.primaryExpression)
+        conversao(CompoundUnaryExpressionConcrete.postfixUnaryExpression)
+
 
 
     def visitReturn(self, Return):

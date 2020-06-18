@@ -276,7 +276,7 @@ def p_infixOperation(p):
 
 def p_elvisExpression(p):
     ''' elvisExpression : rangeExpression
-                        | elvisExpression  ELVIS rangeExpression  '''
+                        | elvisExpression ELVIS rangeExpression  '''
     if len(p) == 2:
         p[0] = p[1]
     else:

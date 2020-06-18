@@ -167,6 +167,9 @@ fun main(args: Array) {
     for (i in 1..num) { 
         factorial *= 10
     }
+    val a = 3
+    val b = 6
+    val c = a * b
     println("Factorial of $num = $factorial")
 }
  '''

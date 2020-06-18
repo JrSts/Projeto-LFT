@@ -229,7 +229,7 @@ class CompoundStatements(ac.Statements):
         self.statements=statements
 
     def accept(self, Visitor):
-     return  Visitor.visitCompoundStatements(self)
+     return Visitor.visitCompoundStatements(self)
 
 
 class If_statement(ac.Open_statement):
@@ -673,7 +673,7 @@ class CompoundRangeExpression(ac.RangeExpression):
 
 
 class CompoundAdditiveExpression(ac.AdditiveExpression):
-    def __init__(self, multiplicativeExpression, additiveOperator, additiveExpression):
+    def __init__(self, additiveExpression, additiveOperator, multiplicativeExpression):
         self.multiplicativeExpression = multiplicativeExpression
         self.additiveOperator = additiveOperator
         self.additiveExpression = additiveExpression
